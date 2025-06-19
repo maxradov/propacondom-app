@@ -1,19 +1,19 @@
 steps:
-# 1. Сборка Docker-образа с правильным тегом для репозитория в us-central1
+# 1. Сборка Docker-образа
 - name: 'gcr.io/cloud-builders/docker'
   args:
     - 'build'
     - '-t'
     - 'us-central1-docker.pkg.dev/$PROJECT_ID/propacondom-repo/propacondom-backend:$COMMIT_SHA'
-    - '-f' # <--- Добавляем флаг -f для указания пути к Dockerfile
-    - 'backend/Dockerfile' # <--- Указываем путь к Dockerfile относительно корня репозитория
-    - '.' # <--- Указываем, что контекст сборки - текущая директория (корень репозитория)
+    - '-f' # Указываем, где находится Dockerfile
+    - 'backend/Dockerfile' # Путь к Dockerfile относительно корня репозитория
+    - '.' # <--- Контекст сборки - корень репозитория (ВАЖНО!)
 
-# 2. Публикация образа с ТЕМ ЖЕ САМЫМ тегом в репозиторий в us-central1
+# 2. Публикация образа
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', 'us-central1-docker.pkg.dev/$PROJECT_ID/propacondom-repo/propacondom-backend:$COMMIT_SHA']
 
-# 3. Развертывание образа из репозитория us-central1 в сервис Cloud Run в регионе us-central1
+# 3. Развертывание
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: gcloud
   args:
