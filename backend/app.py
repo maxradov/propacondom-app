@@ -6,7 +6,7 @@ from celery.result import AsyncResult
 
 # Определяем абсолютный путь к папке frontend
 # Это самый надежный способ, который будет работать всегда
-frontend_folder = '/frontend' # <--- ИЗМЕНЕНО
+frontend_folder = '/frontend' # <--- ЭТОТ ПУТЬ ДОЛЖЕН БЫТЬ ТАКИМ
 # --- ИЗМЕНЕНИЕ: Явно указываем Flask путь к статическим файлам ---
 # static_url_path='' означает, что файлы будут доступны из корня (например, /style.css)
 app = Flask(__name__, static_folder=frontend_folder, static_url_path='/static')

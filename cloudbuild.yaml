@@ -1,33 +1,17 @@
 steps:
 # 1. Сборка Docker-образа
-# Контекст сборки - './backend', Dockerfile - 'Dockerfile' внутри этого контекста
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/propacondom-repo/propacondom-backend:$COMMIT_SHA', './backend']
+  args:
+    - 'build'
+    - '-t'
+    - 'us-central1-docker.pkg.dev/$PROJECT_ID/propacondom-repo/propacondom-backend:$COMMIT_SHA'
+    - '.' # <--- КОНТЕКСТ СБОРКИ: КОРЕНЬ РЕПОЗИТОРИЯ, Dockerfile также в корне
 
 # 2. Публикация образа
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', 'us-central1-docker.pkg.dev/$PROJECT_ID/propacondom-repo/propacondom-backend:$COMMIT_SHA']
 
-# 3. Дополнительный шаг для копирования папки frontend ВНУТРЬ созданного образа
-# Сначала нужно запустить контейнер из образа
-# Затем скопировать frontend
-# Затем удалить контейнер и образ
-- name: 'gcr.io/cloud-builders/docker'
-  entrypoint: 'bash'
-  args:
-    - '-c'
-    - |
-      # Запускаем контейнер из только что собранного образа в фоновом режиме
-      CONTAINER_ID=$(docker run -d us-central1-docker.pkg.dev/$PROJECT_ID/propacondom-repo/propacondom-backend:$COMMIT_SHA /bin/bash)
-      # Копируем папку frontend из хост-системы (Cloud Build) в запущенный контейнер
-      docker cp frontend/ $CONTAINER_ID:/frontend/
-      # Фиксируем изменения в новом образе
-      docker commit $CONTAINER_ID us-central1-docker.pkg.dev/$PROJECT_ID/propacondom-repo/propacondom-backend:$COMMIT_SHA
-      # Останавливаем и удаляем временный контейнер
-      docker stop $CONTAINER_ID
-      docker rm $CONTAINER_ID
-
-# 4. Развертывание (Использует обновленный образ, содержащий frontend)
+# 3. Развертывание
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: gcloud
   args:
