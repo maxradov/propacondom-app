@@ -18,3 +18,7 @@ steps:
     - '--region=europe-west3' # Регион, который мы выбрали для Firestore
     - '--platform=managed'
     - '--allow-unauthenticated' # Разрешаем доступ из интернета
+    
+    # --- ДОБАВЬТЕ ЭТОТ БЛОК В КОНЕЦ ФАЙЛА ---
+options:
+  logging: CLOUD_LOGGING_ONLY
