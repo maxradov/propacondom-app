@@ -1,7 +1,13 @@
 steps:
 # 1. Сборка Docker-образа с правильным тегом для репозитория в us-central1
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/propacondom-repo/propacondom-backend:$COMMIT_SHA', './backend']
+  args:
+    - 'build'
+    - '-t'
+    - 'us-central1-docker.pkg.dev/$PROJECT_ID/propacondom-repo/propacondom-backend:$COMMIT_SHA'
+    - '-f' # <--- Добавляем флаг -f для указания пути к Dockerfile
+    - 'backend/Dockerfile' # <--- Указываем путь к Dockerfile относительно корня репозитория
+    - '.' # <--- Указываем, что контекст сборки - текущая директория (корень репозитория)
 
 # 2. Публикация образа с ТЕМ ЖЕ САМЫМ тегом в репозиторий в us-central1
 - name: 'gcr.io/cloud-builders/docker'

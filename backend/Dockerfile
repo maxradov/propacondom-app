@@ -20,7 +20,7 @@ COPY . .
 # Эта команда возьмет содержимое папки 'frontend' из корневого каталога вашего проекта
 # (propacondom-app/frontend/) и скопирует его в /frontend/ внутри контейнера.
 # Это позволит app.py найти папку 'frontend' по пути '../frontend' относительно /app.
-COPY ../frontend/ /frontend/
+COPY frontend/ /frontend/
 
 # Указываем, как запускать приложение с помощью gunicorn
 # Он будет слушать порт, который ему предоставит Google Cloud (переменная окружения $PORT)
