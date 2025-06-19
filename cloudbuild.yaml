@@ -5,7 +5,7 @@ steps:
 
 # 2. Публикация образа в Artifact Registry
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'europe-west3-docker.pkg.dev/$PROJECT_ID/propacondom-repo/propacondom-backend:$COMMIT_SHA']
+  args: ['push', 'us-central1-docker.pkg.dev/$PROJECT_ID/propacondom-repo/propacondom-backend:$COMMIT_SHA']
 
 # 3. Развертывание образа в Cloud Run как веб-сервис
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
