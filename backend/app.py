@@ -4,15 +4,16 @@ from flask_cors import CORS
 from tasks import celery
 from celery.result import AsyncResult
 
-# Определяем абсолютный путь к папке frontend
-# Это самый надежный способ, который будет работать всегда
-frontend_folder = '/frontend' # <--- ЭТОТ ПУТЬ ДОЛЖЕН БЫТЬ ТАКИМ
-# --- ИЗМЕНЕНИЕ: Явно указываем Flask путь к статическим файлам ---
-# static_url_path='' означает, что файлы будут доступны из корня (например, /style.css)
+# Определяем путь к папке frontend внутри контейнера
+# Dockerfile копирует папку 'frontend' в корень контейнера (/frontend)
+frontend_folder = '/frontend'
+
+# Flask будет обслуживать статические файлы из frontend_folder
+# static_url_path='/static' означает, что style.css будет доступен по /static/style.css
 app = Flask(__name__, static_folder=frontend_folder, static_url_path='/static')
 CORS(app)
 
-# --- API-маршруты (Остаются без изменений) ---
+# --- API-маршруты ---
 @app.route('/api/analyze', methods=['POST'])
 def analyze():
     data = request.get_json()
@@ -30,21 +31,18 @@ def get_status(task_id):
     else:
         return jsonify({"status": "PENDING"}), 202
 
-# --- Маршрут для раздачи главной страницы и статики ---
-# Этот маршрут будет обрабатывать все остальные запросы
-@app.route('/', defaults={'path': ''})
+# --- Маршрут для раздачи главной страницы (index.html) ---
+@app.route('/')
+def serve_index():
+    return send_from_directory(app.static_folder, 'index.html')
+
+# --- Маршрут для раздачи других SPA-маршрутов (которые обрабатывает JS) ---
 @app.route('/<path:path>')
-def serve(path):
-    if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
-        # Если запрашивается существующий файл (style.css, script.js), отдаем его
-        return send_from_directory(app.static_folder, path)
-    else:
-        # В любом другом случае (например, при обновлении страницы /report/xyz)
-        # отдаем главный index.html, чтобы JavaScript мог сам разобраться с маршрутом
-        return send_from_directory(app.static_folder, 'index.html')
-        
+def serve_spa_paths(path):
+    return send_from_directory(app.static_folder, 'index.html')
+
+
 if __name__ == '__main__':
-    # Cloud Run предоставляет порт через переменную окружения PORT
-    # Приложение должно слушать на 0.0.0.0
     port = int(os.environ.get('PORT', 8080))
+    print(f"Starting Flask app on 0.0.0.0:{port}")
     app.run(host='0.0.0.0', port=port)

@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const statusText = document.getElementById('status-text');
     const resultSection = document.getElementById('result-section');
     const langSwitcher = document.getElementById('lang-switcher');
+    // ИСПРАВЛЕНИЕ: Добавлена переменная reportContainer, которая использовалась, но не была объявлена.
+    const reportContainer = document.getElementById('report-container'); // Добавлено
 
     let currentLang = 'en';
     let pollingInterval;
@@ -35,7 +37,8 @@ document.addEventListener('DOMContentLoaded', () => {
         statusSection.style.display = 'block';
 
         try {
-            const analyzeResponse = await fetch('http://localhost:5000/api/analyze', {
+            // ИСПРАВЛЕНИЕ: Изменен URL с localhost на относительный путь
+            const analyzeResponse = await fetch('/api/analyze', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ url: videoUrl, lang: currentLang })
@@ -59,7 +62,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function pollStatus(taskId) {
         pollingInterval = setInterval(async () => {
             try {
-                const statusResponse = await fetch(`http://localhost:5000/api/status/${taskId}`);
+                // ИСПРАВЛЕНИЕ: Изменен URL с localhost на относительный путь
+                const statusResponse = await fetch(`/api/status/${taskId}`);
                 if (!statusResponse.ok) throw new Error('Сервер вернул ошибку при проверке статуса.');
                 
                 const data = await statusResponse.json();
