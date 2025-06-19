@@ -1,24 +1,24 @@
 steps:
-# 1. Сборка Docker-образа для нашего бэкенд-сервера
+# 1. Сборка Docker-образа с правильным тегом для репозитория в us-central1
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'europe-west3-docker.pkg.dev/$PROJECT_ID/propacondom-repo/propacondom-backend:$COMMIT_SHA', './backend']
+  args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/propacondom-repo/propacondom-backend:$COMMIT_SHA', './backend']
 
-# 2. Публикация образа в Artifact Registry
+# 2. Публикация образа с ТЕМ ЖЕ САМЫМ тегом в репозиторий в us-central1
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', 'us-central1-docker.pkg.dev/$PROJECT_ID/propacondom-repo/propacondom-backend:$COMMIT_SHA']
 
-# 3. Развертывание образа в Cloud Run как веб-сервис
+# 3. Развертывание образа из репозитория us-central1 в сервис Cloud Run в регионе us-central1
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: gcloud
   args:
     - 'run'
     - 'deploy'
-    - 'propacondom-service' # Название нашего сервиса
-    - '--image=europe-west3-docker.pkg.dev/$PROJECT_ID/propacondom-repo/propacondom-backend:$COMMIT_SHA'
-    - '--region=europe-west3' # Регион, который мы выбрали для Firestore
+    - 'propacondom-service'
+    - '--image=us-central1-docker.pkg.dev/$PROJECT_ID/propacondom-repo/propacondom-backend:$COMMIT_SHA'
+    - '--region=us-central1'
     - '--platform=managed'
-    - '--allow-unauthenticated' # Разрешаем доступ из интернета
-    
-    # --- ДОБАВЬТЕ ЭТОТ БЛОК В КОНЕЦ ФАЙЛА ---
+    - '--allow-unauthenticated'
+    - '--service-account=cloud-build-deployer@propacondom.iam.gserviceaccount.com'
+
 options:
   logging: CLOUD_LOGGING_ONLY
