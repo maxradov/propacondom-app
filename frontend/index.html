@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Propacondom - Ваш AI Фактчекер</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="container">
+        <header>
+            <h1>Propacondom.com</h1>
+            <p class="description">На страже вашего медиа-пространства. Вставьте ссылку на YouTube видео, и наш AI проверит его на достоверность. Отчет будет сформирован на выбранном вами языке.</p>
+        </header>
+
+        <div class="lang-switcher" id="lang-switcher">
+            <a href="#" class="lang-link active" data-lang="en">EN</a>
+            <a href="#" class="lang-link" data-lang="ru">RU</a>
+            <a href="#" class="lang-link" data-lang="uk">UA</a>
+            <a href="#" class="lang-link" data-lang="es">ES</a>
+            <a href="#" class="lang-link" data-lang="fr">FR</a>
+            <a href="#" class="lang-link" data-lang="de">DE</a>
+            <a href="#" class="lang-link" data-lang="ar">AR</a>
+        </div>
+
+        <section class="input-section">
+            <input type="text" id="youtube-url" placeholder="https://www.youtube.com/watch?v=...">
+            <button id="factcheck-btn">Фактчек</button>
+        </section>
+
+        <section id="status-section" class="status-section" style="display: none;">
+            <div class="loader"></div>
+            <p id="status-text"></p>
+        </section>
+
+        <section id="result-section" class="result-section" style="display: none;">
+            </section>
+    </main>
+
+    <footer>
+        <a href="#">Политика конфиденциальности</a>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

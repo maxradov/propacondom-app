@@ -1,0 +1,8 @@
+flask
+celery
+redis
+yt-dlp
+google-generativeai
+google-cloud-firestore
+Flask-Cors
+gunicorn
