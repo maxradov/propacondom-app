@@ -6,20 +6,17 @@ FROM python:3.12-slim
 # Устанавливаем рабочую директорию внутри контейнера
 WORKDIR /app
 
-# Копируем файл с зависимостями
-COPY requirements.txt requirements.txt
-
+# *** ИЗМЕНЕНО: Путь к requirements.txt относительно корня репозитория ***
+# Теперь Docker Build видит requirements.txt как backend/requirements.txt
+COPY backend/requirements.txt . 
 # Устанавливаем зависимости (убедитесь, что gunicorn тоже в requirements.txt)
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Копируем остальные файлы бэкенда (app.py, tasks.py и т.д.)
-# Они будут находиться в /app внутри контейнера
-COPY . .
+# *** ИЗМЕНЕНО: Путь к файлам бэкенда относительно корня репозитория ***
+# Копируем app.py, tasks.py и т.д. из backend/ в /app
+COPY backend/. . 
 
-# *** ВАЖНОЕ ИЗМЕНЕНИЕ: Копируем папку frontend из родительской директории ***
-# Эта команда возьмет содержимое папки 'frontend' из корневого каталога вашего проекта
-# (propacondom-app/frontend/) и скопирует его в /frontend/ внутри контейнера.
-# Это позволит app.py найти папку 'frontend' по пути '../frontend' относительно /app.
+# *** ЭТА СТРОКА ОСТАЕТСЯ БЕЗ ИЗМЕНЕНИЙ, так как frontend/ уже в корне контекста сборки ***
 COPY frontend/ /frontend/
 
 # Указываем, как запускать приложение с помощью gunicorn
