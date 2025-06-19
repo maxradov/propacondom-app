@@ -8,16 +8,16 @@ WORKDIR /app
 
 # *** ИЗМЕНЕНО: Путь к requirements.txt относительно корня репозитория ***
 # Теперь Docker Build видит requirements.txt как backend/requirements.txt
-COPY backend/requirements.txt . 
+COPY requirements.txt . 
 # Устанавливаем зависимости (убедитесь, что gunicorn тоже в requirements.txt)
 RUN pip install --no-cache-dir -r requirements.txt
 
 # *** ИЗМЕНЕНО: Путь к файлам бэкенда относительно корня репозитория ***
 # Копируем app.py, tasks.py и т.д. из backend/ в /app
-COPY backend/. . 
+COPY . .
 
 # *** ЭТА СТРОКА ОСТАЕТСЯ БЕЗ ИЗМЕНЕНИЙ, так как frontend/ уже в корне контекста сборки ***
-COPY frontend/ /frontend/
+COPY ../frontend/ /frontend/
 
 # Указываем, как запускать приложение с помощью gunicorn
 # Он будет слушать порт, который ему предоставит Google Cloud (переменная окружения $PORT)
