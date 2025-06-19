@@ -43,3 +43,9 @@ def serve(path):
         # В любом другом случае (например, при обновлении страницы /report/xyz)
         # отдаем главный index.html, чтобы JavaScript мог сам разобраться с маршрутом
         return send_from_directory(app.static_folder, 'index.html')
+        
+if __name__ == '__main__':
+    # Cloud Run предоставляет порт через переменную окружения PORT
+    # Приложение должно слушать на 0.0.0.0
+    port = int(os.environ.get('PORT', 8080))
+    app.run(host='0.0.0.0', port=port)
