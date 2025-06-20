@@ -100,25 +100,28 @@ document.addEventListener('DOMContentLoaded', () => {
 		progressContainer.innerHTML = '';
 		reportContainer.innerHTML = '';
 
-		// Убедимся, что данные существуют и содержат нужные поля
-		if (!data || !data.report) {
+		// --- ИЗМЕНЕНИЕ ТУТ ---
+		// Проверяем наличие ключа detailed_results вместо report
+		if (!data || !data.detailed_results) {
 			reportContainer.innerHTML = '<p>Ошибка: получен некорректный формат данных отчета.</p>';
 			resultSection.style.display = 'block';
 			return;
 		}
 
-		const report = data.report;
-		const verdictCounts = report.verdict_counts || {}; // Получаем вердикты
+		// --- И ИЗМЕНЕНИЕ ТУТ ---
+		// Работаем напрямую с объектом data, а не data.report
+		const report = data;
+		const verdictCounts = report.verdict_counts || {};
 		const detailedResults = report.detailed_results || [];
+		const summary_html = report.summary_html || 'Итоговый отчет не был сгенерирован.';
 
-		// --- 1. Отрисовка Прогресс-бара ---
+		// --- 1. Отрисовка Прогресс-бара (логика без изменений) ---
 		const totalVerdicts = Object.values(verdictCounts).reduce((a, b) => a + b, 0);
 		if (totalVerdicts > 0) {
 			const segments = {
 				'True': { id: 'true-segment', label: 'Правда', count: verdictCounts['True'] || 0 },
 				'False': { id: 'false-segment', label: 'Ложь', count: verdictCounts['False'] || 0 },
 				'Partly True/Manipulation': { id: 'manipulation-segment', label: 'Манипуляция', count: verdictCounts['Partly True/Manipulation'] || 0 },
-				// Можно добавить и другие вердикты если нужно
 			};
 
 			for (const key in segments) {
@@ -135,11 +138,10 @@ document.addEventListener('DOMContentLoaded', () => {
 			}
 		}
 
-
-		// --- 2. Отрисовка Отчета ---
+		// --- 2. Отрисовка Отчета (логика без изменений) ---
 		let reportHTML = `
 			<div id="report-summary">
-				${report.summary_html.replace(/\n/g, '<br>')}
+				${summary_html.replace(/\n/g, '<br>')}
 			</div>
 			<button id="details-toggle" class="details-toggle">Показать детальный разбор</button>
 			<div id="claim-list-container" style="display: none;">
@@ -147,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		`;
 
 		detailedResults.forEach(claim => {
-			const verdictClass = claim.verdict.replace(/\s+/g, '-');
+			const verdictClass = (claim.verdict || 'No-data').replace(/[\s/]+/g, '-');
 			reportHTML += `
 				<div class="claim-item">
 					<p class="claim-text">
@@ -165,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				});
 				reportHTML += `</div>`;
 			}
-			reportHTML += `</div>`; // .claim-item
+			reportHTML += `</div>`;
 		});
 
 		reportHTML += `
@@ -175,7 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		reportContainer.innerHTML = reportHTML;
 
-		// --- 3. Добавление логики для кнопки "Показать/Скрыть детали" ---
+		// --- 3. Добавление логики для кнопки (логика без изменений) ---
 		const toggleButton = document.getElementById('details-toggle');
 		const detailsContainer = document.getElementById('claim-list-container');
 		if (toggleButton) {
