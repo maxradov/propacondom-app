@@ -10,7 +10,7 @@
     <main class="container">
         <header>
             <h1>Propacondom.com</h1>
-            <p class="description">На страже вашего медиа-пространства. Вставьте ссылку на YouTube видео, и наш AI проверит его на достоверность. Отчет будет сформирован на выбранном вами языке.</p>
+            <p class="description">Rate the veracity of the video. Insert the link to the YouTube video:</p>
         </header>
 
         <div class="lang-switcher" id="lang-switcher">
@@ -25,7 +25,7 @@
 
         <section class="input-section">
             <input type="text" id="youtube-url" placeholder="https://www.youtube.com/watch?v=...">
-            <button id="factcheck-btn">Фактчек</button>
+            <button id="factcheck-btn">Run Fact Check</button>
         </section>
 
         <section id="status-section" class="status-section" style="display: none;">
@@ -38,7 +38,7 @@
     </main>
 
     <footer>
-        <a href="#">Политика конфиденциальности</a>
+        <a href="#">Policy</a>
     </footer>
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>
