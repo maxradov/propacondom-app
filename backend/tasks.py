@@ -122,7 +122,29 @@ def fact_check_video(self, video_url, target_lang='en'):
         
         average_confidence = round(confidence_sum / claims_with_confidence) if claims_with_confidence > 0 else 0
         
-        summary_prompt = f"Act as an editor-in-chief for a fact-checking agency. Based on the provided JSON data, write a final summary report in the language with code: '{target_lang}'. Report structure: 1. Overall Verdict. 2. Overall Assessment (2-3 sentences). 3. Key Points. Data: {json.dumps(all_results, ensure_ascii=False)}"
+        # Найдите этот блок в tasks.py
+print(f"[LOG-STEP 7] Вызов Gemini для генерации итогового отчета...")
+
+        #  НОВЫЙ ПРОМПТ
+        summary_prompt = f"""
+        You are an editor-in-chief for a fact-checking agency. 
+        Your task is to write a final summary report in plain text based on the provided JSON data.
+
+        **IMPORTANT INSTRUCTIONS:**
+        - Your entire response MUST be the prose report.
+        - DO NOT use JSON or Markdown in your output.
+        - Start your response directly with the "Overall Verdict".
+        - The report MUST be in the language with code: '{target_lang}'.
+
+        Report structure: 
+        1. Overall Verdict. 
+        2. Overall Assessment (2-3 sentences). 
+        3. Key Points. 
+
+        Data: 
+        {json.dumps(all_results, ensure_ascii=False)}
+        """
+
         final_report_response = model.generate_content(summary_prompt, safety_settings=safety_settings)
         
         data_to_save_in_db = {
