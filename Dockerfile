@@ -11,8 +11,6 @@ ENV PATH="/opt/venv/bin:$PATH"
 # Устанавливаем рабочую директорию
 WORKDIR /app
 
-COPY cookies.txt /app/cookies.txt
-
 # Копируем requirements.txt и устанавливаем зависимости Python ВНУТРЬ venv
 COPY backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
