@@ -22,7 +22,7 @@ def analyze():
     
     return jsonify({"task_id": task.id}), 202
 
-@@app.route('/api/status/<task_id>', methods=['GET'])
+@app.route('/api/status/<task_id>', methods=['GET'])
 def get_status(task_id):
     task_result = AsyncResult(task_id, app=celery_app)
     
