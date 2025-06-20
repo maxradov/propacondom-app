@@ -123,7 +123,7 @@ def fact_check_video(self, video_url, target_lang='en'):
         average_confidence = round(confidence_sum / claims_with_confidence) if claims_with_confidence > 0 else 0
         
         # Найдите этот блок в tasks.py
-print(f"[LOG-STEP 7] Вызов Gemini для генерации итогового отчета...")
+        print(f"[LOG-STEP 7] Вызов Gemini для генерации итогового отчета...")
 
         #  НОВЫЙ ПРОМПТ
         summary_prompt = f"""
