@@ -1,20 +1,20 @@
-# Dockerfile (теперь расположен в propacondom-app/Dockerfile)
-
 FROM python:3.12-slim
 
+# Устанавливаем рабочую директорию
 WORKDIR /app
 
-# Копируем requirements.txt из backend/ в /app
+# Копируем только requirements.txt для кэширования слоев Docker
 COPY backend/requirements.txt .
+
+# Устанавливаем зависимости
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Копируем остальные файлы бэкенда (app.py, tasks.py и т.д.) из backend/ в /app
+# Копируем всё остальное из папки backend (включая static и templates)
 COPY backend/. .
 
-# Копируем папку frontend из корневой директории репозитория (propacondom-app/frontend/) в /frontend/ внутри контейнера.
-COPY frontend/ /frontend/
-
+# Указываем порт
 ENV PORT 8080
 EXPOSE 8080
 
+# Запускаем приложение через Gunicorn
 CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 app:app

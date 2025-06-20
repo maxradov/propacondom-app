@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Propacondom - Ваш AI Фактчекер</title>
-    <link rel="stylesheet" href="/static/style.css"> </head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
 <body>
     <main class="container">
         <header>
@@ -40,5 +41,6 @@
         <a href="#">Политика конфиденциальности</a>
     </footer>
 
-    <script src="/static/script.js"></script> </body>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
 </html>
