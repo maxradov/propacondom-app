@@ -8,10 +8,17 @@ import yt_dlp
 import google.generativeai as genai
 from celery import Celery
 from google.cloud import firestore
-from urllib.parse import urlparse, parse_qs # <-- НОВЫЙ ИМПОРТ
+from urllib.parse import urlparse, parse_qs
 
 # --- Настройки ---
-celery = Celery(__name__, broker='redis://localhost:6379/0', backend='redis://localhost:6379/0')
+
+# ↓↓↓ ИЗМЕНЕНИЕ ДЛЯ РАБОТЫ В CLOUD RUN ↓↓↓
+# Получаем URL для подключения к Redis из переменной окружения.
+# Если переменная не найдена (например, при локальном запуске), используется 'localhost'.
+REDIS_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379/0')
+celery = Celery(__name__, broker=REDIS_URL, backend=REDIS_URL)
+
+# --- Остальные настройки без изменений ---
 GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY', "AIzaSyDm2gBtIMh0UhhpDytCRL-xG5AB7RjWx1Q")
 genai.configure(api_key=GEMINI_API_KEY)
 db = firestore.Client(project='propacondom')
@@ -21,6 +28,8 @@ def get_video_id(url):
     """Надежно извлекает ID видео из любого варианта URL YouTube."""
     if not url:
         return None
+    # Эта функция была сокращена для краткости, в вашем файле она останется полной
+    # ... (логика извлечения ID)
     query = urlparse(url)
     if query.hostname == 'youtu.be':
         return query.path[1:]
@@ -31,6 +40,7 @@ def get_video_id(url):
         if query.path.startswith(('/embed/', '/v/')):
             return query.path.split('/')[2]
     return None
+
 
 @celery.task(time_limit=600)
 def fact_check_video(video_url, target_lang='en'):
@@ -43,12 +53,12 @@ def fact_check_video(video_url, target_lang='en'):
         doc = doc_ref.get()
         if doc.exists:
             print(f"Найден кэш для видео {video_id} на языке {target_lang}.")
-            return doc.to_dict()
+            # При возврате из кэша, убедимся, что дата сериализуема
+            cached_data = doc.to_dict()
+            if 'created_at' in cached_data and hasattr(cached_data['created_at'], 'isoformat'):
+                 cached_data['created_at'] = cached_data['created_at'].isoformat()
+            return cached_data
 
-        # ... (остальной код задачи остается без изменений) ...
-        # Он будет вставлен сюда автоматически, когда вы скопируете весь файл.
-        # Просто скопируйте весь блок кода из этого ответа целиком.
-        
         print(f"Кэш не найден. Запускаю полный анализ для {video_id}.")
         
         ydl_opts_list = {'listsubtitles': True, 'quiet': True}
@@ -112,7 +122,6 @@ def fact_check_video(video_url, target_lang='en'):
         print(f"Сохраняю отчет для {video_id} ({target_lang}) в Firestore...")
         doc_ref.set(data_to_save_in_db)
 
-        # 2. Готовим объект для возврата в Celery/Redis, заменяя метку на обычную строку
         data_to_return = data_to_save_in_db.copy()
         data_to_return["created_at"] = datetime.datetime.now().isoformat()
         
