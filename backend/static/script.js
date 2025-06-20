@@ -82,36 +82,32 @@ document.addEventListener('DOMContentLoaded', () => {
 		const confidenceContainer = document.getElementById('confidence-container');
 		const reportContainer = document.getElementById('report-container');
 
+		// Очистка
 		progressContainer.innerHTML = '';
 		confidenceContainer.innerHTML = '';
 		reportContainer.innerHTML = '';
 
-		if (!data || !data.detailed_results || !data.verdict_counts) {
+		if (!data || !data.detailed_results || !data.verdict_counts || !data.summary_data) {
 			reportContainer.innerHTML = '<p>Ошибка: получен некорректный формат данных отчета.</p>';
 			resultSection.style.display = 'block';
 			return;
 		}
 
-		const verdictCounts = data.verdict_counts;
-		const detailedResults = data.detailed_results;
-		const summary_html = data.summary_html || 'Итоговый отчет не был сгенерирован.';
-		const average_confidence = data.average_confidence;
+		const { verdict_counts, detailed_results, summary_data, average_confidence } = data;
 
 		// --- 1. Отрисовка Прогресс-бара ---
-		const totalVerdicts = Object.values(verdictCounts).reduce((a, b) => a + b, 0);
+		const totalVerdicts = Object.values(verdict_counts).reduce((a, b) => a + b, 0);
 		if (totalVerdicts > 0) {
-            const tooltips = {
-                'True': 'True statements',
-                'False': 'False statements',
-                'Unverifiable': 'Unverifiable or manipulative statements'
-            };
-            
+			const tooltips = {
+				'True': 'True statements',
+				'False': 'False statements',
+				'Unverifiable': 'Unverifiable or manipulative statements'
+			};
 			const segments = [
-				{ type: 'True', count: verdictCounts['True'] || 0, id: 'true-segment' },
-				{ type: 'False', count: verdictCounts['False'] || 0, id: 'false-segment' },
-				{ type: 'Unverifiable', count: verdictCounts['Unverifiable'] || 0, id: 'unverifiable-segment' }
+				{ type: 'True', count: verdict_counts['True'] || 0, id: 'true-segment' },
+				{ type: 'False', count: verdict_counts['False'] || 0, id: 'false-segment' },
+				{ type: 'Unverifiable', count: verdict_counts['Unverifiable'] || 0, id: 'unverifiable-segment' }
 			];
-
 			segments.forEach(segment_data => {
 				if (segment_data.count > 0) {
 					const percentage = (segment_data.count / totalVerdicts) * 100;
@@ -120,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
 					segmentDiv.className = 'progress-segment';
 					segmentDiv.style.width = percentage + '%';
 					segmentDiv.textContent = segment_data.count;
-                    segmentDiv.title = tooltips[segment_data.type]; // <-- Добавляем подсказку
+					segmentDiv.title = tooltips[segment_data.type];
 					progressContainer.appendChild(segmentDiv);
 				}
 			});
@@ -131,10 +127,14 @@ document.addEventListener('DOMContentLoaded', () => {
 			confidenceContainer.textContent = `Average confidence: ${average_confidence}%`;
 		}
 
-		// --- 3. Отрисовка Текстового Отчета ---
+		// --- 3. Отрисовка Текстового Отчета из структурированного JSON ---
 		let reportHTML = `
 			<div id="report-summary">
-				${summary_html.replace(/\n/g, '<br>')}
+				<h2>${summary_data.overall_verdict || ''}</h2>
+				<p>${summary_data.overall_assessment || ''}</p>
+				<ul>
+					${(summary_data.key_points || []).map(point => `<li>${point}</li>`).join('')}
+				</ul>
 			</div>
 			<button id="details-toggle" class="details-toggle">Показать детальный разбор</button>
 			<div id="claim-list-container" style="display: none;">
