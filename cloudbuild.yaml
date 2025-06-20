@@ -22,7 +22,7 @@ steps:
     - '--region=us-central1'
     - '--platform=managed'
     - '--allow-unauthenticated'
-    - '--service-account=cloud-build-deployer@propacondom.iam.gserviceaccount.com'
+    - '--service-account=cloud-build-deployer@propacondom-v2.iam.gserviceaccount.com'
 
 options:
   logging: CLOUD_LOGGING_ONLY
