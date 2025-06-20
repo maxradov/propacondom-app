@@ -98,16 +98,18 @@ document.addEventListener('DOMContentLoaded', () => {
 		// --- 1. Отрисовка Прогресс-бара ---
 		const totalVerdicts = Object.values(verdict_counts).reduce((a, b) => a + b, 0);
 		if (totalVerdicts > 0) {
-			const tooltips = {
+            const tooltips = {
 				'True': 'True statements',
 				'False': 'False statements',
 				'Unverifiable': 'Unverifiable or manipulative statements'
 			};
+            
 			const segments = [
 				{ type: 'True', count: verdict_counts['True'] || 0, id: 'true-segment' },
 				{ type: 'False', count: verdict_counts['False'] || 0, id: 'false-segment' },
 				{ type: 'Unverifiable', count: verdict_counts['Unverifiable'] || 0, id: 'unverifiable-segment' }
 			];
+
 			segments.forEach(segment_data => {
 				if (segment_data.count > 0) {
 					const percentage = (segment_data.count / totalVerdicts) * 100;
@@ -116,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
 					segmentDiv.className = 'progress-segment';
 					segmentDiv.style.width = percentage + '%';
 					segmentDiv.textContent = segment_data.count;
-					segmentDiv.title = tooltips[segment_data.type];
+                    segmentDiv.title = tooltips[segment_data.type]; // <-- Добавляем подсказку
 					progressContainer.appendChild(segmentDiv);
 				}
 			});
