@@ -54,7 +54,12 @@ def fact_check_video(self, video_url, target_lang='en'):
         info = None
         try:
             print(f"[LOG-STEP 2] Вызов yt-dlp для получения информации о видео и списка субтитров...")
-            ydl_opts_list = {'listsubtitles': True, 'quiet': True, 'nocheckcertificate': True}
+            ydl_opts_list = {
+                'listsubtitles': True,
+                'quiet': True,
+                'nocheckcertificate': True, # <--- Вот здесь ставится запятая
+                'cookiefile': '/app/cookies.txt' # <--- А вот новая опция
+            }
             info = yt_dlp.YoutubeDL(ydl_opts_list).extract_info(video_url, download=False)
             print(f"[LOG-SUCCESS] yt-dlp успешно получил информацию о видео.")
         except Exception as ytdl_error:
