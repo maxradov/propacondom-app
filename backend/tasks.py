@@ -42,45 +42,66 @@ def fact_check_video(self, video_url, target_lang='en'):
                  cached_data['created_at'] = cached_data['created_at'].isoformat()
             return cached_data
 
-        self.update_state(state='PROGRESS', meta={'status_message': 'Извлечение субтитров через API...'})
-        
+        # --- НАЧАЛО ИЗМЕНЕНИЙ ---
+
+        # Этап 1: Получаем метаданные и список языков
+        print(f"[LOG-STEP 2] Запрос списка доступных языков через SearchApi.io...")
+        self.update_state(state='PROGRESS', meta={'status_message': 'Проверка доступных языков...'})
+
         api_key = os.environ.get('SEARCHAPI_KEY')
-        params = {'engine': 'youtube_transcripts', 'video_id': video_id, 'api_key': api_key}
-        response = requests.get('https://www.searchapi.io/api/v1/search', params=params)
-        response.raise_for_status()
-        metadata = response.json()
-        if 'error' in metadata: raise Exception(f"SearchApi.io вернул ошибку: {metadata['error']}")
-        available_langs = [lang['id'] for lang in metadata.get('available_languages', [])]
-        if not available_langs: raise ValueError("API не нашел доступных субтитров ни на одном языке.")
+        params_list_langs = {
+            'engine': 'youtube_transcripts',
+            'video_id': video_id,
+            'api_key': api_key
+        }
+        response_list_langs = requests.get('https://www.searchapi.io/api/v1/search', params=params_list_langs)
+        response_list_langs.raise_for_status()
+        metadata = response_list_langs.json()
+
+        if 'error' in metadata and 'available_languages' not in metadata:
+             raise Exception(f"SearchApi.io вернул ошибку: {metadata['error']}")
+
+        # ИСПРАВЛЕНИЕ: Используем ключ 'lang' вместо 'id'
+        available_langs = [lang.get('lang') for lang in metadata.get('available_languages', []) if lang.get('lang')]
+
+        if not available_langs:
+            raise ValueError("API не нашел доступных субтитров ни на одном языке.")
         
+        print(f"[LOG-INFO] Найдены языки: {available_langs}")
+
+        # Этап 2: Выбираем лучший доступный язык
         priority_langs = [target_lang, 'en', 'ru', 'uk']
         detected_lang = next((lang for lang in priority_langs if lang in available_langs), available_langs[0])
+        print(f"[LOG-INFO] Выбран язык для извлечения: {detected_lang}")
         
         self.update_state(state='PROGRESS', meta={'status_message': f'Извлечение субтитров ({detected_lang})...'})
-        
-        params['lang'] = detected_lang
-        response_transcript = requests.get('https://www.searchapi.io/api/v1/search', params=params)
+
+        # Этап 3: Запрашиваем транскрипт для ВЫБРАННОГО языка
+        params_get_transcript = {
+            'engine': 'youtube_transcripts', 'video_id': video_id,
+            'lang': detected_lang, 'api_key': api_key
+        }
+        response_transcript = requests.get('https://www.searchapi.io/api/v1/search', params=params_get_transcript)
         response_transcript.raise_for_status()
         transcript_data = response_transcript.json()
+        
         if 'error' in transcript_data: raise Exception(f"SearchApi.io вернул ошибку: {transcript_data['error']}")
         if not transcript_data.get('transcripts'): raise ValueError(f"API не вернул субтитры для языка '{detected_lang}'.")
-        
+
         clean_text = " ".join([item['text'] for item in transcript_data['transcripts']])
+        print(f"[LOG-SUCCESS] Субтитры успешно получены через API.")
+
+        # --- КОНЕЦ ИЗМЕНЕНИЙ В ЭТОМ БЛОКЕ ---
         
         self.update_state(state='PROGRESS', meta={'status_message': 'Анализ текста...'})
         model = genai.GenerativeModel('gemini-1.5-flash')
         safety_settings = {'HARM_CATEGORY_HARASSMENT': 'BLOCK_NONE', 'HARM_CATEGORY_HATE_SPEECH': 'BLOCK_NONE'}
 
-        # --- ИЗМЕНЕНИЕ №1: Просим извлечь 5 ГЛАВНЫХ утверждений ---
-        print(f"[LOG-STEP 4] Вызов Gemini для извлечения 5 главных утверждений...")
         prompt_claims = f"Analyze the following transcript. Extract the 5 most important and significant factual claims. Return them as a numbered list. Transcript: --- {clean_text} ---"
         response_claims = model.generate_content(prompt_claims, safety_settings=safety_settings)
         claims_list = [re.sub(r'^\d+\.\s*', '', line).strip() for line in response_claims.text.strip().split('\n') if line.strip()]
 
         self.update_state(state='PROGRESS', meta={'status_message': f'Извлечено {len(claims_list)} утверждений. Начинаю факт-чекинг...'})
-        
-        # --- ИЗМЕНЕНИЕ №2: Убираем цикл и делаем один пакетный запрос ---
-        print(f"[LOG-STEP 5] Старт ПАКЕТНОГО факт-чекинга для {len(claims_list)} утверждений...")
         
         claims_json_string = json.dumps(claims_list, ensure_ascii=False)
         prompt_fc_batch = f"""
@@ -88,22 +109,16 @@ def fact_check_video(self, video_url, target_lang='en'):
         Return ONLY a single valid JSON array of objects, where each object corresponds to a claim and has the keys: "claim", "verdict" (True, False, Partly True/Manipulation, No data), "confidence_percentage" (0-100), "explanation" (in {target_lang}), "sources" (array of URLs).
         Claims to check: {claims_json_string}
         """
-        
         response_fc_batch = model.generate_content(prompt_fc_batch, safety_settings=safety_settings)
         
-        # Ищем и парсим JSON-массив из ответа
         json_match = re.search(r'\[.*\]', response_fc_batch.text, re.DOTALL)
-        if json_match:
-            all_results = json.loads(json_match.group(0))
-        else:
-            raise ValueError("AI did not return a valid JSON array for the fact-check.")
+        if json_match: all_results = json.loads(json_match.group(0))
+        else: raise ValueError("AI did not return a valid JSON array for the fact-check.")
             
         print(f"[LOG-SUCCESS] Пакетный факт-чекинг завершен.")
-        # --- КОНЕЦ ИЗМЕНЕНИЙ ---
         
         self.update_state(state='PROGRESS', meta={'status_message': 'Формирование итогового отчета...'})
 
-        # ... (блок подсчета статистики и формирования финального отчета остается без изменений) ...
         verdict_counts = {"True": 0, "False": 0, "Unverifiable": 0}
         confidence_sum = 0
         claims_with_confidence = 0
@@ -124,10 +139,8 @@ def fact_check_video(self, video_url, target_lang='en'):
         final_report_response = model.generate_content(summary_prompt, safety_settings=safety_settings)
         
         summary_match = re.search(r'\{.*\}', final_report_response.text, re.DOTALL)
-        if summary_match:
-            summary_data = json.loads(summary_match.group(0))
-        else:
-            summary_data = {"overall_verdict": "Error", "overall_assessment": "Failed to parse summary from AI.", "key_points": []}
+        if summary_match: summary_data = json.loads(summary_match.group(0))
+        else: summary_data = {"overall_verdict": "Error", "overall_assessment": "Failed to parse summary from AI.", "key_points": []}
 
         data_to_save_in_db = {
             "summary_data": summary_data, "verdict_counts": verdict_counts,
