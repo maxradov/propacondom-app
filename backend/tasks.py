@@ -42,18 +42,9 @@ def fact_check_video(self, video_url, target_lang='en'):
                  cached_data['created_at'] = cached_data['created_at'].isoformat()
             return cached_data
 
-        # --- НАЧАЛО ИЗМЕНЕНИЙ ---
-
-        # Этап 1: Получаем метаданные и список языков
-        print(f"[LOG-STEP 2] Запрос списка доступных языков через SearchApi.io...")
         self.update_state(state='PROGRESS', meta={'status_message': 'Проверка доступных языков...'})
-
         api_key = os.environ.get('SEARCHAPI_KEY')
-        params_list_langs = {
-            'engine': 'youtube_transcripts',
-            'video_id': video_id,
-            'api_key': api_key
-        }
+        params_list_langs = {'engine': 'youtube_transcripts', 'video_id': video_id, 'api_key': api_key}
         response_list_langs = requests.get('https://www.searchapi.io/api/v1/search', params=params_list_langs)
         response_list_langs.raise_for_status()
         metadata = response_list_langs.json()
@@ -61,26 +52,15 @@ def fact_check_video(self, video_url, target_lang='en'):
         if 'error' in metadata and 'available_languages' not in metadata:
              raise Exception(f"SearchApi.io вернул ошибку: {metadata['error']}")
 
-        # ИСПРАВЛЕНИЕ: Используем ключ 'lang' вместо 'id'
         available_langs = [lang.get('lang') for lang in metadata.get('available_languages', []) if lang.get('lang')]
-
-        if not available_langs:
-            raise ValueError("API не нашел доступных субтитров ни на одном языке.")
+        if not available_langs: raise ValueError("API не нашел доступных субтитров ни на одном языке.")
         
-        print(f"[LOG-INFO] Найдены языки: {available_langs}")
-
-        # Этап 2: Выбираем лучший доступный язык
         priority_langs = [target_lang, 'en', 'ru', 'uk']
         detected_lang = next((lang for lang in priority_langs if lang in available_langs), available_langs[0])
-        print(f"[LOG-INFO] Выбран язык для извлечения: {detected_lang}")
         
         self.update_state(state='PROGRESS', meta={'status_message': f'Извлечение субтитров ({detected_lang})...'})
-
-        # Этап 3: Запрашиваем транскрипт для ВЫБРАННОГО языка
-        params_get_transcript = {
-            'engine': 'youtube_transcripts', 'video_id': video_id,
-            'lang': detected_lang, 'api_key': api_key
-        }
+        
+        params_get_transcript = {'engine': 'youtube_transcripts', 'video_id': video_id, 'lang': detected_lang, 'api_key': api_key}
         response_transcript = requests.get('https://www.searchapi.io/api/v1/search', params=params_get_transcript)
         response_transcript.raise_for_status()
         transcript_data = response_transcript.json()
@@ -89,9 +69,6 @@ def fact_check_video(self, video_url, target_lang='en'):
         if not transcript_data.get('transcripts'): raise ValueError(f"API не вернул субтитры для языка '{detected_lang}'.")
 
         clean_text = " ".join([item['text'] for item in transcript_data['transcripts']])
-        print(f"[LOG-SUCCESS] Субтитры успешно получены через API.")
-
-        # --- КОНЕЦ ИЗМЕНЕНИЙ В ЭТОМ БЛОКЕ ---
         
         self.update_state(state='PROGRESS', meta={'status_message': 'Анализ текста...'})
         model = genai.GenerativeModel('gemini-1.5-flash')
@@ -104,16 +81,42 @@ def fact_check_video(self, video_url, target_lang='en'):
         self.update_state(state='PROGRESS', meta={'status_message': f'Извлечено {len(claims_list)} утверждений. Начинаю факт-чекинг...'})
         
         claims_json_string = json.dumps(claims_list, ensure_ascii=False)
+        
+        # --- НАЧАЛО ИЗМЕНЕНИЙ ---
+        
+        # 1. Улучшенный промпт
         prompt_fc_batch = f"""
-        Fact-check each claim in the following JSON array. 
-        Return ONLY a single valid JSON array of objects, where each object corresponds to a claim and has the keys: "claim", "verdict" (True, False, Partly True/Manipulation, No data), "confidence_percentage" (0-100), "explanation" (in {target_lang}), "sources" (array of URLs).
+        Fact-check each claim in the following JSON array of strings.
+        Your response MUST be ONLY a single valid JSON array of objects. Do not include any text before or after the array.
+        Each object in the array must correspond to a claim and have these exact keys: "claim", "verdict" (one of: "True", "False", "Partly True/Manipulation", "No data"), "confidence_percentage" (integer 0-100), "explanation" (a string in {target_lang}), "sources" (an array of URL strings).
+        Wrap your entire response in ```json ... ```.
+
         Claims to check: {claims_json_string}
         """
+        
         response_fc_batch = model.generate_content(prompt_fc_batch, safety_settings=safety_settings)
         
-        json_match = re.search(r'\[.*\]', response_fc_batch.text, re.DOTALL)
-        if json_match: all_results = json.loads(json_match.group(0))
-        else: raise ValueError("AI did not return a valid JSON array for the fact-check.")
+        # 2. Улучшенный, "умный" парсинг
+        response_text = response_fc_batch.text
+        print(f"[LOG-DEBUG] Raw fact-check response from AI: {response_text}")
+
+        json_str = None
+        # Сначала ищем JSON внутри markdown-блока ```json ... ```
+        match = re.search(r'```json\s*(\[.*\])\s*```', response_text, re.DOTALL)
+        if match:
+            json_str = match.group(1)
+        else:
+            # Если не нашли, ищем первый же массив в тексте
+            match = re.search(r'\[.*\]', response_text, re.DOTALL)
+            if match:
+                json_str = match.group(0)
+
+        if json_str:
+            all_results = json.loads(json_str)
+        else:
+            raise ValueError("AI did not return a parsable JSON array for the fact-check.")
+        
+        # --- КОНЕЦ ИЗМЕНЕНИЙ ---
             
         print(f"[LOG-SUCCESS] Пакетный факт-чекинг завершен.")
         
