@@ -94,51 +94,54 @@ document.addEventListener('DOMContentLoaded', () => {
 	function displayResults(data) {
 		const resultSection = document.getElementById('result-section');
 		const progressContainer = document.getElementById('progress-container');
+		const confidenceContainer = document.getElementById('confidence-container');
 		const reportContainer = document.getElementById('report-container');
 
 		// Очищаем предыдущие результаты
 		progressContainer.innerHTML = '';
+		confidenceContainer.innerHTML = '';
 		reportContainer.innerHTML = '';
 
-		// --- ИЗМЕНЕНИЕ ТУТ ---
-		// Проверяем наличие ключа detailed_results вместо report
-		if (!data || !data.detailed_results) {
+		if (!data || !data.detailed_results || !data.verdict_counts) {
 			reportContainer.innerHTML = '<p>Ошибка: получен некорректный формат данных отчета.</p>';
 			resultSection.style.display = 'block';
 			return;
 		}
 
-		// --- И ИЗМЕНЕНИЕ ТУТ ---
-		// Работаем напрямую с объектом data, а не data.report
-		const report = data;
-		const verdictCounts = report.verdict_counts || {};
-		const detailedResults = report.detailed_results || [];
-		const summary_html = report.summary_html || 'Итоговый отчет не был сгенерирован.';
+		const verdictCounts = data.verdict_counts;
+		const detailedResults = data.detailed_results;
+		const summary_html = data.summary_html || 'Итоговый отчет не был сгенерирован.';
+		const average_confidence = data.average_confidence;
 
-		// --- 1. Отрисовка Прогресс-бара (логика без изменений) ---
+		// --- 1. Отрисовка Прогресс-бара ---
 		const totalVerdicts = Object.values(verdictCounts).reduce((a, b) => a + b, 0);
 		if (totalVerdicts > 0) {
-			const segments = {
-				'True': { id: 'true-segment', label: 'Правда', count: verdictCounts['True'] || 0 },
-				'False': { id: 'false-segment', label: 'Ложь', count: verdictCounts['False'] || 0 },
-				'Partly True/Manipulation': { id: 'manipulation-segment', label: 'Манипуляция', count: verdictCounts['Partly True/Manipulation'] || 0 },
-			};
+			// Определяем порядок: Зеленый, Красный, Серый
+			const segments = [
+				{ id: 'true-segment', count: verdictCounts['True'] || 0 },
+				{ id: 'false-segment', count: verdictCounts['False'] || 0 },
+				{ id: 'manipulation-segment', count: verdictCounts['Unverifiable'] || 0 } // Используем Unverifiable
+			];
 
-			for (const key in segments) {
-				const segment_data = segments[key];
+			segments.forEach(segment_data => {
 				if (segment_data.count > 0) {
 					const percentage = (segment_data.count / totalVerdicts) * 100;
 					const segmentDiv = document.createElement('div');
 					segmentDiv.id = segment_data.id;
 					segmentDiv.className = 'progress-segment';
 					segmentDiv.style.width = percentage + '%';
-					segmentDiv.textContent = `${segment_data.label} (${Math.round(percentage)}%)`;
+					segmentDiv.textContent = segment_data.count; // Внутри блока только цифра
 					progressContainer.appendChild(segmentDiv);
 				}
-			}
+			});
 		}
 
-		// --- 2. Отрисовка Отчета (логика без изменений) ---
+		// --- 2. Вывод средней уверенности ---
+		if (average_confidence !== undefined) {
+			confidenceContainer.textContent = `Average confidence: ${average_confidence}%`;
+		}
+
+		// --- 3. Отрисовка Текстового Отчета ---
 		let reportHTML = `
 			<div id="report-summary">
 				${summary_html.replace(/\n/g, '<br>')}
@@ -170,14 +173,9 @@ document.addEventListener('DOMContentLoaded', () => {
 			reportHTML += `</div>`;
 		});
 
-		reportHTML += `
-				</div> 
-			</div>
-		`;
-
+		reportHTML += `</div></div>`;
 		reportContainer.innerHTML = reportHTML;
-
-		// --- 3. Добавление логики для кнопки (логика без изменений) ---
+		
 		const toggleButton = document.getElementById('details-toggle');
 		const detailsContainer = document.getElementById('claim-list-container');
 		if (toggleButton) {
