@@ -1,7 +1,6 @@
 import os
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
-# ↓↓↓ ИЗМЕНЕНИЕ: Импортируем сам объект celery, а не отдельную задачу
 from tasks import celery as celery_app
 from celery.result import AsyncResult
 
@@ -23,26 +22,18 @@ def analyze():
     
     return jsonify({"task_id": task.id}), 202
 
-@app.route('/api/status/<task_id>', methods=['GET'])
+@@app.route('/api/status/<task_id>', methods=['GET'])
 def get_status(task_id):
-    # ↓↓↓ ИЗМЕНЕНИЕ: Передаем наш настроенный celery_app в AsyncResult
     task_result = AsyncResult(task_id, app=celery_app)
     
-    if task_result.successful():
-        result = task_result.get()
-        return jsonify({
-            "status": "SUCCESS",
-            "result": result
-        })
-    elif task_result.failed():
-        result = str(task_result.info)
-        return jsonify({
-            "status": "FAILURE",
-            "result": result
-        })
+    # ↓↓↓ ИЗМЕНЕНИЕ: Упрощаем и делаем логику более универсальной ↓↓↓
+    if task_result.state == 'SUCCESS':
+        return jsonify({'status': 'SUCCESS', 'result': task_result.get()})
+    elif task_result.state == 'FAILURE':
+        return jsonify({'status': 'FAILURE', 'result': str(task_result.info)})
     else:
-        # Задача еще выполняется (PENDING, STARTED, RETRY)
-        return jsonify({"status": task_result.state})
+        # Эта ветка теперь обрабатывает и PENDING, и наш новый PROGRESS
+        return jsonify({'status': task_result.state, 'info': task_result.info or {}})
 
 # Этот маршрут будет обслуживать главную страницу
 @app.route('/', defaults={'path': ''})

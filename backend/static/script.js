@@ -57,10 +57,15 @@ document.addEventListener('DOMContentLoaded', () => {
         pollingInterval = setInterval(async () => {
             try {
                 const statusResponse = await fetch(`/api/status/${taskId}`);
-                if (!statusResponse.ok) throw new Error('Сервер вернул ошибку при проверке статуса.');
+                if (!statusResponse.ok) {
+                    // Используем текст ошибки с сервера, если он есть
+                    const errorText = await statusResponse.text();
+                    throw new Error(errorText || 'Сервер вернул ошибку при проверке статуса.');
+                }
                 
                 const data = await statusResponse.json();
 
+                // ↓↓↓ ИЗМЕНЕНИЕ: Добавляем обработку нового формата ответа ↓↓↓
                 if (data.status === 'SUCCESS') {
                     clearInterval(pollingInterval);
                     statusSection.style.display = 'none';
@@ -70,13 +75,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     statusSection.style.display = 'block';
                     statusText.textContent = `Произошла ошибка при обработке: ${data.result}`;
                 } else {
-                    statusText.textContent = 'Анализ в процессе... Это может занять несколько минут.';
+                    // Эта ветка теперь обрабатывает PENDING, PROGRESS и другие промежуточные состояния
+                    const message = data.info && data.info.status_message 
+                        ? data.info.status_message 
+                        : 'Анализ в процессе...'; // Сообщение по умолчанию
+                    statusText.textContent = message;
                 }
             } catch (error) {
                 clearInterval(pollingInterval);
                 statusText.textContent = `Критическая ошибка опроса: ${error.message}`;
             }
-        }, 5000);
+        }, 3000); // Уменьшим интервал до 3 секунд для более плавного обновления
     }
 
     function displayResults(data) {
