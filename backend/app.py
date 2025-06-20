@@ -22,18 +22,25 @@ def analyze():
     
     return jsonify({"task_id": task.id}), 202
 
-@app.route('/api/status/<task_id>', methods=['GET'])
+@@app.route('/api/status/<task_id>', methods=['GET'])
 def get_status(task_id):
     task_result = AsyncResult(task_id, app=celery_app)
     
-    # ↓↓↓ ИЗМЕНЕНИЕ: Упрощаем и делаем логику более универсальной ↓↓↓
     if task_result.state == 'SUCCESS':
         return jsonify({'status': 'SUCCESS', 'result': task_result.get()})
+    
     elif task_result.state == 'FAILURE':
-        return jsonify({'status': 'FAILURE', 'result': str(task_result.info)})
+        # Создаем более надежный ответ об ошибке
+        response = {
+            'status': 'FAILURE',
+            'result': str(task_result.info) # .info содержит исключение
+        }
+        return jsonify(response), 500 # Возвращаем 500, чтобы фронтенд понял, что это ошибка
+        
     else:
         # Эта ветка теперь обрабатывает и PENDING, и наш новый PROGRESS
         return jsonify({'status': task_result.state, 'info': task_result.info or {}})
+
 
 # Этот маршрут будет обслуживать главную страницу
 @app.route('/', defaults={'path': ''})
