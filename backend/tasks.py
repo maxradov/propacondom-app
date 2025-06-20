@@ -16,7 +16,7 @@ GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')
 if GEMINI_API_KEY:
     genai.configure(api_key=GEMINI_API_KEY)
 
-db = firestore.Client(project='propacondom')
+db = firestore.Client()
 
 def get_video_id(url):
     """Надежно извлекает ID видео из любого варианта URL YouTube."""
