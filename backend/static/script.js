@@ -2,24 +2,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const urlInput = document.getElementById('youtube-url');
     const checkBtn = document.getElementById('factcheck-btn');
     const statusSection = document.getElementById('status-section');
-    // ↓↓↓ ИЗМЕНЕНИЕ: Получаем новый элемент для лога ↓↓↓
     const statusLog = document.getElementById('status-log');
     const resultSection = document.getElementById('result-section');
-    const langSwitcher = document.getElementById('lang-switcher');
 
-    let currentLang = 'en';
     let pollingInterval;
-    // ↓↓↓ ИЗМЕНЕНИЕ: Переменная для хранения последнего сообщения ↓↓↓
     let lastStatusMessage = '';
-
-    langSwitcher.addEventListener('click', (e) => {
-        e.preventDefault();
-        if (e.target.classList.contains('lang-link')) {
-            langSwitcher.querySelector('.active').classList.remove('active');
-            e.target.classList.add('active');
-            currentLang = e.target.dataset.lang;
-        }
-    });
 
     checkBtn.addEventListener('click', async () => {
         const videoUrl = urlInput.value.trim();
@@ -30,18 +17,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
         clearInterval(pollingInterval);
         resultSection.style.display = 'none';
-        // ↓↓↓ ИЗМЕНЕНИЕ: Очищаем лог и сбрасываем последнее сообщение ↓↓↓
         statusLog.innerHTML = ''; 
         lastStatusMessage = '';
         
-        statusLog.innerHTML = '<p>Отправка запроса на анализ...</p>'; // Начальное сообщение
+        statusLog.innerHTML = '<p>Отправка запроса на анализ...</p>';
         statusSection.style.display = 'block';
 
         try {
+            // Определяем язык браузера пользователя и берем основную часть (напр. "en" из "en-US")
+            const userLang = (navigator.language || navigator.userLanguage).split('-')[0];
+
             const analyzeResponse = await fetch('/api/analyze', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ url: videoUrl, lang: currentLang })
+                body: JSON.stringify({ url: videoUrl, lang: userLang })
             });
 
             if (!analyzeResponse.ok) {
@@ -73,13 +62,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     clearInterval(pollingInterval);
                     statusLog.innerHTML += `<p style="color:red;">Произошла ошибка при обработке: ${data.result}</p>`;
                 } else {
-                    // ↓↓↓ ИЗМЕНЕНИЕ: Логика добавления новых сообщений в лог ↓↓↓
                     const newMessage = data.info && data.info.status_message ? data.info.status_message : null;
-                    // Добавляем сообщение, только если оно новое
                     if (newMessage && newMessage !== lastStatusMessage) {
                         statusLog.innerHTML += `<p>${newMessage}</p>`;
                         lastStatusMessage = newMessage;
-                        // Автоматически прокручиваем лог вниз
                         statusLog.scrollTop = statusLog.scrollHeight;
                     }
                 }
@@ -90,14 +76,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 3000);
     }
     
-    // ... (функция displayResults и остальной код без изменений) ...
 	function displayResults(data) {
 		const resultSection = document.getElementById('result-section');
 		const progressContainer = document.getElementById('progress-container');
 		const confidenceContainer = document.getElementById('confidence-container');
 		const reportContainer = document.getElementById('report-container');
 
-		// Очищаем предыдущие результаты
 		progressContainer.innerHTML = '';
 		confidenceContainer.innerHTML = '';
 		reportContainer.innerHTML = '';
@@ -116,11 +100,16 @@ document.addEventListener('DOMContentLoaded', () => {
 		// --- 1. Отрисовка Прогресс-бара ---
 		const totalVerdicts = Object.values(verdictCounts).reduce((a, b) => a + b, 0);
 		if (totalVerdicts > 0) {
-			// Определяем порядок: Зеленый, Красный, Серый
+            const tooltips = {
+                'True': 'True statements',
+                'False': 'False statements',
+                'Unverifiable': 'Unverifiable or manipulative statements'
+            };
+            
 			const segments = [
-				{ id: 'true-segment', count: verdictCounts['True'] || 0 },
-				{ id: 'false-segment', count: verdictCounts['False'] || 0 },
-				{ id: 'manipulation-segment', count: verdictCounts['Unverifiable'] || 0 } // Используем Unverifiable
+				{ type: 'True', count: verdictCounts['True'] || 0, id: 'true-segment' },
+				{ type: 'False', count: verdictCounts['False'] || 0, id: 'false-segment' },
+				{ type: 'Unverifiable', count: verdictCounts['Unverifiable'] || 0, id: 'unverifiable-segment' }
 			];
 
 			segments.forEach(segment_data => {
@@ -130,7 +119,8 @@ document.addEventListener('DOMContentLoaded', () => {
 					segmentDiv.id = segment_data.id;
 					segmentDiv.className = 'progress-segment';
 					segmentDiv.style.width = percentage + '%';
-					segmentDiv.textContent = segment_data.count; // Внутри блока только цифра
+					segmentDiv.textContent = segment_data.count;
+                    segmentDiv.title = tooltips[segment_data.type]; // <-- Добавляем подсказку
 					progressContainer.appendChild(segmentDiv);
 				}
 			});

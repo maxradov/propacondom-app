@@ -1,37 +1,115 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
 
 :root {
-    --bg-color: #121212;
-    --text-color: #E0E0E0;
-    --primary-color: #FFFFFF;
-    --secondary-color: #A0A0A0;
-    --surface-color: #1E1E1E;
-    --border-color: #333333;
-    --color-true: #2E7D32;
-    --color-false: #C62828;
-    --color-manipulation: #FF8F00;
-    --color-nodata: #545454;
+    --bg-color: #f4f6f8;
+    --text-color: #212529;
+    --primary-color: #007bff;
+    --secondary-color: #6c757d;
+    --surface-color: #ffffff;
+    --border-color: #dee2e6;
+    --color-true: #28a745;
+    --color-false: #dc3545;
+    --color-unverifiable: #6c757d;
 }
 
-/* ... (основные стили body, header, input, button остаются без изменений) ... */
-body, html { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-color); }
-main { max-width: 800px; margin: 0 auto; padding: 2rem; }
-h1, h2 { color: var(--primary-color); text-align: center; }
-h1 { font-size: 3rem; margin-bottom: 0.5rem;}
-h2 { font-size: 1.8rem; margin-bottom: 1.5rem; }
-/* ... */
+body, html {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
 
-/* --- Стили для Прогресс-бара --- */
+main {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.description {
+    font-size: 1.25rem;
+    color: var(--secondary-color);
+}
+
+.input-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+#youtube-url {
+    width: 100%;
+    max-width: 600px;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background-color: var(--surface-color);
+}
+
+#factcheck-btn {
+    width: 100%;
+    max-width: 300px;
+    padding: 1rem;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #fff;
+    background-color: var(--primary-color);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+#factcheck-btn:hover {
+    background-color: #0056b3;
+}
+
+.status-section {
+    text-align: center;
+}
+.loader {
+    border: 4px solid #e9ecef;
+    border-top: 4px solid var(--primary-color);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+}
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+.status-log {
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    padding: 1rem;
+    margin-top: 1rem;
+    min-height: 50px;
+    max-height: 200px;
+    overflow-y: auto;
+    text-align: left;
+}
+
+.result-section {
+    margin-top: 2rem;
+}
+
 .progress-container {
     display: flex;
     width: 100%;
-    height: 35px; /* <-- Увеличили высоту */
+    height: 35px;
     border-radius: 8px;
     overflow: hidden;
-    margin-bottom: 2rem;
     font-weight: bold;
-    font-size: 0.9rem;
+    font-size: 1rem;
 }
+
 .progress-segment {
     height: 100%;
     transition: width 0.5s ease-in-out;
@@ -39,26 +117,24 @@ h2 { font-size: 1.8rem; margin-bottom: 1.5rem; }
     align-items: center;
     justify-content: center;
     color: white;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
 }
 #true-segment { background-color: var(--color-true); }
 #false-segment { background-color: var(--color-false); }
-#manipulation-segment { background-color: var(--color-manipulation); }
-#nodata-segment { background-color: var(--color-nodata); }
+#unverifiable-segment { background-color: var(--color-unverifiable); }
 
-
-/* --- Стили для отчета --- */
 #report-container {
     background-color: var(--surface-color);
     border: 1px solid var(--border-color);
-    padding: 1.5rem;
-    border-radius: 5px;
-    line-height: 1.7;
+    padding: 2rem;
+    border-radius: 8px;
+    margin-top: 2rem;
 }
 
 #report-summary {
     margin-bottom: 1.5rem;
-    white-space: pre-wrap; /* Сохраняет переносы строк от AI */
+    white-space: pre-wrap;
+    font-size: 1.1rem;
 }
 
 .details-toggle {
@@ -68,72 +144,54 @@ h2 { font-size: 1.8rem; margin-bottom: 1.5rem; }
     text-decoration: underline;
     cursor: pointer;
     font-size: 1.1rem;
-    font-weight: bold;
     padding: 0.5rem 0;
-    margin-top: 1rem;
 }
 
 .claim-list {
-    margin-top: 1rem;
+    margin-top: 1.5rem;
     border-top: 1px solid var(--border-color);
 }
 
 .claim-item {
-    padding: 1rem 0;
+    padding: 1.5rem 0;
     border-bottom: 1px solid var(--border-color);
 }
 .claim-item:last-child {
     border-bottom: none;
 }
+
 .claim-text {
     font-weight: 500;
+    font-size: 1.1rem;
 }
+
 .claim-verdict {
     font-weight: bold;
-    padding: 0.2rem 0.5rem;
+    padding: 0.2rem 0.6rem;
     border-radius: 4px;
-    font-size: 0.9rem;
-    margin-left: 0.5rem;
+    font-size: 0.85rem;
+    margin-left: 0.75rem;
+    color: #fff;
+    white-space: nowrap;
 }
-.verdict-True { background-color: var(--color-true); color: white; }
-.verdict-False { background-color: var(--color-false); color: white; }
-.verdict-Partly { background-color: var(--color-manipulation); color: white; }
-.verdict-No-data, .verdict-Error { background-color: var(--color-nodata); color: white; }
+.verdict-True { background-color: var(--color-true); }
+.verdict-False { background-color: var(--color-false); }
+.verdict-Partly-True-Manipulation { background-color: #ffc107; color: #212529;}
+.verdict-No-data, .verdict-Processing-Error, .verdict-Unverifiable { background-color: var(--color-unverifiable); }
 
 .claim-explanation {
-    margin-top: 0.75rem;
+    margin-top: 1rem;
     color: var(--secondary-color);
     padding-left: 1rem;
-    border-left: 2px solid var(--border-color);
+    border-left: 3px solid var(--border-color);
 }
+
 .claim-sources {
-    margin-top: 0.5rem;
+    margin-top: 0.75rem;
     font-size: 0.9rem;
     padding-left: 1rem;
 }
 .claim-sources a {
     color: var(--primary-color);
-}
-
-/* ... (остальные стили, включая loader и media-query, без изменений) ... */
-.loader { border: 4px solid var(--surface-color); border-top: 4px solid var(--primary-color); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 1rem; }
-@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-/* ... */
-
-/* --- Стили для лога статуса --- */
-.status-log {
-    background-color: var(--surface-color);
-    border: 1px solid var(--border-color);
-    border-radius: 5px;
-    padding: 1rem;
-    margin-top: 1rem;
-    min-height: 50px;
-    max-height: 200px; /* Ограничиваем высоту, чтобы не растягивался */
-    overflow-y: auto; /* Добавляем скролл, если лог большой */
-    text-align: left;
-}
-
-.status-log p {
-    margin: 0 0 0.5rem 0; /* Небольшой отступ между сообщениями */
-    padding: 0;
+    margin-right: 0.5rem;
 }
