@@ -1,18 +1,15 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- ИСПРАВЛЕНИЕ: Добавлены все недостающие переменные ---
     const urlInput = document.getElementById('youtube-url');
     const checkBtn = document.getElementById('factcheck-btn');
     const statusSection = document.getElementById('status-section');
     const statusText = document.getElementById('status-text');
     const resultSection = document.getElementById('result-section');
     const langSwitcher = document.getElementById('lang-switcher');
-    // ИСПРАВЛЕНИЕ: Добавлена переменная reportContainer, которая использовалась, но не была объявлена.
-    const reportContainer = document.getElementById('report-container'); // Добавлено
+    // const reportContainer = document.getElementById('report-container'); // УБИРАЕМ ЭТУ СТРОКУ
 
     let currentLang = 'en';
     let pollingInterval;
 
-    // --- Логика переключения языка ---
     langSwitcher.addEventListener('click', (e) => {
         e.preventDefault();
         if (e.target.classList.contains('lang-link')) {
@@ -22,7 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- Логика кнопки "Фактчек" ---
     checkBtn.addEventListener('click', async () => {
         const videoUrl = urlInput.value.trim();
         if (!videoUrl) {
@@ -32,12 +28,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         clearInterval(pollingInterval);
         resultSection.style.display = 'none';
-        reportContainer.innerHTML = ''; // Очищаем старый отчет
+        resultSection.innerHTML = ''; // Очищаем старый отчет
         statusText.textContent = 'Отправка запроса на анализ...';
         statusSection.style.display = 'block';
 
         try {
-            // ИСПРАВЛЕНИЕ: Изменен URL с localhost на относительный путь
             const analyzeResponse = await fetch('/api/analyze', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -58,11 +53,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- Функция опроса статуса задачи ---
     function pollStatus(taskId) {
         pollingInterval = setInterval(async () => {
             try {
-                // ИСПРАВЛЕНИЕ: Изменен URL с localhost на относительный путь
                 const statusResponse = await fetch(`/api/status/${taskId}`);
                 if (!statusResponse.ok) throw new Error('Сервер вернул ошибку при проверке статуса.');
                 
@@ -81,14 +74,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             } catch (error) {
                 clearInterval(pollingInterval);
-                statusText.textContent = `Ошибка: ${error.message}`;
+                statusText.textContent = `Критическая ошибка опроса: ${error.message}`;
             }
         }, 5000);
     }
 
-    // --- Функция отображения финального результата ---
     function displayResults(data) {
-        resultSection.innerHTML = ''; // Полная очистка перед рендерингом
+        resultSection.innerHTML = '';
 
         if (data.error) {
             resultSection.innerHTML = `<h2>Ошибка анализа</h2><p>${data.error}</p>`;
@@ -112,8 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="progress-segment" style="width: ${manip_percent}%; background-color: var(--color-manipulation);" title="Манипуляция"><span>${Math.round(manip_percent)}%</span></div>
                     <div class="progress-segment" style="width: ${false_percent}%; background-color: var(--color-false);" title="Ложь"><span>${Math.round(false_percent)}%</span></div>
                     <div class="progress-segment" style="width: ${nodata_percent}%; background-color: var(--color-nodata);" title="Нет данных"><span>${Math.round(nodata_percent)}%</span></div>
-                </div>
-            `;
+                </div>`;
         }
 
         const summaryHTML = `<div id="report-summary">${data.summary_html.replace(/\n/g, '<br>')}</div>`;
@@ -126,8 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p class="claim-text">${item.claim} <span class="claim-verdict verdict-${verdictClass}">${item.verdict}</span></p>
                     <p class="claim-explanation">${item.explanation}</p>
                     ${item.sources && item.sources.length > 0 ? `<div class="claim-sources"><strong>Источники:</strong><br/>${item.sources.map(s => `<a href="${s}" target="_blank" rel="noopener noreferrer">${s}</a>`).join('<br/>')}</div>` : ''}
-                </div>
-            `;
+                </div>`;
         });
         detailsHTML += '</div>';
 
@@ -140,8 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 ${summaryHTML}
                 ${toggleButtonHTML}
                 ${detailsHTML}
-            </div>
-        `;
+            </div>`;
         resultSection.innerHTML = finalHTML;
         resultSection.style.display = 'block';
         
