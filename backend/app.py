@@ -1,10 +1,10 @@
 import os
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
-from tasks import fact_check_video  # <-- Импортируем саму задачу
+# ↓↓↓ ИЗМЕНЕНИЕ: Импортируем сам объект celery, а не отдельную задачу
+from tasks import celery as celery_app
 from celery.result import AsyncResult
 
-# Flask автоматически найдет папки 'static' и 'templates'
 app = Flask(__name__)
 CORS(app)
 
@@ -15,18 +15,18 @@ def analyze():
         return jsonify({"error": "URL is required"}), 400
     
     video_url = data['url']
-    target_lang = data.get('lang', 'en') # Получаем язык из запроса
+    target_lang = data.get('lang', 'en')
 
-    # Запускаем задачу Celery асинхронно
-    task = fact_check_video.delay(video_url, target_lang)
+    # Здесь мы используем celery_app.send_task, чтобы запустить задачу по имени
+    # Это более надежный способ, чем импорт самой функции задачи
+    task = celery_app.send_task('tasks.fact_check_video', args=[video_url, target_lang])
     
-    # Возвращаем клиенту ID задачи
     return jsonify({"task_id": task.id}), 202
 
 @app.route('/api/status/<task_id>', methods=['GET'])
 def get_status(task_id):
-    # Проверяем статус задачи по ее ID
-    task_result = AsyncResult(task_id)
+    # ↓↓↓ ИЗМЕНЕНИЕ: Передаем наш настроенный celery_app в AsyncResult
+    task_result = AsyncResult(task_id, app=celery_app)
     
     if task_result.successful():
         result = task_result.get()
@@ -35,16 +35,14 @@ def get_status(task_id):
             "result": result
         })
     elif task_result.failed():
-        # Если внутри задачи произошла ошибка, возвращаем ее
-        result = str(task_result.info) # task_result.info содержит исключение
+        result = str(task_result.info)
         return jsonify({
             "status": "FAILURE",
             "result": result
         })
     else:
-        # Задача еще выполняется
+        # Задача еще выполняется (PENDING, STARTED, RETRY)
         return jsonify({"status": task_result.state})
-
 
 # Этот маршрут будет обслуживать главную страницу
 @app.route('/', defaults={'path': ''})
