@@ -22,7 +22,6 @@ def get_video_id(url):
     """Надежно извлекает ID видео из любого варианта URL YouTube."""
     if not url:
         return None
-    # Простое извлечение ID для стандартных ссылок
     regex = r"(?:v=|\/embed\/|\/v\/|youtu\.be\/|\/shorts\/)([a-zA-Z0-9_-]{11})"
     match = re.search(regex, url)
     if match:
@@ -51,21 +50,29 @@ def fact_check_video(self, video_url, target_lang='en'):
         print(f"[LOG-INFO] Кэш не найден. Начинается полный анализ.")
         self.update_state(state='PROGRESS', meta={'status_message': 'Извлечение субтитров...'})
 
+        # --- САМОДИАГНОСТИКА ---
+        cookie_path = '/app/cookies.txt'
+        print(f"[LOG-DEBUG] Проверяем файл куки по пути: {cookie_path}")
+        if os.path.exists(cookie_path):
+            with open(cookie_path, 'r', encoding='utf-8') as f:
+                first_line = f.readline().strip()
+            print(f"[LOG-DEBUG] Файл куки НАЙДЕН. Его первая строка: '{first_line}'")
+        else:
+            print(f"!!! [LOG-DEBUG] ФАЙЛ КУКИ НЕ НАЙДЕН по пути {cookie_path}!")
+        # --- КОНЕЦ САМОДИАГНОСТИКИ ---
+
         info = None
         try:
             print(f"[LOG-STEP 2] Вызов yt-dlp для получения информации о видео и списка субтитров...")
-            ydl_opts_list = {
-                'listsubtitles': True,
-                'quiet': True,
-                'nocheckcertificate': True, # <--- Вот здесь ставится запятая
-                'cookiefile': '/app/cookies.txt' # <--- А вот новая опция
-            }
+            ydl_opts_list = {'listsubtitles': True, 'quiet': True, 'nocheckcertificate': True, 'cookiefile': cookie_path}
             info = yt_dlp.YoutubeDL(ydl_opts_list).extract_info(video_url, download=False)
             print(f"[LOG-SUCCESS] yt-dlp успешно получил информацию о видео.")
         except Exception as ytdl_error:
             print(f"!!! [LOG-CRITICAL] ОШИБКА на шаге 2 при вызове yt-dlp: {ytdl_error}")
             raise ytdl_error
 
+        # ... (остальной код остается без изменений) ...
+        
         if not info: raise ValueError("yt-dlp не смог получить информацию о видео.")
         
         available_subs = info.get('automatic_captions', {}) or info.get('subtitles', {})
@@ -77,7 +84,7 @@ def fact_check_video(self, video_url, target_lang='en'):
 
         print(f"[LOG-STEP 3] Загрузка файла субтитров для языка: {detected_lang}...")
         subtitle_filename = f'subtitles_{video_id}.{detected_lang}.vtt'
-        ydl_opts_download = {'writeautomaticsub': True, 'subtitleslangs': [detected_lang], 'skip_download': True, 'outtmpl': f'subtitles_{video_id}'}
+        ydl_opts_download = {'writeautomaticsub': True, 'subtitleslangs': [detected_lang], 'skip_download': True, 'outtmpl': f'subtitles_{video_id}', 'cookiefile': cookie_path}
         with yt_dlp.YoutubeDL(ydl_opts_download) as ydl: ydl.download([video_url])
         print(f"[LOG-SUCCESS] Файл субтитров загружен. Идет очистка...")
         
@@ -118,9 +125,6 @@ def fact_check_video(self, video_url, target_lang='en'):
         
         self.update_state(state='PROGRESS', meta={'status_message': 'Все утверждения проверены. Формирование итогового отчета...'})
         
-        # Мы убрали подсчет вердиктов, так как он не использовался. Если понадобится, можно вернуть.
-        # verdict_counts = {"True": 0, "False": 0, "Partly True/Manipulation": 0, "No data": 0, "Processing Error": 0}
-
         print(f"[LOG-STEP 6] Вызов Gemini для генерации итогового отчета...")
         summary_prompt = f"Act as an editor-in-chief for a fact-checking agency. Based on the provided JSON data, write a final summary report in the language with code: '{target_lang}'. Report structure: 1. Overall Verdict. 2. Overall Assessment (2-3 sentences). 3. Key Points. Data: {json.dumps(all_results, ensure_ascii=False)}"
         final_report_response = model.generate_content(summary_prompt, safety_settings=safety_settings)
@@ -128,7 +132,7 @@ def fact_check_video(self, video_url, target_lang='en'):
         
         data_to_save_in_db = {
             "summary_html": final_report_response.text,
-            "verdict_counts": {}, # Заглушка
+            "verdict_counts": {},
             "detailed_results": all_results,
             "created_at": firestore.SERVER_TIMESTAMP 
         }
@@ -145,6 +149,4 @@ def fact_check_video(self, video_url, target_lang='en'):
 
     except Exception as e:
         print(f"!!! [LOG-CRITICAL] Произошла критическая ошибка в задаче: {e}")
-        # Передаем исключение дальше, чтобы Celery сам его обработал.
-        # Это надежнее и должно предотвратить 'KeyError' в app.py
         raise e
