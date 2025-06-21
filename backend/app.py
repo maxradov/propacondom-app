@@ -51,3 +51,20 @@ def serve_spa(path):
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 8080))
     app.run(host='0.0.0.0', port=port)
+    
+# Добавьте этот код в конец файла app.py
+
+@app.route('/report/<analysis_id>')
+def show_report(analysis_id):
+    try:
+        doc_ref = db.collection('analyses').document(analysis_id)
+        doc = doc_ref.get()
+
+        if doc.exists:
+            report_data = doc.to_dict()
+            return render_template('report.html', report=report_data)
+        else:
+            return "Report not found", 404
+            
+    except Exception as e:
+        return f"An error occurred: {e}", 500
