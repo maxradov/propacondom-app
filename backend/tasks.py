@@ -2,7 +2,7 @@ import os
 import re
 import json
 import datetime
-import requests # <-- Using the new library
+import requests
 import google.generativeai as genai
 from celery import Celery
 from google.cloud import firestore
@@ -13,7 +13,7 @@ REDIS_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379/0')
 celery = Celery(__name__, broker=REDIS_URL, backend=REDIS_URL)
 
 GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')
-SEARCHAPI_KEY = os.environ.get('SEARCHAPI_KEY') # <-- Getting the new key
+SEARCHAPI_KEY = os.environ.get('SEARCHAPI_KEY')
 
 if GEMINI_API_KEY:
     genai.configure(api_key=GEMINI_API_KEY)
@@ -42,23 +42,16 @@ def fact_check_video(self, video_url, target_lang='en'):
                  cached_data['created_at'] = cached_data['created_at'].isoformat()
             return cached_data
 
-        # --- START OF CHANGES IN THIS BLOCK ---
-        print(f"[LOG-STEP 2] Requesting metadata and transcripts via SearchApi.io...")
         self.update_state(state='PROGRESS', meta={'status_message': 'Checking available languages...'})
-
         api_key = os.environ.get('SEARCHAPI_KEY')
-        # Requesting transcript and metadata at the same time
-        params = {
-            'engine': 'youtube_transcripts', 'video_id': video_id, 'api_key': api_key
-        }
-        response = requests.get('https://www.searchapi.io/api/v1/search', params=params)
-        response.raise_for_status()
-        metadata = response.json()
+        params_list_langs = {'engine': 'youtube_transcripts', 'video_id': video_id, 'api_key': api_key}
+        response_list_langs = requests.get('https://www.searchapi.io/api/v1/search', params=params_list_langs)
+        response_list_langs.raise_for_status()
+        metadata = response_list_langs.json()
 
         if 'error' in metadata and 'available_languages' not in metadata:
              raise Exception(f"SearchApi.io returned an error: {metadata['error']}")
-
-        # Extracting video title and thumbnail from metadata
+        
         video_title = metadata.get('video_details', {}).get('title', 'Video Title Not Found')
         thumbnail_url = metadata.get('video_details', {}).get('thumbnail', '')
         
@@ -70,32 +63,76 @@ def fact_check_video(self, video_url, target_lang='en'):
         
         self.update_state(state='PROGRESS', meta={'status_message': f'Extracting subtitles ({detected_lang})...'})
         
-        # If the transcript for the desired language didn't arrive with the first request, make a second one
-        if not metadata.get('transcripts'):
-            params['lang'] = detected_lang
-            response_transcript = requests.get('https://www.searchapi.io/api/v1/search', params=params)
-            response_transcript.raise_for_status()
-            transcript_data = response_transcript.json()
-        else:
-            transcript_data = metadata
-
+        params_get_transcript = {'engine': 'youtube_transcripts', 'video_id': video_id, 'lang': detected_lang, 'api_key': api_key}
+        response_transcript = requests.get('https://www.searchapi.io/api/v1/search', params=params_get_transcript)
+        response_transcript.raise_for_status()
+        transcript_data = response_transcript.json()
+        
         if 'error' in transcript_data: raise Exception(f"SearchApi.io returned an error: {transcript_data['error']}")
         if not transcript_data.get('transcripts'): raise ValueError(f"API did not return subtitles for language '{detected_lang}'.")
 
         clean_text = " ".join([item['text'] for item in transcript_data['transcripts']])
-        # --- END OF CHANGES IN THIS BLOCK ---
+        
+        self.update_state(state='PROGRESS', meta={'status_message': 'Text analysis...'})
+        model = genai.GenerativeModel('gemini-1.5-pro') # Using the pro model as discussed
+        safety_settings = {'HARM_CATEGORY_HARASSMENT': 'BLOCK_NONE', 'HARM_CATEGORY_HATE_SPEECH': 'BLOCK_NONE'}
 
-        # ... (The rest of the code with Gemini calls and stats calculation remains unchanged) ...
-        # ... ... ...
+        prompt_claims = f"Analyze the following transcript. Extract the 5 most important and significant factual claims. Return them as a numbered list. Transcript: --- {clean_text} ---"
+        response_claims = model.generate_content(prompt_claims, safety_settings=safety_settings)
+        claims_list = [re.sub(r'^\d+\.\s*', '', line).strip() for line in response_claims.text.strip().split('\n') if line.strip() and re.match(r'^\d+\.', line)]
+        
+        if not claims_list: raise ValueError("AI did not return claims in the expected format.")
+
+        self.update_state(state='PROGRESS', meta={'status_message': f'Extracted {len(claims_list)} statements. Fact-checking...'})
+        
+        claims_json_string = json.dumps(claims_list, ensure_ascii=False)
+        prompt_fc_batch = f"""
+        Fact-check each claim in the following JSON array. For each claim, return a single, valid JSON object on its own line. Do not group them into a JSON array.
+        Each JSON object must have these keys: "claim", "verdict" (True, False, Partly True/Manipulation, No data), "confidence_percentage" (integer 0-100), "explanation" (in {target_lang}), "sources" (an array of URL strings).
+        Claims to check: {claims_json_string}
+        """
+        response_fc_batch = model.generate_content(prompt_fc_batch, safety_settings=safety_settings)
+        
+        all_results = []
+        for line in response_fc_batch.text.strip().split('\n'):
+            try:
+                json_obj = json.loads(line.strip())
+                all_results.append(json_obj)
+            except json.JSONDecodeError:
+                print(f"[LOG-WARNING] Could not parse line as JSON, skipping: '{line}'")
+                continue
+        
+        if not all_results: raise ValueError("AI did not return any valid JSON objects for the fact-check.")
+
+        self.update_state(state='PROGRESS', meta={'status_message': 'Generating final report...'})
+
+        verdict_counts = {"True": 0, "False": 0, "Unverifiable": 0}
+        confidence_sum = 0
+        claims_with_confidence = 0
+        for res in all_results:
+            verdict = res.get("verdict", "Unverifiable")
+            if verdict == "True": verdict_counts["True"] += 1
+            elif verdict == "False": verdict_counts["False"] += 1
+            else: verdict_counts["Unverifiable"] += 1
+            if "confidence_percentage" in res:
+                confidence_sum += int(res["confidence_percentage"])
+                claims_with_confidence += 1
+        average_confidence = round(confidence_sum / claims_with_confidence) if claims_with_confidence > 0 else 0
+        
+        summary_prompt = f"""
+        Analyze the provided list of fact-checked claims. Return ONLY a single JSON object with the following keys: "overall_verdict", "overall_assessment", and "key_points".
+        Data: {json.dumps(all_results, ensure_ascii=False)}
+        """
+        final_report_response = model.generate_content(summary_prompt, safety_settings=safety_settings)
+        
+        summary_match = re.search(r'\{.*\}', final_report_response.text, re.DOTALL)
+        if summary_match: summary_data = json.loads(summary_match.group(0))
+        else: summary_data = {"overall_verdict": "Error", "overall_assessment": "Failed to parse summary from AI.", "key_points": []}
 
         data_to_save_in_db = {
-            "video_url": video_url, 
-            "video_title": video_title,
-            "thumbnail_url": thumbnail_url,
-            "summary_data": summary_data,
-            "verdict_counts": verdict_counts,
-            "average_confidence": average_confidence,
-            "detailed_results": all_results,
+            "video_url": video_url, "video_title": video_title, "thumbnail_url": thumbnail_url,
+            "summary_data": summary_data, "verdict_counts": verdict_counts,
+            "average_confidence": average_confidence, "detailed_results": all_results,
             "created_at": firestore.SERVER_TIMESTAMP 
         }
         
