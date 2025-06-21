@@ -1,11 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Этот код выполняется, когда HTML-страница полностью загружена
     if (typeof reportData !== 'undefined') {
-        // Если данные отчета существуют, вызываем функцию для их отображения
         displayResults(reportData);
     }
 
-    // Ищем кнопку "Share" и назначаем ей обработчик клика
     const shareBtn = document.getElementById('share-btn');
     if (shareBtn) {
         shareBtn.addEventListener('click', shareResults);
@@ -13,9 +10,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function displayResults(data) {
-    // Находим все необходимые контейнеры на странице
     const reportWrapper = document.querySelector('.report-wrapper');
-    if (!reportWrapper) { return; } // Выходим, если нет главного контейнера
+    if (!reportWrapper) { return; }
 
     const progressContainer = reportWrapper.querySelector('#progress-container');
     const confidenceContainer = reportWrapper.querySelector('#confidence-container');
@@ -34,9 +30,7 @@ function displayResults(data) {
     const totalVerdicts = Object.values(verdict_counts).reduce((a, b) => a + b, 0);
     progressContainer.innerHTML = '';
     
-    // --- ВОССТАНОВЛЕНА ЛОГИКА ПРОГРЕСС-БАРА С ПОДСКАЗКАМИ ---
     if (totalVerdicts > 0) {
-        // Определяем тексты подсказок
         const tooltips = {
             'True': 'True statements',
             'False': 'False statements',
@@ -60,24 +54,26 @@ function displayResults(data) {
                 segmentDiv.className = 'progress-segment';
                 segmentDiv.style.width = percentage + '%';
                 segmentDiv.textContent = segment_data.count;
-                segmentDiv.title = tooltips[segment_data.type]; // <-- ВОТ ЭТА СТРОКА ДОБАВЛЯЕТ ПОДСКАЗКИ
+                segmentDiv.title = tooltips[segment_data.type];
                 progressContainer.appendChild(segmentDiv);
             }
         });
     }
 
-    // --- ВОССТАНОВЛЕНА ЛОГИКА ОТОБРАЖЕНИЯ СТАТИСТИКИ ПОД БАРОМ ---
+    // --- ИЗМЕНЕНИЕ ЗДЕСЬ ---
+    // Просто меняем порядок добавления в массив stats
     const stats = [];
-    if (average_confidence !== undefined) {
-        stats.push(`Average confidence: ${average_confidence}%`);
-    }
     if (confirmed_credibility !== undefined) {
         stats.push(`Confirmed credibility: ${confirmed_credibility}%`);
     }
+    if (average_confidence !== undefined) {
+        stats.push(`Average confidence: ${average_confidence}%`);
+    }
     confidenceContainer.innerHTML = stats.join(' <span class="stats-separator">|</span> ');
+    // --- КОНЕЦ ИЗМЕНЕНИЯ ---
 
 
-    // --- ВОССТАНОВЛЕНА ПОЛНАЯ ЛОГИКА РЕНДЕРИНГА ТЕКСТОВОГО ОТЧЕТА ---
+    // Рендеринг текстового отчета
     let reportHTML = `
         <div id="report-summary">
             <h2>${summary_data.overall_verdict || 'No summary verdict'}</h2>
@@ -111,7 +107,6 @@ function displayResults(data) {
     reportHTML += `</div></div>`;
     reportContainer.innerHTML = reportHTML;
     
-    // --- ВОССТАНОВЛЕНА ЛОГИКА КНОПКИ ДЛЯ ДЕТАЛЬНОГО РАЗБОРА ---
     const toggleButton = document.getElementById('details-toggle');
     const detailsContainer = document.getElementById('claim-list-container');
     if (toggleButton && detailsContainer) {
@@ -123,7 +118,6 @@ function displayResults(data) {
     }
 }
 
-// --- ВОССТАНОВЛЕНА ФУНКЦИЯ SHARE ---
 function shareResults() {
     const shareData = {
         title: 'Fact-Check Report',
