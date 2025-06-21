@@ -147,8 +147,15 @@ def fact_check_video(self, video_url, target_lang='en'):
         }
         
         doc_ref.set(data_to_save_in_db)
-        return doc_ref.get().to_dict()
+
+        # --- ИЗМЕНЕНИЕ 2: Возвращаем JSON-совместимые данные ---
+        data_to_return = data_to_save_in_db.copy()
+        # Конвертируем Timestamp в строку, чтобы избежать ошибок при сериализации
+        data_to_return["created_at"] = datetime.datetime.now(datetime.timezone.utc).isoformat()
+        return data_to_return
 
     except Exception as e:
         print(f"!!! [TASK_CRITICAL] A critical error occurred in the task: {e}")
+        # Обновляем состояние задачи с информацией об ошибке
+        self.update_state(state='FAILURE', meta={'exc_type': type(e).__name__, 'exc_message': str(e)})
         raise e
