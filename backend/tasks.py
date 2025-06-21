@@ -39,7 +39,6 @@ def fact_check_video(self, video_url, target_lang='en'):
         if doc_ref.get().exists:
             return doc_ref.get().to_dict()
     
-    try:
          # --- 2. ПОЛУЧЕНИЕ ДЕТАЛЕЙ ВИДЕО (ИСПРАВЛЕННАЯ ЛОГИКА) ---
         self.update_state(state='PROGRESS', meta={'status_message': 'Fetching video details...'})
         params_details = {'engine': 'youtube_video', 'video_id': video_id, 'api_key': search_api_key}
