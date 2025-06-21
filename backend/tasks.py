@@ -8,13 +8,15 @@ from celery import Celery
 from google.cloud import firestore
 from urllib.parse import urlparse, parse_qs
 
-# --- Settings (без изменений) ---
+# --- Settings ---
 REDIS_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379/0')
-celery = Celery(__name__, broker=REDIS_URL, backend=REDIS_URL) 
+celery = Celery(__name__, broker=REDIS_URL, backend=REDIS_URL)
+
+# Ключи все еще можно определить здесь для общей доступности, но в задаче мы их перечитаем
 GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')
-SEARCHAPI_KEY = os.environ.get('SEARCHAPI_KEY')
 if GEMINI_API_KEY:
     genai.configure(api_key=GEMINI_API_KEY)
+
 db = firestore.Client()
 
 def get_video_id(url):
@@ -26,20 +28,37 @@ def get_video_id(url):
 @celery.task(bind=True, name='tasks.fact_check_video', time_limit=600)
 def fact_check_video(self, video_url, target_lang='en'):
     try:
-        # ... (код получения video_id, кэширования, получения деталей видео и транскрипции остается без изменений) ...
+        # --- ИЗМЕНЕНИЕ 1: Добавляем логирование и надежное получение ключа API ---
+        print(f"[TASK_START] Received URL: {video_url}")
+        
+        # Надежно получаем ключ API внутри задачи, как в старой рабочей версии
+        search_api_key = os.environ.get('SEARCHAPI_KEY')
+        if not search_api_key:
+            raise ValueError("SEARCHAPI_KEY environment variable not found or empty inside the task.")
+        
+        print(f"[TASK_INFO] Using Search API Key ending with: ...{search_api_key[-4:]}")
+
         video_id = get_video_id(video_url)
         if not video_id: raise ValueError(f"Could not extract video ID from URL: {video_url}")
+        
+        print(f"[TASK_INFO] Extracted Video ID: {video_id}")
 
         doc_ref = db.collection('analyses').document(f"{video_id}_{target_lang}")
         doc = doc_ref.get()
         if doc.exists:
+            print(f"[TASK_SUCCESS] Cache hit for video_id {video_id}. Returning from Firestore.")
             return doc.to_dict()
 
         self.update_state(state='PROGRESS', meta={'status_message': 'Fetching video details...'})
-        params_details = {'engine': 'youtube_video','video_id': video_id,'api_key': SEARCHAPI_KEY}
+        
+        # --- ИЗМЕНЕНИЕ 2: Используем локальную переменную `search_api_key` во всех запросах ---
+        params_details = {'engine': 'youtube_video','video_id': video_id,'api_key': search_api_key}
         details_response = requests.get('https://www.searchapi.io/api/v1/search', params=params_details)
+        details_response.raise_for_status() # Убедимся, что запрос успешен
         details_data = details_response.json()
+        
         if 'error' in details_data: raise Exception(f"SearchApi.io (video details) error: {details_data['error']}")
+        
         video_details = details_data.get('video_details', {})
         video_title = video_details.get('title', 'Title Not Found')
         thumbnails = video_details.get('thumbnails', [])
@@ -47,9 +66,16 @@ def fact_check_video(self, video_url, target_lang='en'):
         if thumbnails:
             thumb_map = {thumb['quality']: thumb['url'] for thumb in thumbnails}
             thumbnail_url = thumb_map.get('high', thumb_map.get('medium', thumbnails[0].get('url', '')))
+        
+        print(f"[TASK_INFO] Fetched Title: {' '.join(video_title.split()[:5])}...")
 
+        # ... остальная часть кода также должна использовать `search_api_key` ...
         self.update_state(state='PROGRESS', meta={'status_message': 'Checking available languages...'})
-        params_list_langs = {'engine': 'youtube_transcripts', 'video_id': video_id, 'api_key': SEARCHAPI_KEY}
+        params_list_langs = {'engine': 'youtube_transcripts', 'video_id': video_id, 'api_key': search_api_key}
+        # ... и так далее для всех остальных вызовов requests.get
+
+        # (Весь остальной код анализа и сохранения остается таким же, как в последней версии,
+        # просто убедитесь, что все вызовы к searchapi.io используют `search_api_key`)
         response_list_langs = requests.get('https://www.searchapi.io/api/v1/search', params=params_list_langs)
         metadata = response_list_langs.json()
         if 'error' in metadata and 'available_languages' not in metadata: raise Exception(f"SearchApi.io returned an error: {metadata['error']}")
@@ -58,12 +84,13 @@ def fact_check_video(self, video_url, target_lang='en'):
         priority_langs = [target_lang, 'en', 'ru', 'uk']
         detected_lang = next((lang for lang in priority_langs if lang in available_langs), available_langs[0])
         self.update_state(state='PROGRESS', meta={'status_message': f'Extracting subtitles ({detected_lang})...'})
-        params_get_transcript = {'engine': 'youtube_transcripts', 'video_id': video_id, 'lang': detected_lang, 'api_key': SEARCHAPI_KEY}
+        params_get_transcript = {'engine': 'youtube_transcripts', 'video_id': video_id, 'lang': detected_lang, 'api_key': search_api_key}
         response_transcript = requests.get('https://www.searchapi.io/api/v1/search', params=params_get_transcript)
         transcript_data = response_transcript.json()
         if 'error' in transcript_data or not transcript_data.get('transcripts'): raise ValueError(f"API did not return subtitles for '{detected_lang}'.")
         clean_text = " ".join([item['text'] for item in transcript_data['transcripts']])
 
+        # ... (Код AI-анализа, подсчета статистики и сохранения в БД остается без изменений) ...
         self.update_state(state='PROGRESS', meta={'status_message': 'Analyzing text...'})
         model = genai.GenerativeModel('gemini-1.5-pro')
         safety_settings = {'HARM_CATEGORY_HARASSMENT': 'BLOCK_NONE', 'HARM_CATEGORY_HATE_SPEECH': 'BLOCK_NONE'}
@@ -86,7 +113,6 @@ def fact_check_video(self, video_url, target_lang='en'):
         if not all_results: raise ValueError("AI did not return any valid JSON objects for the fact-check.")
         self.update_state(state='PROGRESS', meta={'status_message': 'Generating final report...'})
 
-        # --- ИЗМЕНЕНИЕ ЗДЕСЬ: РАСЧЕТ СТАТИСТИКИ ---
         verdict_counts = {"True": 0, "False": 0, "Misleading": 0, "Partly True": 0, "Unverifiable": 0}
         confidence_sum = 0
         claims_with_confidence = 0
@@ -100,7 +126,6 @@ def fact_check_video(self, video_url, target_lang='en'):
         
         average_confidence = round(confidence_sum / claims_with_confidence) if claims_with_confidence > 0 else 0
         
-        # --- НОВЫЙ КОД: РАСЧЕТ "Confirmed Credibility" ---
         true_verdicts = verdict_counts.get("True", 0)
         total_verdicts = len(all_results)
         confirmed_credibility = round((true_verdicts / total_verdicts) * 100) if total_verdicts > 0 else 0
@@ -110,19 +135,19 @@ def fact_check_video(self, video_url, target_lang='en'):
         summary_match = re.search(r'\{.*\}', final_report_response.text, re.DOTALL)
         summary_data = json.loads(summary_match.group(0)) if summary_match else {}
 
-        # --- ИЗМЕНЕНИЕ ЗДЕСЬ: Добавляем новое поле в БД ---
         data_to_save_in_db = {
             "video_url": video_url, "video_title": video_title, "thumbnail_url": thumbnail_url,
             "summary_data": summary_data, "verdict_counts": verdict_counts,
             "average_confidence": average_confidence,
-            "confirmed_credibility": confirmed_credibility, # <--- НАШЕ НОВОЕ ПОЛЕ
+            "confirmed_credibility": confirmed_credibility, 
             "detailed_results": all_results,
             "created_at": firestore.SERVER_TIMESTAMP 
         }
         
         doc_ref.set(data_to_save_in_db)
+        print(f"[TASK_SUCCESS] Task for video_id {video_id} completed and saved to Firestore.")
         return doc_ref.get().to_dict()
 
     except Exception as e:
-        print(f"A critical error occurred in the task: {e}")
+        print(f"!!! [TASK_CRITICAL] A critical error occurred in the task: {e}")
         raise e
