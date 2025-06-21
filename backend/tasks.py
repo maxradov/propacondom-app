@@ -74,52 +74,58 @@ def fact_check_video(self, video_url, target_lang='en'):
         model = genai.GenerativeModel('gemini-1.5-flash')
         safety_settings = {'HARM_CATEGORY_HARASSMENT': 'BLOCK_NONE', 'HARM_CATEGORY_HATE_SPEECH': 'BLOCK_NONE'}
 
-        prompt_claims = f"Analyze the following transcript. Extract the 5 most important and significant factual claims. Return them as a numbered list. Transcript: --- {clean_text} ---"
+        # --- НАЧАЛО ИЗМЕНЕНИЙ ---
+
+        # 1. Более строгий промпт
+        prompt_claims = f"""
+        Analyze the following transcript. Extract the 5 most important and significant factual claims.
+        IMPORTANT: Your response MUST be ONLY a numbered list from 1 to 5. Do not add any introduction, preamble, or conclusion.
+        Transcript: --- {clean_text} ---
+        """
         response_claims = model.generate_content(prompt_claims, safety_settings=safety_settings)
-        claims_list = [re.sub(r'^\d+\.\s*', '', line).strip() for line in response_claims.text.strip().split('\n') if line.strip()]
+        
+        # 2. Более умный парсинг, который берет только строки, начинающиеся с цифры и точки.
+        claims_list = []
+        for line in response_claims.text.strip().split('\n'):
+            line = line.strip()
+            # Принимаем только строки, которые выглядят как "1. Текст..."
+            if re.match(r'^\d+\.', line):
+                # Убираем "1. " в начале, оставляем чистый текст
+                claim_text = re.sub(r'^\d+\.\s*', '', line)
+                claims_list.append(claim_text)
+        
+        # --- КОНЕЦ ИЗМЕНЕНИЙ ---
 
         self.update_state(state='PROGRESS', meta={'status_message': f'Извлечено {len(claims_list)} утверждений. Начинаю факт-чекинг...'})
         
+        if not claims_list:
+            raise ValueError("AI не вернул утверждений в нужном формате.")
+
         claims_json_string = json.dumps(claims_list, ensure_ascii=False)
-        
-        # --- НАЧАЛО ИЗМЕНЕНИЙ ---
-        
-        # 1. Улучшенный промпт
         prompt_fc_batch = f"""
         Fact-check each claim in the following JSON array of strings.
         Your response MUST be ONLY a single valid JSON array of objects. Do not include any text before or after the array.
-        Each object in the array must correspond to a claim and have these exact keys: "claim", "verdict" (one of: "True", "False", "Partly True/Manipulation", "No data"), "confidence_percentage" (integer 0-100), "explanation" (a string in {target_lang}), "sources" (an array of URL strings).
+        Each object in the array must correspond to a claim and has these exact keys: "claim", "verdict" (one of: "True", "False", "Partly True/Manipulation", "No data"), "confidence_percentage" (integer 0-100), "explanation" (a string in {target_lang}), "sources" (an array of URL strings).
         Wrap your entire response in ```json ... ```.
-
         Claims to check: {claims_json_string}
         """
-        
         response_fc_batch = model.generate_content(prompt_fc_batch, safety_settings=safety_settings)
         
-        # 2. Улучшенный, "умный" парсинг
         response_text = response_fc_batch.text
-        print(f"[LOG-DEBUG] Raw fact-check response from AI: {response_text}")
-
         json_str = None
-        # Сначала ищем JSON внутри markdown-блока ```json ... ```
         match = re.search(r'```json\s*(\[.*\])\s*```', response_text, re.DOTALL)
         if match:
             json_str = match.group(1)
         else:
-            # Если не нашли, ищем первый же массив в тексте
             match = re.search(r'\[.*\]', response_text, re.DOTALL)
             if match:
                 json_str = match.group(0)
-
+        
         if json_str:
             all_results = json.loads(json_str)
         else:
             raise ValueError("AI did not return a parsable JSON array for the fact-check.")
-        
-        # --- КОНЕЦ ИЗМЕНЕНИЙ ---
             
-        print(f"[LOG-SUCCESS] Пакетный факт-чекинг завершен.")
-        
         self.update_state(state='PROGRESS', meta={'status_message': 'Формирование итогового отчета...'})
 
         verdict_counts = {"True": 0, "False": 0, "Unverifiable": 0}
