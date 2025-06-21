@@ -43,6 +43,7 @@ def fact_check_video(self, video_url, target_lang='en'):
             return cached_data
 
         self.update_state(state='PROGRESS', meta={'status_message': 'Checking available languages...'})
+        
         api_key = os.environ.get('SEARCHAPI_KEY')
         params_list_langs = {'engine': 'youtube_transcripts', 'video_id': video_id, 'api_key': api_key}
         response_list_langs = requests.get('https://www.searchapi.io/api/v1/search', params=params_list_langs)
@@ -74,12 +75,18 @@ def fact_check_video(self, video_url, target_lang='en'):
         clean_text = " ".join([item['text'] for item in transcript_data['transcripts']])
         
         self.update_state(state='PROGRESS', meta={'status_message': 'Text analysis...'})
-        model = genai.GenerativeModel('gemini-1.5-pro') # Using the pro model as discussed
+        model = genai.GenerativeModel('gemini-1.5-pro')
         safety_settings = {'HARM_CATEGORY_HARASSMENT': 'BLOCK_NONE', 'HARM_CATEGORY_HATE_SPEECH': 'BLOCK_NONE'}
 
         prompt_claims = f"Analyze the following transcript. Extract the 5 most important and significant factual claims. Return them as a numbered list. Transcript: --- {clean_text} ---"
         response_claims = model.generate_content(prompt_claims, safety_settings=safety_settings)
-        claims_list = [re.sub(r'^\d+\.\s*', '', line).strip() for line in response_claims.text.strip().split('\n') if line.strip() and re.match(r'^\d+\.', line)]
+        
+        claims_list = []
+        for line in response_claims.text.strip().split('\n'):
+            line = line.strip()
+            if re.match(r'^\d+\.', line):
+                claim_text = re.sub(r'^\d+\.\s*', '', line)
+                claims_list.append(claim_text)
         
         if not claims_list: raise ValueError("AI did not return claims in the expected format.")
 
@@ -103,7 +110,7 @@ def fact_check_video(self, video_url, target_lang='en'):
                 continue
         
         if not all_results: raise ValueError("AI did not return any valid JSON objects for the fact-check.")
-
+        
         self.update_state(state='PROGRESS', meta={'status_message': 'Generating final report...'})
 
         verdict_counts = {"True": 0, "False": 0, "Unverifiable": 0}
@@ -126,8 +133,10 @@ def fact_check_video(self, video_url, target_lang='en'):
         final_report_response = model.generate_content(summary_prompt, safety_settings=safety_settings)
         
         summary_match = re.search(r'\{.*\}', final_report_response.text, re.DOTALL)
-        if summary_match: summary_data = json.loads(summary_match.group(0))
-        else: summary_data = {"overall_verdict": "Error", "overall_assessment": "Failed to parse summary from AI.", "key_points": []}
+        if summary_match:
+            summary_data = json.loads(summary_match.group(0))
+        else:
+            summary_data = {"overall_verdict": "Error", "overall_assessment": "Failed to parse summary from AI.", "key_points": []}
 
         data_to_save_in_db = {
             "video_url": video_url, "video_title": video_title, "thumbnail_url": thumbnail_url,
