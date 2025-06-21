@@ -15,7 +15,21 @@
         </section>
         
         <div class="report-wrapper">
-            </div>
+            <header>
+                <p class="description">Fact-check report for:</p>
+                <h1>{{ report.video_title }}</h1>
+                <a href="{{ report.video_url }}" target="_blank" class="video-link">Watch on YouTube</a>
+                <button id="share-btn" class="share-button-header">Share Results</button>
+            </header>
+            
+            <img src="{{ report.thumbnail_url }}" alt="Video Thumbnail" class="video-thumbnail" onerror="this.style.display='none'">
+
+            <section id="result-section" class="result-section">
+                <div id="progress-container" class="progress-container"></div>
+                <div id="confidence-container" class="confidence-container"></div>
+                <div id="report-container" class="report-container"></div>
+            </section>
+        </div>
     </main>
     
     <script>
@@ -23,10 +37,10 @@
     </script>
     
     <script>
+        // Эта логика для кнопки нового поиска остается без изменений
         document.getElementById('factcheck-btn-report').addEventListener('click', () => {
             const url = document.getElementById('youtube-url-report').value;
             if (url) {
-                // Просто перенаправляем на главную страницу с параметром
                 window.location.href = `/?url=${encodeURIComponent(url)}`;
             }
         });
