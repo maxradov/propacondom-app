@@ -17,6 +17,8 @@ body, html {
     background-color: var(--bg-color);
     color: var(--text-color);
     line-height: 1.6;
+    margin: 0;
+    padding: 0;
 }
 
 main.container {
@@ -25,13 +27,31 @@ main.container {
     padding: 2rem;
 }
 
-/* --- СТИЛИ ДЛЯ ВЕРХНЕЙ ФОРМЫ ПОИСКА НА СТРАНИЦЕ ОТЧЕТА --- */
+/* --- ИЗМЕНЕНИЕ: ОБЩИЕ СТИЛИ ДЛЯ ЦЕНТРИРОВАНИЯ --- */
+/* Эти стили теперь применяются и к главной, и к странице отчета */
+main.container > header,
+.input-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Центрируем по горизонтали */
+    text-align: center;   /* Центрируем текст */
+    gap: 1rem;            /* Расстояние между элементами */
+}
+
+main.container > header {
+    margin-bottom: 1.5rem;
+}
+
+/* Специфичный стиль для формы на странице отчета */
 .input-section.top-form {
     margin-bottom: 2.5rem;
     padding-bottom: 2.5rem;
     border-bottom: 1px solid var(--border-color);
 }
-#youtube-url {
+/* --- КОНЕЦ ИЗМЕНЕНИЯ --- */
+
+
+#youtube-url, #youtube-url-report { /* Применяем стиль к обоим полям ввода */
     width: 100%;
     max-width: 600px;
     padding: 0.75rem 1rem;
@@ -39,8 +59,10 @@ main.container {
     border-radius: 8px;
     border: 1px solid var(--border-color);
     background-color: var(--surface-color);
+    box-sizing: border-box; /* Для корректного рендеринга */
 }
-#factcheck-btn {
+
+#factcheck-btn, #factcheck-btn-report { /* Применяем стиль к обеим кнопкам */
     width: 100%;
     max-width: 300px;
     padding: 1rem;
@@ -53,25 +75,25 @@ main.container {
     cursor: pointer;
     transition: background-color 0.2s ease;
 }
-#factcheck-btn:hover {
+#factcheck-btn:hover, #factcheck-btn-report:hover {
     background-color: #0056b3;
 }
 
+
 /* --- СТИЛИ ДЛЯ ОБЕРТКИ ОТЧЕТА --- */
 .report-wrapper {
-    /* Эти стили раньше были у #report-container, теперь они у обертки */
     background-color: var(--surface-color);
     border: 1px solid var(--border-color);
     padding: 1.5rem 2rem;
     border-radius: 8px;
 }
 .report-wrapper header {
-    text-align: center;
     margin-bottom: 1.5rem;
 }
 .report-wrapper .description {
     font-size: 1.25rem;
     color: var(--secondary-color);
+    margin-top: 0;
 }
 .report-wrapper h1 {
     margin-top: 0.5rem;
@@ -91,24 +113,24 @@ main.container {
     border: 1px solid var(--border-color);
 }
 
-/* --- НОВЫЙ СТИЛЬ ДЛЯ КНОПКИ SHARE --- */
+/* --- СТИЛЬ ДЛЯ КНОПКИ SHARE --- */
 .share-button-header {
     display: block;
     width: 100%;
     max-width: 250px;
-    margin: 1.5rem auto 0; /* Отступ сверху и центрирование */
+    margin: 1.5rem auto 0;
     padding: 0.75rem 1.5rem;
     font-size: 1rem;
     font-weight: bold;
     color: #fff;
-    background-color: var(--color-true); /* Зеленый цвет */
+    background-color: var(--color-true);
     border: none;
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.2s ease;
 }
 .share-button-header:hover {
-    background-color: #218838; /* Более темный зеленый при наведении */
+    background-color: #218838;
 }
 
 
@@ -142,6 +164,10 @@ main.container {
     margin-top: 0.5rem;
     font-weight: bold;
     color: var(--secondary-color);
+}
+.stats-separator {
+    margin: 0 0.75rem;
+    color: var(--border-color);
 }
 
 .claim-list {
@@ -192,21 +218,3 @@ main.container {
     font-size: 1.1rem;
     padding: 0.5rem 0;
 }
-
-
-/* --- СТИЛИ ДЛЯ ВЕРХНЕЙ ФОРМЫ ПОИСКА И ШАПКИ ОТЧЕТА--- */
-.input-section.top-form, .report-wrapper header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center; /* Добавлено для текста */
-}
-
-.input-section.top-form {
-    gap: 1rem;
-    margin-bottom: 2.5rem;
-    padding-bottom: 2.5rem;
-    border-bottom: 1px solid var(--border-color);
-}
-
-/* ... (остальные стили остаются без изменений) ... */
