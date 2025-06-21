@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let pollingInterval;
     let lastStatusMessage = '';
 
-    // Простая функция для извлечения ID видео из URL
+    // Simple function to extract video ID from URL
     function getVideoId(url) {
         const regex = /(?:v=|\/embed\/|\/v\/|youtu\.be\/|\/shorts\/)([a-zA-Z0-9_-]{11})/;
         const match = url.match(regex);
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     checkBtn.addEventListener('click', async () => {
         const videoUrl = urlInput.value.trim();
         if (!videoUrl) {
-            alert('Пожалуйста, вставьте ссылку на видео.');
+            alert('Please paste a video link.');
             return;
         }
 
@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
         statusLog.innerHTML = ''; 
         lastStatusMessage = '';
         
-        statusLog.innerHTML = '<p>Отправка запроса на анализ...</p>';
+        statusLog.innerHTML = '<p>Sending request for analysis...</p>';
         statusSection.style.display = 'block';
 
         try {
@@ -38,15 +38,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!analyzeResponse.ok) {
                 const errData = await analyzeResponse.json();
-                throw new Error(errData.error || 'Ошибка при запуске анализа.');
+                throw new Error(errData.error || 'Error starting analysis.');
             }
 
             const data = await analyzeResponse.json();
-            // Передаем URL и язык для построения ID отчета
+            // Passing URL and language to build the report ID
             pollStatus(data.task_id, videoUrl, userLang);
 
         } catch (error) {
-            statusLog.innerHTML += `<p style="color:red;">Ошибка: ${error.message}</p>`;
+            statusLog.innerHTML += `<p style="color:red;">Error: ${error.message}</p>`;
         }
     });
 
@@ -54,22 +54,22 @@ document.addEventListener('DOMContentLoaded', () => {
         pollingInterval = setInterval(async () => {
             try {
                 const statusResponse = await fetch(`/api/status/${taskId}`);
-                if (!statusResponse.ok) throw new Error('Сервер вернул ошибку при проверке статуса.');
+                if (!statusResponse.ok) throw new Error('Server returned an error when checking status.');
                 
                 const data = await statusResponse.json();
 
                 if (data.status === 'SUCCESS') {
                     clearInterval(pollingInterval);
-                    // ПЕРЕНАПРАВЛЕНИЕ на страницу отчета
+                    // REDIRECT to the report page
                     const videoId = getVideoId(videoUrl);
                     if (videoId) {
                         window.location.href = `/report/${videoId}_${userLang}`;
                     } else {
-                         throw new Error("Не удалось извлечь ID видео для перенаправления.");
+                         throw new Error("Could not extract video ID for redirection.");
                     }
                 } else if (data.status === 'FAILURE') {
                     clearInterval(pollingInterval);
-                    statusLog.innerHTML += `<p style="color:red;">Произошла ошибка при обработке: ${data.result}</p>`;
+                    statusLog.innerHTML += `<p style="color:red;">An error occurred during processing: ${data.result}</p>`;
                 } else {
                     const newMessage = data.info && data.info.status_message ? data.info.status_message : null;
                     if (newMessage && newMessage !== lastStatusMessage) {
@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             } catch (error) {
                 clearInterval(pollingInterval);
-                statusLog.innerHTML += `<p style="color:red;">Критическая ошибка опроса: ${error.message}</p>`;
+                statusLog.innerHTML += `<p style="color:red;">Critical polling error: ${error.message}</p>`;
             }
         }, 3000);
     }
