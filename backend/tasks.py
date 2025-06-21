@@ -31,18 +31,18 @@ def get_video_id(url):
 def fact_check_video(self, video_url, target_lang='en'):
     try:
         video_id = get_video_id(video_url)
-        if not video_id: raise ValueError(f"Не удалось извлечь ID видео из URL: {video_url}")
+        if not video_id: raise ValueError(f"Failed to extract video ID from URL: {video_url}")
 
         doc_ref = db.collection('analyses').document(f"{video_id}_{target_lang}")
         doc = doc_ref.get()
         if doc.exists:
-            print(f"[LOG-SUCCESS] Найден и возвращен кэш из Firestore.")
+            print(f"[LOG-SUCCESS] Cache found and returned from Firestore.")
             cached_data = doc.to_dict()
             if 'created_at' in cached_data and hasattr(cached_data['created_at'], 'isoformat'):
                  cached_data['created_at'] = cached_data['created_at'].isoformat()
             return cached_data
 
-        self.update_state(state='PROGRESS', meta={'status_message': 'Проверка доступных языков...'})
+        self.update_state(state='PROGRESS', meta={'status_message': 'Checking available languages...'})
         api_key = os.environ.get('SEARCHAPI_KEY')
         params_list_langs = {'engine': 'youtube_transcripts', 'video_id': video_id, 'api_key': api_key}
         response_list_langs = requests.get('https://www.searchapi.io/api/v1/search', params=params_list_langs)
@@ -50,27 +50,27 @@ def fact_check_video(self, video_url, target_lang='en'):
         metadata = response_list_langs.json()
 
         if 'error' in metadata and 'available_languages' not in metadata:
-             raise Exception(f"SearchApi.io вернул ошибку: {metadata['error']}")
+             raise Exception(f"SearchApi.io returned an error: {metadata['error']}")
 
         available_langs = [lang.get('lang') for lang in metadata.get('available_languages', []) if lang.get('lang')]
-        if not available_langs: raise ValueError("API не нашел доступных субтитров ни на одном языке.")
+        if not available_langs: raise ValueError("The API did not find any available subtitles in any language.")
         
         priority_langs = [target_lang, 'en', 'ru', 'uk']
         detected_lang = next((lang for lang in priority_langs if lang in available_langs), available_langs[0])
         
-        self.update_state(state='PROGRESS', meta={'status_message': f'Извлечение субтитров ({detected_lang})...'})
+        self.update_state(state='PROGRESS', meta={'status_message': f'Extract subtitles ({detected_lang})...'})
         
         params_get_transcript = {'engine': 'youtube_transcripts', 'video_id': video_id, 'lang': detected_lang, 'api_key': api_key}
         response_transcript = requests.get('https://www.searchapi.io/api/v1/search', params=params_get_transcript)
         response_transcript.raise_for_status()
         transcript_data = response_transcript.json()
         
-        if 'error' in transcript_data: raise Exception(f"SearchApi.io вернул ошибку: {transcript_data['error']}")
-        if not transcript_data.get('transcripts'): raise ValueError(f"API не вернул субтитры для языка '{detected_lang}'.")
+        if 'error' in transcript_data: raise Exception(f"SearchApi.io returned an error: {transcript_data['error']}")
+        if not transcript_data.get('transcripts'): raise ValueError(f"API did not return subtitles for language '{detected_lang}'.")
 
         clean_text = " ".join([item['text'] for item in transcript_data['transcripts']])
         
-        self.update_state(state='PROGRESS', meta={'status_message': 'Анализ текста...'})
+        self.update_state(state='PROGRESS', meta={'status_message': 'Text analysis...'})
         model = genai.GenerativeModel('gemini-1.5-flash')
         safety_settings = {'HARM_CATEGORY_HARASSMENT': 'BLOCK_NONE', 'HARM_CATEGORY_HATE_SPEECH': 'BLOCK_NONE'}
 
@@ -96,10 +96,10 @@ def fact_check_video(self, video_url, target_lang='en'):
         
         # --- КОНЕЦ ИЗМЕНЕНИЙ ---
 
-        self.update_state(state='PROGRESS', meta={'status_message': f'Извлечено {len(claims_list)} утверждений. Начинаю факт-чекинг...'})
+        self.update_state(state='PROGRESS', meta={'status_message': f'Extracted {len(claims_list)} statements. I begin fact-checking....'})
         
         if not claims_list:
-            raise ValueError("AI не вернул утверждений в нужном формате.")
+            raise ValueError("AI did not return statements in the required format.")
 
         claims_json_string = json.dumps(claims_list, ensure_ascii=False)
         prompt_fc_batch = f"""
@@ -126,7 +126,7 @@ def fact_check_video(self, video_url, target_lang='en'):
         else:
             raise ValueError("AI did not return a parsable JSON array for the fact-check.")
             
-        self.update_state(state='PROGRESS', meta={'status_message': 'Формирование итогового отчета...'})
+        self.update_state(state='PROGRESS', meta={'status_message': 'Formation of the final report...'})
 
         verdict_counts = {"True": 0, "False": 0, "Unverifiable": 0}
         confidence_sum = 0
@@ -164,5 +164,5 @@ def fact_check_video(self, video_url, target_lang='en'):
         return data_to_return
 
     except Exception as e:
-        print(f"!!! [LOG-CRITICAL] Произошла критическая ошибка в задаче: {e}")
+        print(f"!!! [LOG-CRITICAL] A critical error occurred in the task: {e}")
         raise e
