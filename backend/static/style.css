@@ -123,18 +123,30 @@ header {
 #false-segment { background-color: var(--color-false); }
 #unverifiable-segment { background-color: var(--color-unverifiable); }
 
+/* --- НАЧАЛО ИЗМЕНЕНИЙ --- */
+
 #report-container {
     background-color: var(--surface-color);
     border: 1px solid var(--border-color);
-    padding: 2rem;
+    padding: 1.5rem 2rem; /* Сделали вертикальные отступы чуть меньше */
     border-radius: 8px;
     margin-top: 2rem;
 }
 
-#report-summary {
-    margin-bottom: 1.5rem;
-    white-space: pre-wrap;
-    font-size: 1.1rem;
+#report-summary h2 {
+    margin-top: 0; /* Убрали верхний отступ у заголовка */
+    margin-bottom: 0.75rem; /* Уменьшили нижний отступ */
+}
+
+#report-summary p {
+    margin-top: 0;
+    margin-bottom: 1rem; /* Уменьшили нижний отступ у параграфа */
+}
+
+#report-summary ul {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    padding-left: 1.5rem; /* Уменьшили внутренний отступ списка */
 }
 
 .details-toggle {
@@ -145,7 +157,10 @@ header {
     cursor: pointer;
     font-size: 1.1rem;
     padding: 0.5rem 0;
+    margin-top: 1rem; /* Уменьшили отступ над кнопкой */
 }
+
+/* --- КОНЕЦ ИЗМЕНЕНИЙ --- */
 
 .claim-list {
     margin-top: 1.5rem;
