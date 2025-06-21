@@ -2,10 +2,10 @@ import os
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 from celery.result import AsyncResult
-
-# --- ИСПРАВЛЕНИЕ ЗДЕСЬ ---
-# Импортируем 'celery' из tasks.py и переименовываем его в 'celery_app'
-# Также импортируем 'db'
+# --- ИЗМЕНЕНИЕ ЗДЕСЬ ---
+# Импортируем 'datetime' для проверки типа
+from datetime import datetime
+# Импортируем правильные объекты из tasks.py
 from tasks import celery as celery_app, db
 
 app = Flask(__name__)
@@ -42,7 +42,15 @@ def serve_spa(path):
             doc_ref = db.collection('analyses').document(analysis_id)
             doc = doc_ref.get()
             if doc.exists:
-                return render_template('report.html', report=doc.to_dict())
+                # --- ИЗМЕНЕНИЕ ЗДЕСЬ: Преобразование данных перед отправкой в шаблон ---
+                report_data = doc.to_dict()
+                
+                # Проверяем, есть ли поле 'created_at' и является ли оно объектом datetime
+                if 'created_at' in report_data and isinstance(report_data['created_at'], datetime):
+                    # Преобразуем его в строку формата ISO, понятную для JSON
+                    report_data['created_at'] = report_data['created_at'].isoformat()
+
+                return render_template('report.html', report=report_data)
             else:
                 return "Report not found", 404
         except Exception as e:
