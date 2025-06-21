@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,27 +9,33 @@
 </head>
 <body>
     <main class="container">
-        <header>
-            <p class="description">Fact-check report for:</p>
-            <h1>{{ report.video_title }}</h1>
-            <a href="{{ report.video_url }}" target="_blank" class="video-link">Watch on YouTube</a>
-        </header>
-        
-        <img src="{{ report.thumbnail_url }}" alt="Video Thumbnail" class="video-thumbnail">
+        <section class="input-section top-form">
+            <input type="text" id="youtube-url" placeholder="Paste a new YouTube link to check...">
+            <button id="factcheck-btn">Run Another Fact Check</button>
+        </section>
 
-        <section id="result-section" class="result-section">
-			<div id="progress-container" class="progress-container"></div>
-			<div id="confidence-container" class="confidence-container" style="text-align: center; margin-top: 0.5rem; font-weight: bold; color: var(--secondary-color);"></div>
-			<div id="report-container" class="report-container"></div>
-		</section>
+        <div class="report-wrapper">
+            <header>
+                <p class="description">Fact-check report for:</p>
+                <h1>{{ report.video_title }}</h1>
+                <a href="{{ report.video_url }}" target="_blank" class="video-link">Watch on YouTube</a>
+                
+                <button id="share-btn" class="share-button-header">Share Results</button>
+            </header>
+            
+            <img src="{{ report.thumbnail_url }}" alt="Video Thumbnail" class="video-thumbnail">
 
-        <footer>
-            <button id="share-btn">Share Results</button>
-            <a href="/" class="back-link">Check another video</a>
-        </footer>
-    </main>
+            <section id="result-section" class="result-section">
+                <div id="progress-container" class="progress-container"></div>
+                <div id="confidence-container" class="confidence-container"></div>
+                <div id="report-container" class="report-container"></div>
+            </section>
+        </div>
+
+        </main>
     
     <script>
+        // Передаем данные в JS, как и раньше
         const reportData = {{ report | tojson }};
     </script>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
