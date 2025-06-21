@@ -76,111 +76,104 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 3000);
     }
     
-	function displayResults(data) {
-		try {
-			console.log("--- [DEBUG] displayResults: Функция запущена. Получены данные:", data);
+function displayResults(data) {
+    try {
+        console.log("--- [DEBUG] displayResults: Функция запущена. Получены данные:", data);
 
-			const resultSection = document.getElementById('result-section');
-			const progressContainer = document.getElementById('progress-container');
-			const confidenceContainer = document.getElementById('confidence-container');
-			const reportContainer = document.getElementById('report-container');
+        const resultSection = document.getElementById('result-section');
+        const progressContainer = document.getElementById('progress-container');
+        const confidenceContainer = document.getElementById('confidence-container');
+        const reportContainer = document.getElementById('report-container');
 
-			progressContainer.innerHTML = '';
-			confidenceContainer.innerHTML = '';
-			reportContainer.innerHTML = '';
+        progressContainer.innerHTML = '';
+        confidenceContainer.innerHTML = '';
+        reportContainer.innerHTML = '';
 
-			console.log("[DEBUG] displayResults: Проверка формата данных...");
-			if (!data || !data.detailed_results || !data.verdict_counts || !data.summary_data) {
-				console.error("[DEBUG] displayResults: Ошибка! Не хватает ключевых полей в данных.");
-				reportContainer.innerHTML = '<p>Ошибка: получен некорректный формат данных отчета.</p>';
-				resultSection.style.display = 'block';
-				return;
-			}
-			console.log("[DEBUG] displayResults: Формат данных корректен.");
+        if (!data || !data.detailed_results || !data.verdict_counts || !data.summary_data) {
+            reportContainer.innerHTML = '<p>Ошибка: получен некорректный формат данных отчета.</p>';
+            resultSection.style.display = 'block';
+            return;
+        }
 
-			const { verdict_counts, detailed_results, summary_data, average_confidence } = data;
+        const { verdict_counts, detailed_results, summary_data, average_confidence } = data;
 
-			// --- 1. Отрисовка Прогресс-бара ---
-			console.log("[DEBUG] displayResults: Начинаю отрисовку прогресс-бара...");
-			const totalVerdicts = Object.values(verdict_counts).reduce((a, b) => a + b, 0);
-			if (totalVerdicts > 0) {
-				const tooltips = {
-					'True': 'True statements', 'False': 'False statements',
-					'Unverifiable': 'Unverifiable or manipulative statements'
-				};
-				const segments = [
-					{ type: 'True', count: verdict_counts['True'] || 0, id: 'true-segment' },
-					{ type: 'False', count: verdict_counts['False'] || 0, id: 'false-segment' },
-					{ type: 'Unverifiable', count: verdict_counts['Unverifiable'] || 0, id: 'unverifiable-segment' }
-				];
-				segments.forEach(segment_data => {
-					if (segment_data.count > 0) {
-						const percentage = (segment_data.count / totalVerdicts) * 100;
-						const segmentDiv = document.createElement('div');
-						segmentDiv.id = segment_data.id;
-						segmentDiv.className = 'progress-segment';
-						segmentDiv.style.width = percentage + '%';
-						segmentDiv.textContent = segment_data.count;
-						segmentDiv.title = tooltips[segment_data.type];
-						progressContainer.appendChild(segmentDiv);
-					}
-				});
-			}
-			console.log("[DEBUG] displayResults: Прогресс-бар отрисован.");
+        // --- 1. Отрисовка Прогресс-бара ---
+        const totalVerdicts = Object.values(verdict_counts).reduce((a, b) => a + b, 0);
+        if (totalVerdicts > 0) {
+            const tooltips = {
+                'True': 'True statements', 'False': 'False statements',
+                'Unverifiable': 'Unverifiable or manipulative statements'
+            };
+            const segments = [
+                { type: 'True', count: verdict_counts['True'] || 0, id: 'true-segment' },
+                { type: 'False', count: verdict_counts['False'] || 0, id: 'false-segment' },
+                { type: 'Unverifiable', count: verdict_counts['Unverifiable'] || 0, id: 'unverifiable-segment' }
+            ];
+            segments.forEach(segment_data => {
+                if (segment_data.count > 0) {
+                    const percentage = (segment_data.count / totalVerdicts) * 100;
+                    const segmentDiv = document.createElement('div');
+                    segmentDiv.id = segment_data.id;
+                    segmentDiv.className = 'progress-segment';
+                    segmentDiv.style.width = percentage + '%';
+                    segmentDiv.textContent = segment_data.count;
+                    segmentDiv.title = tooltips[segment_data.type];
+                    progressContainer.appendChild(segmentDiv);
+                }
+            });
+        }
 
-			// --- 2. Вывод средней уверенности ---
-			if (average_confidence !== undefined) {
-				confidenceContainer.textContent = `Average confidence: ${average_confidence}%`;
-			}
-			console.log("[DEBUG] displayResults: Средняя уверенность отрисована.");
+        // --- 2. Вывод средней уверенности ---
+        if (average_confidence !== undefined) {
+            confidenceContainer.textContent = `Average confidence: ${average_confidence}%`;
+        }
 
-			// --- 3. Отрисовка Текстового Отчета ---
-			console.log("[DEBUG] displayResults: Начинаю отрисовку текстового отчета...");
-			let reportHTML = `
-				<div id="report-summary">
-					<h2>${summary_data.overall_verdict || ''}</h2>
-					<p>${summary_data.overall_assessment || ''}</p>
-					<ul>
-						${(summary_data.key_points || []).map(point => `<li>${point}</li>`).join('')}
-					</ul>
-				</div>
-				<button id="details-toggle" class="details-toggle">Показать детальный разбор</button>
-				<div id="claim-list-container" style="display: none;">
-					<div class="claim-list">
-			`;
+        // --- 3. Отрисовка Текстового Отчета ---
+        let reportHTML = `
+            <div id="report-summary">
+                <h2>${summary_data.overall_verdict || ''}</h2>
+                <p>${summary_data.overall_assessment || ''}</p>
+                <ul>
+                    ${(summary_data.key_points || []).map(point => `<li>${point}</li>`).join('')}
+                </ul>
+            </div>
+            <button id="details-toggle" class="details-toggle">Показать детальный разбор</button>
+            <div id="claim-list-container" style="display: none;">
+                <div class="claim-list">
+        `;
 
-			detailedResults.forEach(claim => {
-				const verdictClass = (claim.verdict || 'No-data').replace(/[\s/]+/g, '-');
-				reportHTML += `<div class="claim-item"><p class="claim-text">${claim.claim || 'Claim text missing'}<span class="claim-verdict verdict-${verdictClass}">${claim.verdict || 'No verdict'}</span></p><div class="claim-explanation"><p>${claim.explanation || ''}</p></div>`;
-				if (claim.sources && claim.sources.length > 0) {
-					reportHTML += `<div class="claim-sources"><strong>Источники:</strong> `;
-					claim.sources.forEach((source, index) => {
-						reportHTML += `<a href="${source}" target="_blank">[${index + 1}]</a> `;
-					});
-					reportHTML += `</div>`;
-				}
-				reportHTML += `</div>`;
-			});
+        // --- ИСПРАВЛЕНИЕ ЗДЕСЬ ---
+        // Используем правильное имя переменной: detailed_results
+        detailed_results.forEach(claim => {
+            const verdictClass = (claim.verdict || 'No-data').replace(/[\s/]+/g, '-');
+            reportHTML += `<div class="claim-item"><p class="claim-text">${claim.claim || 'Claim text missing'}<span class="claim-verdict verdict-${verdictClass}">${claim.verdict || 'No verdict'}</span></p><div class="claim-explanation"><p>${claim.explanation || ''}</p></div>`;
+            if (claim.sources && claim.sources.length > 0) {
+                reportHTML += `<div class="claim-sources"><strong>Источники:</strong> `;
+                claim.sources.forEach((source, index) => {
+                    reportHTML += `<a href="${source}" target="_blank">[${index + 1}]</a> `;
+                });
+                reportHTML += `</div>`;
+            }
+            reportHTML += `</div>`;
+        });
 
-			reportHTML += `</div></div>`;
-			reportContainer.innerHTML = reportHTML;
-			console.log("[DEBUG] displayResults: Текстовый отчет отрисован.");
+        reportHTML += `</div></div>`;
+        reportContainer.innerHTML = reportHTML;
+        
+        const toggleButton = document.getElementById('details-toggle');
+        const detailsContainer = document.getElementById('claim-list-container');
+        if (toggleButton) {
+            toggleButton.addEventListener('click', () => {
+                const isHidden = detailsContainer.style.display === 'none';
+                detailsContainer.style.display = isHidden ? 'block' : 'none';
+                toggleButton.textContent = isHidden ? 'Скрыть детальный разбор' : 'Показать детальный разбор';
+            });
+        }
 
-			const toggleButton = document.getElementById('details-toggle');
-			const detailsContainer = document.getElementById('claim-list-container');
-			if (toggleButton) {
-				toggleButton.addEventListener('click', () => {
-					const isHidden = detailsContainer.style.display === 'none';
-					detailsContainer.style.display = isHidden ? 'block' : 'none';
-					toggleButton.textContent = isHidden ? 'Скрыть детальный разбор' : 'Показать детальный разбор';
-				});
-			}
-
-			resultSection.style.display = 'block';
-			console.log("--- [DEBUG] displayResults: Функция успешно завершена. Результаты должны быть видны. ---");
-			
-		} catch (e) {
-			console.error("!!! [DEBUG] КРИТИЧЕСКАЯ ОШИБКА ВНУТРИ displayResults:", e);
-		}
-	}
+        resultSection.style.display = 'block';
+        
+    } catch (e) {
+        console.error("!!! [DEBUG] КРИТИЧЕСКАЯ ОШИБКА ВНУТРИ displayResults:", e);
+    }
+}
 });
