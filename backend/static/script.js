@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     checkBtn.addEventListener('click', async () => {
         const videoUrl = urlInput.value.trim();
         if (!videoUrl) {
-            alert('Пожалуйста, вставьте ссылку на видео.');
+            alert('Please insert the link to the video.');
             return;
         }
 
@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
         statusLog.innerHTML = ''; 
         lastStatusMessage = '';
         
-        statusLog.innerHTML = '<p>Отправка запроса на анализ...</p>';
+        statusLog.innerHTML = '<p>Submitting a request for analysis...</p>';
         statusSection.style.display = 'block';
 
         try {
@@ -35,14 +35,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!analyzeResponse.ok) {
                 const errData = await analyzeResponse.json();
-                throw new Error(errData.error || 'Ошибка при запуске анализа.');
+                throw new Error(errData.error || 'Error starting analysis.');
             }
 
             const data = await analyzeResponse.json();
             pollStatus(data.task_id);
 
         } catch (error) {
-            statusLog.innerHTML += `<p style="color:red;">Ошибка: ${error.message}</p>`;
+            statusLog.innerHTML += `<p style="color:red;">Error: ${error.message}</p>`;
         }
     });
 
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
         pollingInterval = setInterval(async () => {
             try {
                 const statusResponse = await fetch(`/api/status/${taskId}`);
-                if (!statusResponse.ok) throw new Error('Сервер вернул ошибку при проверке статуса.');
+                if (!statusResponse.ok) throw new Error('The server returned an error while checking its status.');
                 
                 const data = await statusResponse.json();
 
@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     displayResults(data.result);
                 } else if (data.status === 'FAILURE') {
                     clearInterval(pollingInterval);
-                    statusLog.innerHTML += `<p style="color:red;">Произошла ошибка при обработке: ${data.result}</p>`;
+                    statusLog.innerHTML += `<p style="color:red;">An error occurred while processing: ${data.result}</p>`;
                 } else {
                     const newMessage = data.info && data.info.status_message ? data.info.status_message : null;
                     if (newMessage && newMessage !== lastStatusMessage) {
@@ -71,14 +71,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             } catch (error) {
                 clearInterval(pollingInterval);
-                statusLog.innerHTML += `<p style="color:red;">Критическая ошибка опроса: ${error.message}</p>`;
+                statusLog.innerHTML += `<p style="color:red;">Critical poll error: ${error.message}</p>`;
             }
         }, 3000);
     }
     
 function displayResults(data) {
     try {
-        console.log("--- [DEBUG] displayResults: Функция запущена. Получены данные:", data);
+        console.log("--- [DEBUG] displayResults: Function started. Data received.:", data);
 
         const resultSection = document.getElementById('result-section');
         const progressContainer = document.getElementById('progress-container');
@@ -90,7 +90,7 @@ function displayResults(data) {
         reportContainer.innerHTML = '';
 
         if (!data || !data.detailed_results || !data.verdict_counts || !data.summary_data) {
-            reportContainer.innerHTML = '<p>Ошибка: получен некорректный формат данных отчета.</p>';
+            reportContainer.innerHTML = '<p>Error: Incorrect report data format received.</p>';
             resultSection.style.display = 'block';
             return;
         }
@@ -137,7 +137,7 @@ function displayResults(data) {
                     ${(summary_data.key_points || []).map(point => `<li>${point}</li>`).join('')}
                 </ul>
             </div>
-            <button id="details-toggle" class="details-toggle">Показать детальный разбор</button>
+            <button id="details-toggle" class="details-toggle">Show detailed analysis</button>
             <div id="claim-list-container" style="display: none;">
                 <div class="claim-list">
         `;
@@ -148,7 +148,7 @@ function displayResults(data) {
             const verdictClass = (claim.verdict || 'No-data').replace(/[\s/]+/g, '-');
             reportHTML += `<div class="claim-item"><p class="claim-text">${claim.claim || 'Claim text missing'}<span class="claim-verdict verdict-${verdictClass}">${claim.verdict || 'No verdict'}</span></p><div class="claim-explanation"><p>${claim.explanation || ''}</p></div>`;
             if (claim.sources && claim.sources.length > 0) {
-                reportHTML += `<div class="claim-sources"><strong>Источники:</strong> `;
+                reportHTML += `<div class="claim-sources"><strong>Sources:</strong> `;
                 claim.sources.forEach((source, index) => {
                     reportHTML += `<a href="${source}" target="_blank">[${index + 1}]</a> `;
                 });
@@ -166,14 +166,14 @@ function displayResults(data) {
             toggleButton.addEventListener('click', () => {
                 const isHidden = detailsContainer.style.display === 'none';
                 detailsContainer.style.display = isHidden ? 'block' : 'none';
-                toggleButton.textContent = isHidden ? 'Скрыть детальный разбор' : 'Показать детальный разбор';
+                toggleButton.textContent = isHidden ? 'Hide detailed analysis' : 'Show detailed analysis';
             });
         }
 
         resultSection.style.display = 'block';
         
     } catch (e) {
-        console.error("!!! [DEBUG] КРИТИЧЕСКАЯ ОШИБКА ВНУТРИ displayResults:", e);
+        console.error("!!! [DEBUG] CRITICAL ERROR INSIDE displayResults:", e);
     }
 }
 });
