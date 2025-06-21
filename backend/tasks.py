@@ -6,13 +6,11 @@ import requests
 import google.generativeai as genai
 from celery import Celery
 from google.cloud import firestore
-from urllib.parse import urlparse, parse_qs
 
 # --- Settings ---
 REDIS_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379/0')
 celery = Celery(__name__, broker=REDIS_URL, backend=REDIS_URL)
 
-# Ключи все еще можно определить здесь для общей доступности, но в задаче мы их перечитаем
 GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')
 if GEMINI_API_KEY:
     genai.configure(api_key=GEMINI_API_KEY)
@@ -28,69 +26,79 @@ def get_video_id(url):
 @celery.task(bind=True, name='tasks.fact_check_video', time_limit=600)
 def fact_check_video(self, video_url, target_lang='en'):
     try:
-        # --- ИЗМЕНЕНИЕ 1: Добавляем логирование и надежное получение ключа API ---
-        print(f"[TASK_START] Received URL: {video_url}")
-        
-        # Надежно получаем ключ API внутри задачи, как в старой рабочей версии
+        # --- 1. ПОДГОТОВКА ---
+        video_id = get_video_id(video_url)
+        if not video_id:
+            raise ValueError(f"Could not extract video ID from URL: {video_url}")
+
+        # Надежно получаем ключ API внутри задачи
         search_api_key = os.environ.get('SEARCHAPI_KEY')
         if not search_api_key:
             raise ValueError("SEARCHAPI_KEY environment variable not found or empty inside the task.")
-        
-        print(f"[TASK_INFO] Using Search API Key ending with: ...{search_api_key[-4:]}")
 
-        video_id = get_video_id(video_url)
-        if not video_id: raise ValueError(f"Could not extract video ID from URL: {video_url}")
-        
-        print(f"[TASK_INFO] Extracted Video ID: {video_id}")
-
+        # Проверка кэша
         doc_ref = db.collection('analyses').document(f"{video_id}_{target_lang}")
         doc = doc_ref.get()
         if doc.exists:
-            print(f"[TASK_SUCCESS] Cache hit for video_id {video_id}. Returning from Firestore.")
             return doc.to_dict()
 
+        # --- 2. ЗАПРОС №1: ПОЛУЧАЕМ НАЗВАНИЕ И ПРЕВЬЮ ---
         self.update_state(state='PROGRESS', meta={'status_message': 'Fetching video details...'})
-        
-        # --- ИЗМЕНЕНИЕ 2: Используем локальную переменную `search_api_key` во всех запросах ---
-        params_details = {'engine': 'youtube_video','video_id': video_id,'api_key': search_api_key}
+        params_details = {
+            'engine': 'youtube_video',
+            'video_id': video_id,
+            'api_key': search_api_key
+        }
         details_response = requests.get('https://www.searchapi.io/api/v1/search', params=params_details)
-        details_response.raise_for_status() # Убедимся, что запрос успешен
+        details_response.raise_for_status()
         details_data = details_response.json()
         
-        if 'error' in details_data: raise Exception(f"SearchApi.io (video details) error: {details_data['error']}")
-        
+        if 'error' in details_data:
+            raise Exception(f"SearchApi.io error on video details: {details_data['error']}")
+
         video_details = details_data.get('video_details', {})
         video_title = video_details.get('title', 'Title Not Found')
         thumbnails = video_details.get('thumbnails', [])
         thumbnail_url = ''
         if thumbnails:
             thumb_map = {thumb['quality']: thumb['url'] for thumb in thumbnails}
-            thumbnail_url = thumb_map.get('high', thumb_map.get('medium', thumbnails[0].get('url', '')))
-        
-        print(f"[TASK_INFO] Fetched Title: {' '.join(video_title.split()[:5])}...")
+            thumbnail_url = thumb_map.get('high', thumb_map.get('default', ''))
 
-        # ... остальная часть кода также должна использовать `search_api_key` ...
-        self.update_state(state='PROGRESS', meta={'status_message': 'Checking available languages...'})
-        params_list_langs = {'engine': 'youtube_transcripts', 'video_id': video_id, 'api_key': search_api_key}
-        # ... и так далее для всех остальных вызовов requests.get
+        # --- 3. ЗАПРОС №2: ПОЛУЧАЕМ СУБТИТРЫ ---
+        self.update_state(state='PROGRESS', meta={'status_message': 'Fetching subtitles...'})
+        params_transcript = {
+            'engine': 'youtube_transcripts',
+            'video_id': video_id,
+            'api_key': search_api_key
+        }
+        transcript_response = requests.get('https://www.searchapi.io/api/v1/search', params=params_transcript)
+        transcript_response.raise_for_status()
+        transcript_data = transcript_response.json()
 
-        # (Весь остальной код анализа и сохранения остается таким же, как в последней версии,
-        # просто убедитесь, что все вызовы к searchapi.io используют `search_api_key`)
-        response_list_langs = requests.get('https://www.searchapi.io/api/v1/search', params=params_list_langs)
-        metadata = response_list_langs.json()
-        if 'error' in metadata and 'available_languages' not in metadata: raise Exception(f"SearchApi.io returned an error: {metadata['error']}")
-        available_langs = [lang.get('lang') for lang in metadata.get('available_languages', []) if lang.get('lang')]
-        if not available_langs: raise ValueError("API did not find available subtitles in any language.")
+        if 'error' in transcript_data and 'available_languages' not in transcript_data:
+            raise Exception(f"SearchApi.io error on transcripts: {transcript_data['error']}")
+
+        available_langs = [lang.get('lang') for lang in transcript_data.get('available_languages', []) if lang.get('lang')]
+        if not available_langs:
+            raise ValueError("Subtitles not found for any language.")
+
         priority_langs = [target_lang, 'en', 'ru', 'uk']
         detected_lang = next((lang for lang in priority_langs if lang in available_langs), available_langs[0])
-        self.update_state(state='PROGRESS', meta={'status_message': f'Extracting subtitles ({detected_lang})...'})
-        params_get_transcript = {'engine': 'youtube_transcripts', 'video_id': video_id, 'lang': detected_lang, 'api_key': search_api_key}
-        response_transcript = requests.get('https://www.searchapi.io/api/v1/search', params=params_get_transcript)
-        transcript_data = response_transcript.json()
-        if 'error' in transcript_data or not transcript_data.get('transcripts'): raise ValueError(f"API did not return subtitles for '{detected_lang}'.")
+        
+        # Если нужный язык не был в первом ответе, делаем еще один запрос на конкретном языке
+        if not transcript_data.get('transcripts') or transcript_data.get('search_parameters', {}).get('lang') != detected_lang:
+            self.update_state(state='PROGRESS', meta={'status_message': f'Extracting subtitles ({detected_lang})...'})
+            params_transcript['lang'] = detected_lang
+            transcript_response = requests.get('https://www.searchapi.io/api/v1/search', params=params_transcript)
+            transcript_data = transcript_response.json()
+
+        if not transcript_data.get('transcripts'):
+            raise ValueError(f"API did not return subtitles for language '{detected_lang}'.")
+            
         clean_text = " ".join([item['text'] for item in transcript_data['transcripts']])
 
-        # ... (Код AI-анализа, подсчета статистики и сохранения в БД остается без изменений) ...
+        # --- 4. AI-АНАЛИЗ И СОХРАНЕНИЕ (без изменений) ---
+        # (Весь остальной код анализа, подсчета статистики и сохранения в БД остается таким же)
         self.update_state(state='PROGRESS', meta={'status_message': 'Analyzing text...'})
         model = genai.GenerativeModel('gemini-1.5-pro')
         safety_settings = {'HARM_CATEGORY_HARASSMENT': 'BLOCK_NONE', 'HARM_CATEGORY_HATE_SPEECH': 'BLOCK_NONE'}
@@ -145,7 +153,6 @@ def fact_check_video(self, video_url, target_lang='en'):
         }
         
         doc_ref.set(data_to_save_in_db)
-        print(f"[TASK_SUCCESS] Task for video_id {video_id} completed and saved to Firestore.")
         return doc_ref.get().to_dict()
 
     except Exception as e:
