@@ -2,9 +2,11 @@ import os
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 from celery.result import AsyncResult
-# --- ИЗМЕНЕНИЕ ЗДЕСЬ ---
-# Импортируем не только celery_app, но и db из tasks.py
-from tasks import celery_app, db 
+
+# --- ИСПРАВЛЕНИЕ ЗДЕСЬ ---
+# Импортируем 'celery' из tasks.py и переименовываем его в 'celery_app'
+# Также импортируем 'db'
+from tasks import celery as celery_app, db
 
 app = Flask(__name__)
 CORS(app)
@@ -17,7 +19,7 @@ def analyze():
     
     video_url = data['url']
     target_lang = data.get('lang', 'en')
-    # Убедимся, что вызывается правильная задача
+    
     task = celery_app.send_task('tasks.fact_check_video', args=[video_url, target_lang])
     return jsonify({"task_id": task.id}), 202
 
@@ -34,11 +36,9 @@ def get_status(task_id):
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def serve_spa(path):
-    # Теперь этот блок кода будет работать, так как 'db' импортирован
     if path.startswith('report/'):
         analysis_id = path.split('/')[1]
         try:
-            # Эта строка больше не вызовет ошибку
             doc_ref = db.collection('analyses').document(analysis_id)
             doc = doc_ref.get()
             if doc.exists:
@@ -46,7 +46,6 @@ def serve_spa(path):
             else:
                 return "Report not found", 404
         except Exception as e:
-            # Логирование ошибки поможет в будущем
             print(f"Error fetching report {analysis_id}: {e}") 
             return f"An error occurred: {e}", 500
     
