@@ -26,43 +26,25 @@ def get_video_id(url):
 @celery.task(bind=True, name='tasks.fact_check_video', time_limit=600)
 def fact_check_video(self, video_url, target_lang='en'):
     try:
-        # --- 1. ПОДГОТОВКА (ID видео и ключ API) ---
-        search_api_key = os.environ.get('SEARCHAPI_KEY')
-        if not search_api_key:
-            raise ValueError("SEARCHAPI_KEY environment variable not found.")
-
-        video_id = get_video_id(video_url)
-        if not video_id:
-            raise ValueError(f"Could not extract video ID from URL: {video_url}")
-
-        doc_ref = db.collection('analyses').document(f"{video_id}_{target_lang}")
-        if doc_ref.get().exists:
-            return doc_ref.get().to_dict()
-
-        # --- 2. ПОЛУЧЕНИЕ ДЕТАЛЕЙ ВИДЕО С УЛУЧШЕННЫМ ЛОГИРОВАНИЕМ ---
+         # --- 2. ПОЛУЧЕНИЕ ДЕТАЛЕЙ ВИДЕО (ИСПРАВЛЕННАЯ ЛОГИКА) ---
         self.update_state(state='PROGRESS', meta={'status_message': 'Fetching video details...'})
         params_details = {'engine': 'youtube_video', 'video_id': video_id, 'api_key': search_api_key}
         details_response = requests.get('https://www.searchapi.io/api/v1/search', params=params_details)
         details_response.raise_for_status()
         details_data = details_response.json()
 
-        video_details = details_data.get('video_details') # Убрали значение по умолчанию {}
+        # --- ИЗМЕНЕНИЕ ЗДЕСЬ: Ищем "context", а не "video_details" ---
+        context_data = details_data.get('context')
 
-        # ИЗМЕНЕНИЕ: Если video_details не найден, логируем весь ответ от API
-        if not video_details:
-            print("!!! [API_DEBUG] 'video_details' not found in SearchApi.io response.")
+        if not context_data:
+            print("!!! [API_DEBUG] 'context' key not found in SearchApi.io response.")
             print(f"!!! [API_DEBUG] Full response for details: {json.dumps(details_data)}")
-            # Устанавливаем значения по умолчанию только после логирования
             video_title = 'Title Not Found'
             thumbnail_url = ''
         else:
-            video_title = video_details.get('title', 'Title Not Found')
-            thumbnails = video_details.get('thumbnails', [])
-            thumbnail_url = ''
-            if thumbnails:
-                thumb_map = {thumb['quality']: thumb['url'] for thumb in thumbnails}
-                thumbnail_url = thumb_map.get('high', thumb_map.get('default', ''))
-        
+            # Получаем данные из 'context', как в вашем примере
+            video_title = context_data.get('title', 'Title Not Found')
+            thumbnail_url = context_data.get('thumbnail', '')
        
 
         # --- 3. ПОЛУЧЕНИЕ СУБТИТРОВ (ВОССТАНОВЛЕННАЯ РАБОЧАЯ ЛОГИКА) ---
