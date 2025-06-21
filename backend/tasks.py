@@ -71,7 +71,7 @@ def fact_check_video(self, video_url, target_lang='en'):
         clean_text = " ".join([item['text'] for item in transcript_data['transcripts']])
         
         self.update_state(state='PROGRESS', meta={'status_message': 'Text analysis...'})
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        model = genai.GenerativeModel('gemini-1.5-pro')
         safety_settings = {'HARM_CATEGORY_HARASSMENT': 'BLOCK_NONE', 'HARM_CATEGORY_HATE_SPEECH': 'BLOCK_NONE'}
 
         # --- НАЧАЛО ИЗМЕНЕНИЙ ---
