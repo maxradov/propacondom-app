@@ -1,21 +1,32 @@
-// Полная версия файла report.js
-
 document.addEventListener('DOMContentLoaded', () => {
     if (typeof reportData !== 'undefined') {
         displayResults(reportData);
     }
 
     const shareBtn = document.getElementById('share-btn');
-    if(shareBtn) {
+    if (shareBtn) {
         shareBtn.addEventListener('click', shareResults);
     }
 });
 
 function displayResults(data) {
-    const progressContainer = document.getElementById('progress-container');
-    const confidenceContainer = document.getElementById('confidence-container');
-    const reportContainer = document.getElementById('report-container');
+    // Ищем контейнеры внутри главного блока отчета
+    const reportWrapper = document.querySelector('.report-wrapper');
+    if (!reportWrapper) {
+        console.error('Error: .report-wrapper element not found.');
+        return;
+    }
 
+    const progressContainer = reportWrapper.querySelector('#progress-container');
+    const confidenceContainer = reportWrapper.querySelector('#confidence-container');
+    const reportContainer = reportWrapper.querySelector('#report-container');
+
+    // Проверяем, что все контейнеры найдены, прежде чем что-то делать
+    if (!progressContainer || !confidenceContainer || !reportContainer) {
+        console.error('Error: One or more report containers are missing.');
+        return;
+    }
+    
     if (!data || !data.detailed_results || !data.verdict_counts || !data.summary_data) {
         reportContainer.innerHTML = '<p>Error: Received incorrect report data format.</p>';
         return;
@@ -23,15 +34,17 @@ function displayResults(data) {
 
     const { verdict_counts, detailed_results, summary_data, average_confidence, confirmed_credibility } = data;
 
-    // --- ИСПРАВЛЕНИЕ: ПОЛНАЯ ЛОГИКА РЕНДЕРИНГА ПРОГРЕСС-БАРА ---
+    // --- ЛОГИКА РЕНДЕРИНГА (остается без изменений) ---
+
+    // Рендеринг Прогресс-бара
     const totalVerdicts = Object.values(verdict_counts).reduce((a, b) => a + b, 0);
-    progressContainer.innerHTML = ''; // Очищаем на всякий случай
+    progressContainer.innerHTML = ''; 
     if (totalVerdicts > 0) {
         const segments = [
             { type: 'True', count: verdict_counts['True'] || 0, id: 'true-segment' },
             { type: 'False', count: verdict_counts['False'] || 0, id: 'false-segment' },
             { type: 'Unverifiable', count: verdict_counts['Unverifiable'] || 0, id: 'unverifiable-segment' },
-            { type: 'Misleading', count: verdict_counts['Misleading'] || 0, id: 'unverifiable-segment' }, // Другие вердикты
+            { type: 'Misleading', count: verdict_counts['Misleading'] || 0, id: 'unverifiable-segment' },
             { type: 'Partly True', count: verdict_counts['Partly True'] || 0, id: 'unverifiable-segment' }
         ];
 
@@ -48,14 +61,13 @@ function displayResults(data) {
         });
     }
 
-    // Рендеринг статистики (без изменений)
+    // Рендеринг Статистики
     const stats = [];
     if (average_confidence !== undefined) stats.push(`Average confidence: ${average_confidence}%`);
     if (confirmed_credibility !== undefined) stats.push(`Confirmed credibility: ${confirmed_credibility}%`);
     confidenceContainer.innerHTML = stats.join(' <span class="stats-separator">|</span> ');
 
-
-    // --- ИСПРАВЛЕНИЕ: ПОЛНАЯ ЛОГИКА РЕНДЕРИНГА ДЕТАЛЬНОГО ОТЧЕТА ---
+    // Рендеринг Текстового Отчета
     let reportHTML = `
         <div id="report-summary">
             <h2>${summary_data.overall_verdict || 'No summary verdict'}</h2>
@@ -89,7 +101,6 @@ function displayResults(data) {
     reportHTML += `</div></div>`;
     reportContainer.innerHTML = reportHTML;
     
-    // Этот код теперь будет работать, так как claim-list-container заполнен
     const toggleButton = document.getElementById('details-toggle');
     const detailsContainer = document.getElementById('claim-list-container');
     if (toggleButton && detailsContainer) {
