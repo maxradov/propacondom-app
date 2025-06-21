@@ -10,10 +10,15 @@
 <body>
     <main class="container">
         <section class="input-section top-form">
-            <input type="text" id="youtube-url-report" placeholder="Paste a new YouTube link to check...">
-            <button id="factcheck-btn-report">Run Another Fact Check</button>
+            <input type="text" id="youtube-url" placeholder="Paste a new YouTube link to check...">
+            <button id="factcheck-btn">Run Another Fact Check</button>
         </section>
         
+        <section id="status-section" class="status-section" style="display: none;">
+			<div class="loader"></div>
+			<div id="status-log" class="status-log"></div>
+		</section>
+
         <div class="report-wrapper">
             <header>
                 <p class="description">Fact-check report for:</p>
@@ -36,15 +41,7 @@
         const reportData = {{ report | tojson }};
     </script>
     
-    <script>
-        // Эта логика для кнопки нового поиска остается без изменений
-        document.getElementById('factcheck-btn-report').addEventListener('click', () => {
-            const url = document.getElementById('youtube-url-report').value;
-            if (url) {
-                window.location.href = `/?url=${encodeURIComponent(url)}`;
-            }
-        });
-    </script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
     <script src="{{ url_for('static', filename='report.js') }}"></script>
 </body>
 </html>

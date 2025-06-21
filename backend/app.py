@@ -23,15 +23,25 @@ def analyze():
     task = celery_app.send_task('tasks.fact_check_video', args=[video_url, target_lang])
     return jsonify({"task_id": task.id}), 202
 
+# Замените этот эндпоинт в вашем файле app.py
+
 @app.route('/api/status/<task_id>', methods=['GET'])
 def get_status(task_id):
-    task_result = AsyncResult(task_id, app=celery_app)
-    response_data = {
-        'status': task_result.state,
-        'info': task_result.info if task_result.state != 'SUCCESS' else None,
-        'result': task_result.result if task_result.state == 'SUCCESS' else None
-    }
-    return jsonify(response_data)
+    try:
+        task_result = AsyncResult(task_id, app=celery_app)
+        
+        # ИЗМЕНЕНИЕ: Обернули логику в try...except
+        response_data = {
+            'status': task_result.state,
+            'info': task_result.info if task_result.state != 'SUCCESS' else None,
+            'result': task_result.result if task_result.state == 'SUCCESS' else None
+        }
+        return jsonify(response_data)
+    except Exception as e:
+        # Если что-то пошло не так (например, нет связи с Redis),
+        # возвращаем ошибку, а не падаем
+        print(f"Error getting task status for {task_id}: {e}")
+        return jsonify({'status': 'FAILURE', 'result': 'Could not retrieve task status from backend.'}), 500
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')

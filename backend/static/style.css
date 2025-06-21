@@ -218,3 +218,10 @@ main.container > header {
     font-size: 1.1rem;
     padding: 0.5rem 0;
 }
+/* Добавьте эти стили в ваш файл style.css */
+
+#true-segment { background-color: var(--color-true); }
+#false-segment { background-color: var(--color-false); }
+#unverifiable-segment { background-color: var(--color-unverifiable); }
+/* Новый стиль для вердиктов "между" правдой и ложью */
+#misleading-segment { background-color: #ffc107; }
