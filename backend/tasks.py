@@ -39,21 +39,31 @@ def fact_check_video(self, video_url, target_lang='en'):
         if doc_ref.get().exists:
             return doc_ref.get().to_dict()
 
-        # --- 2. ПОЛУЧЕНИЕ ДЕТАЛЕЙ ВИДЕО (название и превью) ---
+        # --- 2. ПОЛУЧЕНИЕ ДЕТАЛЕЙ ВИДЕО С УЛУЧШЕННЫМ ЛОГИРОВАНИЕМ ---
         self.update_state(state='PROGRESS', meta={'status_message': 'Fetching video details...'})
         params_details = {'engine': 'youtube_video', 'video_id': video_id, 'api_key': search_api_key}
         details_response = requests.get('https://www.searchapi.io/api/v1/search', params=params_details)
         details_response.raise_for_status()
         details_data = details_response.json()
-        if 'error' in details_data: raise Exception(f"SearchApi.io error on video details: {details_data['error']}")
+
+        video_details = details_data.get('video_details') # Убрали значение по умолчанию {}
+
+        # ИЗМЕНЕНИЕ: Если video_details не найден, логируем весь ответ от API
+        if not video_details:
+            print("!!! [API_DEBUG] 'video_details' not found in SearchApi.io response.")
+            print(f"!!! [API_DEBUG] Full response for details: {json.dumps(details_data)}")
+            # Устанавливаем значения по умолчанию только после логирования
+            video_title = 'Title Not Found'
+            thumbnail_url = ''
+        else:
+            video_title = video_details.get('title', 'Title Not Found')
+            thumbnails = video_details.get('thumbnails', [])
+            thumbnail_url = ''
+            if thumbnails:
+                thumb_map = {thumb['quality']: thumb['url'] for thumb in thumbnails}
+                thumbnail_url = thumb_map.get('high', thumb_map.get('default', ''))
         
-        video_details = details_data.get('video_details', {})
-        video_title = video_details.get('title', 'Title Not Found')
-        thumbnails = video_details.get('thumbnails', [])
-        thumbnail_url = ''
-        if thumbnails:
-            thumb_map = {thumb['quality']: thumb['url'] for thumb in thumbnails}
-            thumbnail_url = thumb_map.get('high', thumb_map.get('default', ''))
+       
 
         # --- 3. ПОЛУЧЕНИЕ СУБТИТРОВ (ВОССТАНОВЛЕННАЯ РАБОЧАЯ ЛОГИКА) ---
         self.update_state(state='PROGRESS', meta={'status_message': 'Checking available languages...'})

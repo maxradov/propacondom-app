@@ -192,3 +192,21 @@ main.container {
     font-size: 1.1rem;
     padding: 0.5rem 0;
 }
+
+
+/* --- СТИЛИ ДЛЯ ВЕРХНЕЙ ФОРМЫ ПОИСКА И ШАПКИ ОТЧЕТА--- */
+.input-section.top-form, .report-wrapper header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center; /* Добавлено для текста */
+}
+
+.input-section.top-form {
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* ... (остальные стили остаются без изменений) ... */
