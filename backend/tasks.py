@@ -26,6 +26,20 @@ def get_video_id(url):
 @celery.task(bind=True, name='tasks.fact_check_video', time_limit=600)
 def fact_check_video(self, video_url, target_lang='en'):
     try:
+        search_api_key = os.environ.get('SEARCHAPI_KEY')
+        if not search_api_key:
+            raise ValueError("SEARCHAPI_KEY environment variable not found.")
+
+        # --- ИСПРАВЛЕНИЕ: ЭТА СТРОКА ПЕРЕМЕЩЕНА ВВЕРХ ---
+        video_id = get_video_id(video_url)
+        if not video_id:
+            raise ValueError(f"Could not extract video ID from URL: {video_url}")
+
+        doc_ref = db.collection('analyses').document(f"{video_id}_{target_lang}")
+        if doc_ref.get().exists:
+            return doc_ref.get().to_dict()
+    
+    try:
          # --- 2. ПОЛУЧЕНИЕ ДЕТАЛЕЙ ВИДЕО (ИСПРАВЛЕННАЯ ЛОГИКА) ---
         self.update_state(state='PROGRESS', meta={'status_message': 'Fetching video details...'})
         params_details = {'engine': 'youtube_video', 'video_id': video_id, 'api_key': search_api_key}
