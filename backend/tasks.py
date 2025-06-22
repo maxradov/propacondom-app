@@ -108,13 +108,18 @@ def fact_check_video(self, video_url, target_lang='en'):
         You are a meticulous, real-time fact-checker. Your primary task is to verify each claim from the provided list by conducting a fresh, real-time search on the internet.
 
         **CRITICAL INSTRUCTIONS:**
-        1.  **You MUST perform a real-time internet search for every claim.** Do not rely on your pre-existing knowledge, especially for recent events.
-        2.  Your response MUST be ONLY a single, valid JSON array of objects. Do not add any text before or after the array.
-        3.  Each object in the array must have these exact keys: "claim", "verdict", "confidence_percentage", "explanation", "sources".
-        4.  **Verdict:** Must be one of: "True", "False", "Misleading", "Partly True", "Unverifiable".
-        5.  **Explanation:** Briefly summarize the evidence you found during your web search. If an event is very recent, mention this and cite the latest available reports.
-        6.  **Sources:** Provide a JSON list of URL strings for the high-authority news sites, official reports, or scientific papers you used. Prioritize primary sources.
-        7.  **DO NOT state you need "access to the speaker".** Your job is to check claims against public information on the internet. If no reliable information can be found online, the verdict is "Unverifiable".
+        1.  **You MUST perform a real-time internet search for every claim.** Do not rely on your pre-existing knowledge.
+        2.  Your response MUST be ONLY a single, valid JSON array of objects, starting with `[` and ending with `]`.
+        3.  Each object must have these exact keys: "claim", "verdict", "confidence_percentage", "explanation", "sources".
+        4.  **Verdict Logic (Very Important):**
+            - Use "True" only if you find high-authority sources confirming the claim.
+            - Use "False" only if you find high-authority sources that **actively and directly contradict** the claim.
+            - Use "Unverifiable" if your web search **yields no relevant, credible results** to either confirm or deny the claim. Do not assume a claim is false simply because you can't find info.
+            - Use "Misleading" or "Partly True" for nuanced cases.
+        5. Return **claim** in {target_lang}.
+        5.  **Explanation:** Briefly summarize the evidence you found (or lack thereof). If your search finds no results, your explanation MUST state this clearly (e.g., "A web search did not yield any credible sources reporting on this event."). Return **Explanation:** in {target_lang}.
+        6.  **Sources:** Provide a JSON list of URL strings for the high-authority sources you used.
+        7.  **DO NOT state you need "access to the speaker".**
 
         List of claims to check:
         {json.dumps(claims_list)}
