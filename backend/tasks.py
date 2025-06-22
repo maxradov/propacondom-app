@@ -108,7 +108,7 @@ def fact_check_video(self, video_url, target_lang='en'):
         You are a meticulous, real-time fact-checker. Your primary task is to verify each claim from the provided list by conducting a fresh, real-time search on the internet.
 
         **CRITICAL INSTRUCTIONS:**
-        1.  **You MUST perform a real-time internet search for every claim.** Do not rely on your pre-existing knowledge.
+        1.  **You MUST perform a real-time internet search for every claim.** Do not rely on your pre-existing knowledge. Specifically search on https://www.reuters.com/ and https://cnn.com/ for more accurate results for the events that happened recently.
         2.  Your response MUST be ONLY a single, valid JSON array of objects, starting with `[` and ending with `]`.
         3.  Each object must have these exact keys: "claim", "verdict", "confidence_percentage", "explanation", "sources".
         4.  **Verdict Logic (Very Important):**
@@ -117,9 +117,9 @@ def fact_check_video(self, video_url, target_lang='en'):
             - Use "Unverifiable" if your web search **yields no relevant, credible results** to either confirm or deny the claim. Do not assume a claim is false simply because you can't find info.
             - Use "Misleading" or "Partly True" for nuanced cases.
         5. Return **claim** in {target_lang}.
-        5.  **Explanation:** Briefly summarize the evidence you found (or lack thereof). If your search finds no results, your explanation MUST state this clearly (e.g., "A web search did not yield any credible sources reporting on this event."). Return **Explanation:** in {target_lang}.
-        6.  **Sources:** Provide a JSON list of URL strings for the high-authority sources you used.
-        7.  **DO NOT state you need "access to the speaker".**
+        6.  **Explanation:** Briefly summarize the evidence you found (or lack thereof). If your search finds no results, your explanation MUST state this clearly (e.g., "A web search did not yield any credible sources reporting on this event."). Return **Explanation:** in {target_lang}.
+        7.  **Sources:** Provide a JSON list of URL strings for the high-authority sources you used.
+        8.  **DO NOT state you need "access to the speaker".**
 
         List of claims to check:
         {json.dumps(claims_list)}
