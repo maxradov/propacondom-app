@@ -1,0 +1,96 @@
+# Arabic translations for PROJECT.
+# Copyright (C) 2025 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2025-06-22 23:16+0000\n"
+"PO-Revision-Date: 2025-06-23 02:40+0300\n"
+"Last-Translator: Gemini AI Assistant\n"
+"Language: ar\n"
+"Language-Team: ar <LL@li.org>\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : "
+"n%100>=3 && n%100<=10 ? 3 : n%100>=0 && n%100<=2 ? 4 : 5);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: backend/app.py:152
+msgid "Report not found"
+msgstr "لم يتم العثور على التقرير"
+
+#: backend/app.py:155
+msgid "An error occurred"
+msgstr "حدث خطأ"
+
+#: backend/templates/index.html:3 backend/templates/index.html:9
+#: backend/templates/layout.html:6
+msgid "AI Fact Checker"
+msgstr "مدقق الحقائق بالذكاء الاصطناعي"
+
+#: backend/templates/index.html:10
+msgid "Don't be fooled. Check factual accuracy."
+msgstr "لا تنخدع. تحقق من دقة الحقائق."
+
+#: backend/templates/index.html:13
+msgid "Paste a YouTube link to check..."
+msgstr "الصق رابط يوتيوب للتحقق..."
+
+#: backend/templates/index.html:14
+msgid "Run Fact Check"
+msgstr "بدء التحقق من الحقائق"
+
+#: backend/templates/index.html:23
+msgid "Last checked:"
+msgstr "آخر فحص:"
+
+#: backend/templates/index.html:33
+#, python-format
+msgid "%(credibility)s%% Credibility / %(confidence)s%% Confidence"
+msgstr "مصداقية %(credibility)s%% / ثقة %(confidence)s%%"
+
+#: backend/templates/index.html:41
+msgid "Loading more..."
+msgstr "جاري تحميل المزيد..."
+
+#: backend/templates/report.html:3
+msgid "Fact-Check Report for:"
+msgstr "تقرير التحقق من الحقائق لـ:"
+
+#: backend/templates/report.html:8
+msgid "Paste a new YouTube link to check..."
+msgstr "الصق رابط يوتيوب جديد للتحقق..."
+
+#: backend/templates/report.html:9
+msgid "Run Another Fact Check"
+msgstr "إجراء تحقق آخر من الحقائق"
+
+#: backend/templates/report.html:19
+msgid "Disclaimer:"
+msgstr "إخلاء مسؤولية:"
+
+#: backend/templates/report.html:19
+msgid ""
+"This report is AI-generated. It may contain errors and may not have "
+"access to real-time data. Please verify the information independently."
+msgstr "هذا التقرير تم إنشاؤه بواسطة الذكاء الاصطناعي. قد يحتوي على أخطاء وقد لا يتمكن من الوصول إلى البيانات في الوقت الفعلي. يرجى التحقق من المعلومات بشكل مستقل."
+
+#: backend/templates/report.html:22
+msgid "Fact-check report for:"
+msgstr "تقرير التحقق من الحقائق لـ:"
+
+#: backend/templates/report.html:24
+msgid "Watch on YouTube"
+msgstr "شاهد على يوتيوب"
+
+#: backend/templates/report.html:25
+msgid "Share Results"
+msgstr "مشاركة النتائج"
+
+#: backend/templates/report.html:28
+msgid "Video Thumbnail"
+msgstr "الصورة المصغرة للفيديو"
