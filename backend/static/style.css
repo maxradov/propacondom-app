@@ -12,6 +12,100 @@
     --color-unverifiable: #495057; 
 }
 
+/* Добавьте/измените эти стили в вашем файле style.css */
+
+/* ... (существующие стили для :root, body, html) ... */
+
+/* Новый основной макет */
+.main-layout {
+    display: flex;
+    gap: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.main-content {
+    flex: 1; /* Занимает доступное пространство */
+    max-width: 700px;
+}
+
+.sidebar-feed {
+    width: 400px; /* Фиксированная ширина для боковой панели */
+    flex-shrink: 0;
+}
+
+#feed-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.feed-item a {
+    display: flex;
+    gap: 1rem;
+    text-decoration: none;
+    color: var(--text-color);
+    padding: 8px;
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+}
+
+.feed-item a:hover {
+    background-color: #e9ecef;
+}
+
+.feed-thumbnail {
+    width: 160px; /* Фиксированный размер превью */
+    height: 90px;
+    object-fit: cover;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+.feed-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.feed-title {
+    font-size: 1rem;
+    font-weight: 500;
+    margin: 0 0 0.25rem 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.feed-stats {
+    font-size: 0.85rem;
+    color: var(--secondary-color);
+    margin: 0;
+}
+
+.feed-loader {
+    text-align: center;
+    padding: 1rem;
+    color: var(--secondary-color);
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 1024px) {
+    .main-layout {
+        flex-direction: column;
+    }
+    .sidebar-feed {
+        width: 100%;
+        margin-top: 3rem;
+        padding-top: 2rem;
+        border-top: 1px solid var(--border-color);
+    }
+}
+
+
+
 body, html {
     font-family: 'Inter', sans-serif;
     background-color: var(--bg-color);

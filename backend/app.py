@@ -1,5 +1,7 @@
 import os
 from flask import Flask, request, jsonify, render_template
+from google.cloud.firestore_v1.query import Query
+
 from flask_cors import CORS
 from celery.result import AsyncResult
 # --- ИЗМЕНЕНИЕ ЗДЕСЬ ---
@@ -43,31 +45,65 @@ def get_status(task_id):
         print(f"Error getting task status for {task_id}: {e}")
         return jsonify({'status': 'FAILURE', 'result': 'Could not retrieve task status from backend.'}), 500
 
+def get_analyses(last_timestamp_str=None):
+    """Вспомогательная функция для получения порции анализов из Firestore."""
+    query = db.collection('analyses').order_by('created_at', direction=Query.DESCENDING)
+    
+    # Если передан timestamp последнего видео, начинаем поиск после него (пагинация)
+    if last_timestamp_str:
+        # Firestore требует объект datetime для курсора, конвертируем строку обратно
+        last_timestamp = datetime.datetime.fromisoformat(last_timestamp_str)
+        query = query.start_after({'created_at': last_timestamp})
+    
+    query = query.limit(5)
+    
+    results = []
+    for doc in query.stream():
+        data = doc.to_dict()
+        data['id'] = doc.id
+        # Убедимся, что дата всегда в строковом формате для JSON
+        if 'created_at' in data and hasattr(data['created_at'], 'isoformat'):
+            data['created_at'] = data['created_at'].isoformat()
+        results.append(data)
+    return results
+
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def serve_spa(path):
+    # Этот блок остается без изменений. Он обрабатывает страницы отчетов.
     if path.startswith('report/'):
         analysis_id = path.split('/')[1]
         try:
             doc_ref = db.collection('analyses').document(analysis_id)
             doc = doc_ref.get()
             if doc.exists:
-                # --- ИЗМЕНЕНИЕ ЗДЕСЬ: Преобразование данных перед отправкой в шаблон ---
                 report_data = doc.to_dict()
-                
                 # Проверяем, есть ли поле 'created_at' и является ли оно объектом datetime
                 if 'created_at' in report_data and isinstance(report_data['created_at'], datetime):
                     # Преобразуем его в строку формата ISO, понятную для JSON
                     report_data['created_at'] = report_data['created_at'].isoformat()
-
                 return render_template('report.html', report=report_data)
             else:
                 return "Report not found", 404
         except Exception as e:
-            print(f"Error fetching report {analysis_id}: {e}") 
+            print(f"Error fetching report {analysis_id}: {e}")
             return f"An error occurred: {e}", 500
-    
-    return render_template("index.html")
+
+    # --- СЮДА ВСТАВЛЯЕТСЯ ВАШ ВТОРОЙ СКРИНШОТ ---
+    # Этот блок проверяет, является ли страница главной (т.е. path пустой).
+    if not path:
+        try:
+            # Загружаем первую порцию из 5 видео
+            recent_analyses = get_analyses()
+            return render_template("index.html", recent_analyses=recent_analyses)
+        except Exception as e:
+            print(f"Error fetching initial analyses: {e}")
+            return render_template("index.html", recent_analyses=[])
+    # --- КОНЕЦ ВСТАВКИ ---
+
+    # Если путь не является ни отчетом, ни главной страницей,
+    # можно вернуть либо страницу 404, либо главную без данных.
+    return render_template("index.html", recent_analyses=[])
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 8080))

@@ -8,21 +8,43 @@
 	<link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
 </head>
 <body>
-    <main class="container">
-        <header>
-            <p class="description">Don't be fooled by propaganda. Check the video for factual accuracy. Insert the link to the YouTube video:</p>
-        </header>
+    <div class="main-layout">
+        <main class="main-content">
+            <header>
+                <h1>AI Fact Checker</h1>
+                <p class="description">Don't be fooled by propaganda. Check the video for factual accuracy.</p>
+            </header>
+            <section class="input-section">
+                <input type="text" id="youtube-url" placeholder="Paste a YouTube link to check...">
+                <button id="factcheck-btn">Run Fact Check</button>
+            </section>
+            <section id="status-section" class="status-section" style="display: none;">
+                <div class="loader"></div>
+                <div id="status-log" class="status-log"></div>
+            </section>
+        </main>
 
-        <section class="input-section">
-            <input type="text" id="youtube-url" placeholder="https://www.youtube.com/watch?v=...">
-            <button id="factcheck-btn">Run Fact Check</button>
-        </section>
-
-        <section id="status-section" class="status-section" style="display: none;">
-			<div class="loader"></div>
-			<div id="status-log" class="status-log"></div>
-		</section>
-    </main>
+        <aside class="sidebar-feed">
+            <div id="feed-container">
+                {% for analysis in recent_analyses %}
+                    {% if analysis.thumbnail_url and analysis.video_title != 'Title Not Found' %}
+                    <div class="feed-item" data-timestamp="{{ analysis.created_at }}">
+                        <a href="/report/{{ analysis.id }}" class="feed-item-link">
+                            <img src="{{ analysis.thumbnail_url }}" alt="" class="feed-thumbnail">
+                            <div class="feed-info">
+                                <h3 class="feed-title">{{ analysis.video_title }}</h3>
+                                <p class="feed-stats">
+                                    {{ analysis.confirmed_credibility }}% Credibility / {{ analysis.average_confidence }}% Confidence
+                                </p>
+                            </div>
+                        </a>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div id="feed-loader" class="feed-loader" style="display: none;">Loading more...</div>
+        </aside>
+    </div>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

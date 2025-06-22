@@ -85,3 +85,75 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 3000);
     }
 });
+
+// Добавьте этот код в конец вашего файла script.js
+
+document.addEventListener('DOMContentLoaded', () => {
+    // ... (существующий код для формы остается здесь) ...
+
+    // --- НОВЫЙ КОД ДЛЯ БЕСКОНЕЧНОЙ ПРОКРУТКИ ---
+    const feedContainer = document.getElementById('feed-container');
+    const loader = document.getElementById('feed-loader');
+    let isLoading = false;
+
+    const loadMoreAnalyses = async () => {
+        if (isLoading) return; // Предотвращаем повторные запросы
+
+        const lastItem = feedContainer.querySelector('.feed-item:last-child');
+        // Если элементов нет, ничего не делаем
+        if (!lastItem) return;
+
+        isLoading = true;
+        if(loader) loader.style.display = 'block';
+
+        const lastTimestamp = lastItem.dataset.timestamp;
+
+        try {
+            const response = await fetch(`/api/get_recent_analyses?last_timestamp=${lastTimestamp}`);
+            const newAnalyses = await response.json();
+
+            if (newAnalyses.length > 0) {
+                newAnalyses.forEach(analysis => {
+                    // Создаем HTML для нового элемента
+                    const itemHTML = `
+                        <a href="/report/${analysis.id}" class="feed-item-link">
+                            <img src="${analysis.thumbnail_url}" alt="" class="feed-thumbnail">
+                            <div class="feed-info">
+                                <h3 class="feed-title">${analysis.video_title}</h3>
+                                <p class="feed-stats">
+                                    ${analysis.confirmed_credibility}% Credibility / ${analysis.average_confidence}% Confidence
+                                </p>
+                            </div>
+                        </a>
+                    `;
+                    const newItem = document.createElement('div');
+                    newItem.className = 'feed-item';
+                    newItem.dataset.timestamp = analysis.created_at;
+                    newItem.innerHTML = itemHTML;
+                    feedContainer.appendChild(newItem);
+                });
+            } else {
+                // Если больше нет данных, отключаем скролл
+                window.removeEventListener('scroll', handleScroll);
+                if(loader) loader.textContent = 'No more results';
+            }
+        } catch (error) {
+            console.error('Failed to load more analyses:', error);
+            if(loader) loader.textContent = 'Failed to load';
+        }
+
+        isLoading = false;
+        if(loader && loader.textContent !== 'No more results') {
+            loader.style.display = 'none';
+        }
+    };
+
+    const handleScroll = () => {
+        // Проверяем, доскроллил ли пользователь до низа страницы
+        if (window.innerHeight + window.scrollY >= document.documentElement.offsetHeight - 100) {
+            loadMoreAnalyses();
+        }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+});
