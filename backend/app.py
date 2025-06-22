@@ -38,8 +38,18 @@ LANGUAGES = {
     'de': {'name': 'Deutsch', 'flag': '🇩🇪'}
 }
 app.config['BABEL_DEFAULT_LOCALE'] = 'en'
-babel = Babel(app)
 
+# --- ИЗМЕНЕНИЕ: Мы определяем функцию ДО инициализации Babel ---
+def get_locale():
+    # Сначала проверяем язык, установленный в cookie
+    lang_code = request.cookies.get('lang')
+    if lang_code in LANGUAGES:
+        return lang_code
+    # Если в cookie ничего нет, используем заголовок браузера
+    return request.accept_languages.best_match(list(LANGUAGES.keys()))
+
+# --- ИЗМЕНЕНИЕ: Убираем декоратор и передаем функцию напрямую в конструктор ---
+babel = Babel(app, locale_selector=get_locale)
 @babel.localeselector
 def get_locale():
     lang_code = request.cookies.get('lang')
