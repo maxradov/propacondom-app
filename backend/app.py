@@ -6,8 +6,8 @@ from datetime import datetime
 from google.cloud.firestore_v1.query import Query
 from flask_babel import Babel, _
 
-# Импортируем объекты из tasks.py
-from tasks import celery as celery_app, db
+# --- ИЗМЕНЕНИЕ: Импортируем функцию для получения клиента БД, а не сам объект db ---
+from tasks import celery as celery_app, get_db_client
 
 # --- App Configuration ---
 app = Flask(__name__)
@@ -31,16 +31,13 @@ babel = Babel(app)
 
 @babel.localeselector
 def get_locale():
-    # 1. Check for language in cookie
     lang_code = request.cookies.get('lang')
     if lang_code in LANGUAGES:
         return lang_code
-    # 2. Fallback to browser's Accept-Languages header
     return request.accept_languages.best_match(list(LANGUAGES.keys()))
 
 @app.context_processor
 def inject_conf_var():
-    # Pass language info to all templates
     return dict(
         LANGUAGES=LANGUAGES,
         CURRENT_LANG=get_locale()
@@ -50,13 +47,11 @@ def inject_conf_var():
 def set_language(lang):
     if lang not in LANGUAGES:
         lang = app.config['BABEL_DEFAULT_LOCALE']
-    
-    # Redirect to the same page the user was on
     response = make_response(redirect(request.referrer or url_for('serve_index')))
-    response.set_cookie('lang', lang, max_age=60*60*24*365*2) # Set for 2 years
+    response.set_cookie('lang', lang, max_age=60*60*24*365*2)
     return response
 
-# --- API Эндпоинты (без изменений) ---
+# --- API Эндпоинты ---
 
 @app.route('/api/analyze', methods=['POST'])
 def analyze():
@@ -87,6 +82,8 @@ def get_status(task_id):
         return jsonify({'status': 'FAILURE', 'result': 'Could not retrieve task status from backend.'}), 500
 
 def get_analyses(last_timestamp_str=None):
+    # --- ИЗМЕНЕНИЕ: Получаем клиент БД через функцию ---
+    db = get_db_client()
     query = db.collection('analyses').order_by('created_at', direction=Query.DESCENDING)
     
     if last_timestamp_str and isinstance(last_timestamp_str, str) and last_timestamp_str.strip():
@@ -118,7 +115,7 @@ def api_get_recent_analyses():
         print(f"Error in /api/get_recent_analyses: {e}")
         return jsonify({"error": "Failed to fetch more analyses"}), 500
 
-# --- Эндпоинты для отображения страниц (без изменений) ---
+# --- Эндпоинты для отображения страниц ---
 
 @app.route('/', methods=['GET'])
 def serve_index():
@@ -133,6 +130,8 @@ def serve_index():
 @app.route('/report/<analysis_id>', methods=['GET'])
 def serve_report(analysis_id):
     try:
+        # --- ИЗМЕНЕНИЕ: Получаем клиент БД через функцию ---
+        db = get_db_client()
         doc_ref = db.collection('analyses').document(analysis_id)
         doc = doc_ref.get()
         if doc.exists:
