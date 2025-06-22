@@ -95,9 +95,16 @@ def fact_check_video(self, video_url, target_lang='en'):
         self.update_state(state='PROGRESS', meta={'status_message': 'Analyzing text...'})
         model = genai.GenerativeModel('gemini-1.5-pro')
         safety_settings = {'HARM_CATEGORY_HARASSMENT': 'BLOCK_NONE', 'HARM_CATEGORY_HATE_SPEECH': 'BLOCK_NONE'}
+        prompt_claims = f"Analyze the following transcript. Your task is to extract the 5 main factual claims that can be verified against public information. Focus on specific, checkable statements. Present them as a numbered list. Transcript: --- {clean_text} ---"
 
-
-        prompt_fc = f"""
+        response_claims = model.generate_content(prompt_claims, safety_settings=safety_settings)
+        claims_list = [re.sub(r'^\d+\.\s*', '', line).strip() for line in response_claims.text.strip().split('\n') if line.strip() and re.match(r'^\d+\.', line)]
+        
+        if not claims_list: raise ValueError("AI did not return claims in the expected format.")
+        
+        self.update_state(state='PROGRESS', meta={'status_message': f'Extracted {len(claims_list)} statements. Fact-checking...'})
+        
+       prompt_fc = f"""
         You are a meticulous, real-time fact-checker. Your primary task is to verify each claim from the provided list by conducting a fresh, real-time search on the internet.
 
         **CRITICAL INSTRUCTIONS:**
@@ -114,15 +121,6 @@ def fact_check_video(self, video_url, target_lang='en'):
 
         Respond in {target_lang}.
         """
-        
-        response_claims = model.generate_content(prompt_claims, safety_settings=safety_settings)
-        claims_list = [re.sub(r'^\d+\.\s*', '', line).strip() for line in response_claims.text.strip().split('\n') if line.strip() and re.match(r'^\d+\.', line)]
-        
-        if not claims_list: raise ValueError("AI did not return claims in the expected format.")
-        
-        self.update_state(state='PROGRESS', meta={'status_message': f'Extracted {len(claims_list)} statements. Fact-checking...'})
-        
-        prompt_fc = f"""You are a meticulous fact-checker. For the provided list of claims, return a single, valid JSON array of objects. Each object in the array must have these exact keys: "claim", "verdict", "confidence_percentage", "explanation", "sources". "verdict" must be one of: "True", "False", "Misleading", "Partly True", "Unverifiable". "explanation" must be a concise, neutral summary of your findings. "sources" must be a JSON list of URL strings. CRITICAL: Your entire response must be ONLY the JSON array, starting with `[` and ending with `]`. Do not add any other text or markdown. Claims to check: {json.dumps(claims_list)}. Respond in {target_lang}."""
         response_fc = model.generate_content(prompt_fc, safety_settings=safety_settings)
         
         match = re.search(r'\[\s*\{.*\}\s*\]', response_fc.text, re.DOTALL)
