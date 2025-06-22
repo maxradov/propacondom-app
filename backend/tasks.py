@@ -104,7 +104,7 @@ def fact_check_video(self, video_url, target_lang='en'):
         
         self.update_state(state='PROGRESS', meta={'status_message': f'Extracted {len(claims_list)} statements. Fact-checking...'})
         
-       prompt_fc = f"""
+        prompt_fc = f"""
         You are a meticulous, real-time fact-checker. Your primary task is to verify each claim from the provided list by conducting a fresh, real-time search on the internet.
 
         **CRITICAL INSTRUCTIONS:**
