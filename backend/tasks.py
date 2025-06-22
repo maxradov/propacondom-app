@@ -7,9 +7,8 @@ import google.generativeai as genai
 from celery import Celery
 from google.cloud import firestore
 
-# --- Settings ---
-REDIS_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379/0')
-celery = Celery('tasks', broker=REDIS_URL, backend=REDIS_URL)
+# --- ИЗМЕНЕНИЕ: Импортируем готовый объект Celery ---
+from celery_init import celery
 
 # --- Ключи API ---
 GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')
@@ -44,6 +43,16 @@ def get_video_id(url):
     regex = r"(?:v=|\/embed\/|\/v\/|youtu\.be\/|\/shorts\/)([a-zA-Z0-9_-]{11})"
     match = re.search(regex, url)
     return match.group(1) if match else None
+
+# --- ИЗМЕНЕНИЕ: Указываем, что этот файл содержит наши задачи ---
+celery.conf.update(
+    task_serializer='json',
+    accept_content=['json'],
+    result_serializer='json',
+    timezone='Europe/Sofia',
+    enable_utc=True,
+    imports=('tasks',) # Явно указываем, где искать задачи
+)
 
 @celery.task(bind=True, name='tasks.fact_check_video', time_limit=900)
 def fact_check_video(self, video_url, target_lang='en'):
