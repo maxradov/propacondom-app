@@ -45,15 +45,21 @@ def get_status(task_id):
         print(f"Error getting task status for {task_id}: {e}")
         return jsonify({'status': 'FAILURE', 'result': 'Could not retrieve task status from backend.'}), 500
 
+
 def get_analyses(last_timestamp_str=None):
     """Вспомогательная функция для получения порции анализов из Firestore."""
     query = db.collection('analyses').order_by('created_at', direction=Query.DESCENDING)
     
-    # Если передан timestamp последнего видео, начинаем поиск после него (пагинация)
+    # --- ИЗМЕНЕНИЕ: Добавляем проверку, что last_timestamp_str не пустой ---
     if last_timestamp_str:
-        # Firestore требует объект datetime для курсора, конвертируем строку обратно
-        last_timestamp = datetime.datetime.fromisoformat(last_timestamp_str)
-        query = query.start_after({'created_at': last_timestamp})
+        try:
+            # Конвертируем строку обратно в объект datetime
+            last_timestamp = datetime.datetime.fromisoformat(last_timestamp_str.replace("Z", "+00:00"))
+            query = query.start_after({'created_at': last_timestamp})
+        except (ValueError, TypeError):
+            # Если формат некорректный, просто игнорируем его
+            print(f"Warning: Invalid timestamp format received: {last_timestamp_str}")
+            pass
     
     query = query.limit(5)
     
@@ -61,7 +67,6 @@ def get_analyses(last_timestamp_str=None):
     for doc in query.stream():
         data = doc.to_dict()
         data['id'] = doc.id
-        # Убедимся, что дата всегда в строковом формате для JSON
         if 'created_at' in data and hasattr(data['created_at'], 'isoformat'):
             data['created_at'] = data['created_at'].isoformat()
         results.append(data)

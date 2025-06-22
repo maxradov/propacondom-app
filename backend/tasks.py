@@ -155,7 +155,16 @@ def fact_check_video(self, video_url, target_lang='en'):
         return data_to_return
 
     except Exception as e:
+        # --- ИЗМЕНЕНИЕ: УЛУЧШЕННАЯ ОБРАБОТКА ИСКЛЮЧЕНИЙ ---
         print(f"!!! [TASK_CRITICAL] A critical error occurred in the task: {e}")
-        # Обновляем состояние задачи с информацией об ошибке
-        self.update_state(state='FAILURE', meta={'exc_type': type(e).__name__, 'exc_message': str(e)})
+        # Обновляем состояние задачи с информацией об ошибке в формате,
+        # который можно сериализовать в JSON.
+        self.update_state(
+            state='FAILURE',
+            meta={
+                'exc_type': type(e).__name__,
+                'exc_message': str(e) # Конвертируем исключение в строку
+            }
+        )
+        # Передаем исключение дальше, чтобы Celery тоже его увидел
         raise e
