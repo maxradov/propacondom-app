@@ -99,7 +99,7 @@ def fact_check_video(self, video_url, target_lang='en'):
 
         self.update_state(state='PROGRESS', meta={'status_message': 'Analyzing text...'})
         safety_settings = {'HARM_CATEGORY_HARASSMENT': 'BLOCK_NONE', 'HARM_CATEGORY_HATE_SPEECH': 'BLOCK_NONE'}
-        prompt_claims = f"Analyze the transcript. Extract 5 main factual claims that can be verified. Focus on specific, checkable statements. Present them as a numbered list. Transcript: --- {clean_text} ---"
+        prompt_claims = f"Analyze the transcript. Extract 5 main factual claims that can be verified. Focus on specific, checkable statements. Present them as a numbered list. Return claims written in {target_lang}. Transcript: --- {clean_text} ---"
         response_claims = gemini_model.generate_content(prompt_claims, safety_settings=safety_settings)
         claims_list = [re.sub(r'^\d+\.\s*', '', line).strip() for line in response_claims.text.strip().split('\n') if line.strip() and re.match(r'^\d+\.', line)]
         if not claims_list: raise ValueError("AI did not return claims in the expected format.")
@@ -126,7 +126,7 @@ def fact_check_video(self, video_url, target_lang='en'):
             {search_context}
             ---
             Your task is to return a single JSON object with these keys: "claim", "verdict", "confidence_percentage", "explanation", "sources".
-            - The "claim" value MUST be the original claim provided above.
+            - The "claim" value MUST be the original claim provided above. If the language of the claim is different from {target_lang}, then return the claims written in {target_lang}.
             - The "verdict" MUST be one of: "True", "False", "Misleading", "Partly True", "Unverifiable".
             - The "explanation" MUST be a concise, neutral summary of the evidence from the search results, written in {target_lang}.
             - The "sources" MUST be a list of the URLs from the search results that you used for your conclusion.
