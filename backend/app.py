@@ -6,7 +6,7 @@ from datetime import datetime
 from google.cloud.firestore_v1.query import Query
 from flask_babel import Babel, _
 
-# --- ИЗМЕНЕНИЕ: Импортируем celery из нового файла, а get_db_client - из tasks
+# --- ИСПРАВЛЕНИЕ 1: Правильные, раздельные импорты ---
 from celery_init import celery as celery_app
 from tasks import get_db_client
 
@@ -14,14 +14,14 @@ from tasks import get_db_client
 app = Flask(__name__)
 CORS(app)
 
-
-# Связываем контекст Flask с Celery
+# --- ИСПРАВЛЕНИЕ 2: Добавляем класс для связывания контекста Flask и Celery ---
 class FlaskTask(celery_app.Task):
     def __call__(self, *args, **kwargs):
         with app.app_context():
             return self.run(*args, **kwargs)
 
 celery_app.Task = FlaskTask
+# --- КОНЕЦ ИСПРАВЛЕНИЙ ---
 
 
 # --- Babel (i18n) Configuration ---
