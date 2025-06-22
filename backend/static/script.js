@@ -172,6 +172,24 @@ document.addEventListener('DOMContentLoaded', () => {
             loadMoreAnalyses();
         }
     };
+	
+	// --- ЛОГИКА ДЛЯ ПЕРЕКЛЮЧАТЕЛЯ ЯЗЫКОВ ---
+    const langSwitcher = document.querySelector('.lang-switcher');
+    if (langSwitcher) {
+        const currentLang = langSwitcher.querySelector('.lang-switcher-current');
+        
+        currentLang.addEventListener('click', (event) => {
+            event.stopPropagation(); // Предотвращаем закрытие по клику на самом элементе
+            langSwitcher.classList.toggle('open');
+        });
+
+        // Закрываем дропдаун, если клик был вне его области
+        window.addEventListener('click', () => {
+            if (langSwitcher.classList.contains('open')) {
+                langSwitcher.classList.remove('open');
+            }
+        });
+    }
 
     window.addEventListener('scroll', handleScroll);
     fillScreen(); // <-- Запускаем начальное заполнение экрана

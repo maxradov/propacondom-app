@@ -372,3 +372,68 @@ main.container > header {
     letter-spacing: 0.5px;
     margin: 0 0 1rem 8px;      /* Отступ снизу и небольшой отступ слева, чтобы выровнять с элементами ленты */
 }
+
+/* --- СТИЛИ ДЛЯ ПЕРЕКЛЮЧАТЕЛЯ ЯЗЫКОВ --- */
+.top-bar {
+    justify-content: space-between; /* Распределяем элементы по краям */
+}
+
+.lang-switcher {
+    position: relative;
+    font-size: 1rem;
+}
+
+.lang-switcher-current {
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+    display: flex;
+    align-items: center;
+}
+.lang-switcher-current:hover {
+    background-color: var(--bg-color);
+}
+.lang-switcher-current span {
+    font-size: 1.5rem; /* Увеличиваем флаг */
+}
+
+.lang-dropdown {
+    display: none; /* Скрыт по умолчанию */
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    padding: 0.5rem;
+    z-index: 1000;
+    min-width: 180px; /* Минимальная ширина списка */
+}
+
+.lang-switcher.open .lang-dropdown {
+    display: block; /* Показываем при классе 'open' */
+}
+
+.lang-option {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    text-decoration: none;
+    color: var(--text-color);
+    border-radius: 6px;
+    transition: background-color 0.2s ease;
+}
+.lang-option:hover {
+    background-color: var(--bg-color);
+}
+.lang-option.active {
+    font-weight: bold;
+    background-color: #e9ecef;
+}
+
+.lang-option span:first-child {
+    font-size: 1.2rem;
+}

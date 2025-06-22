@@ -1,57 +1,44 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fact-Check Report: {{ report.video_title }}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
-</head>
-<body>
-    <div class="top-bar">
-        <a href="/" class="logo-link">
-            <img src="{{ url_for('static', filename='favicon.png') }}" alt="Logo" class="logo-image">
-            <span>Propacondom</span>
-        </a>
-    </div>
+{% extends "layout.html" %}
 
-    <main class="container">
-        <section class="input-section top-form">
-			<input type="text" id="youtube-url" placeholder="Paste a new YouTube link to check...">
-			<button id="factcheck-btn">Run Another Fact Check</button>
-		</section>
-        
-        <section id="status-section" class="status-section" style="display: none;">
-			<div class="loader"></div>
-			<div id="status-log" class="status-log"></div>
-		</section>
+{% block title %}{{ _('Fact-Check Report for:') }} {{ report.video_title }}{% endblock %}
 
-        <div class="report-wrapper">
-            <div class="disclaimer-box">
-				<p><strong>Disclaimer:</strong> This report is AI-generated. It may contain errors and may not have access to real-time data. Please verify the information independently.</p>
-			</div>
-			<header class="page-header">
-				<p class="description">Fact-check report for:</p>
-				<h1>{{ report.video_title }}</h1>
-				<a href="{{ report.video_url }}" target="_blank" class="video-link">Watch on YouTube</a>
-				<button id="share-btn" class="share-button-header">Share Results</button>
-			</header>
-            
-            <img src="{{ report.thumbnail_url }}" alt="Video Thumbnail" class="video-thumbnail" onerror="this.style.display='none'">
+{% block content %}
+<main class="container">
+    <section class="input-section top-form">
+        <input type="text" id="youtube-url" placeholder="{{ _('Paste a new YouTube link to check...') }}">
+        <button id="factcheck-btn">{{ _('Run Another Fact Check') }}</button>
+    </section>
+    
+    <section id="status-section" class="status-section" style="display: none;">
+        <div class="loader"></div>
+        <div id="status-log" class="status-log"></div>
+    </section>
 
-            <section id="result-section" class="result-section">
-                <div id="progress-container" class="progress-container"></div>
-                <div id="confidence-container" class="confidence-container"></div>
-                <div id="report-container" class="report-container"></div>
-            </section>
+    <div class="report-wrapper">
+        <div class="disclaimer-box">
+            <p><strong>{{ _('Disclaimer:') }}</strong> {{ _('This report is AI-generated. It may contain errors and may not have access to real-time data. Please verify the information independently.') }}</p>
         </div>
-    </main>
-    
-    <script>
-        const reportData = {{ report | tojson }};
-    </script>
-    
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
-    <script src="{{ url_for('static', filename='report.js') }}"></script>
-</body>
-</html>
+        <header class="page-header">
+            <p class="description">{{ _('Fact-check report for:') }}</p>
+            <h1>{{ report.video_title }}</h1>
+            <a href="{{ report.video_url }}" target="_blank" class="video-link">{{ _('Watch on YouTube') }}</a>
+            <button id="share-btn" class="share-button-header">{{ _('Share Results') }}</button>
+        </header>
+        
+        <img src="{{ report.thumbnail_url }}" alt="{{ _('Video Thumbnail') }}" class="video-thumbnail" onerror="this.style.display='none'">
+
+        <section id="result-section" class="result-section">
+            <div id="progress-container" class="progress-container"></div>
+            <div id="confidence-container" class="confidence-container"></div>
+            <div id="report-container" class="report-container"></div>
+        </section>
+    </div>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const reportData = {{ report | tojson }};
+</script>
+<script src="{{ url_for('static', filename='report.js') }}"></script>
+{% endblock %}

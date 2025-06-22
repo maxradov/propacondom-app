@@ -1,58 +1,44 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Fact Checker</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-	<link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
-</head>
-<body>
-    <div class="top-bar">
-        <a href="/" class="logo-link">
-            <img src="{{ url_for('static', filename='favicon.png') }}" alt="Logo" class="logo-image">
-            <span>Propacondom</span>
-        </a>
-    </div>
+{% extends "layout.html" %}
 
-    <div class="main-layout">
-        <main class="main-content">
-            <header class="page-header">
-                <h1>AI Fact Checker</h1>
-                <p class="description">Don't be fooled. Check factual accuracy.</p>
-            </header>
-            <section class="input-section">
-                <input type="text" id="youtube-url" placeholder="Paste a YouTube link to check...">
-                <button id="factcheck-btn">Run Fact Check</button>
-            </section>
-            <section id="status-section" class="status-section" style="display: none;">
-                <div class="loader"></div>
-                <div id="status-log" class="status-log"></div>
-            </section>
-        </main>
+{% block title %}{{ _('AI Fact Checker') }}{% endblock %}
 
-        <aside class="sidebar-feed">
-			<h4 class="feed-header-title">Last checked:</h4>
-			<div id="feed-container">
-				{% for analysis in recent_analyses %}
-					{% if analysis.thumbnail_url and analysis.video_title != 'Title Not Found' %}
-					<div class="feed-item" data-timestamp="{{ analysis.created_at }}">
-						<a href="/report/{{ analysis.id }}" class="feed-item-link">
-							<img src="{{ analysis.thumbnail_url }}" alt="" class="feed-thumbnail">
-							<div class="feed-info">
-								<h3 class="feed-title">{{ analysis.video_title }}</h3>
-								<p class="feed-stats">
-									{{ analysis.confirmed_credibility }}% Credibility / {{ analysis.average_confidence }}% Confidence
-								</p>
-							</div>
-						</a>
-					</div>
-					{% endif %}
-				{% endfor %}
-			</div>
-			<div id="feed-loader" class="feed-loader" style="display: none;">Loading more...</div>
-		</aside>
-    </div>
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
-</body>
-</html>
+{% block content %}
+<div class="main-layout">
+    <main class="main-content">
+        <header class="page-header">
+            <h1>{{ _('AI Fact Checker') }}</h1>
+            <p class="description">{{ _('Don\'t be fooled. Check factual accuracy.') }}</p>
+        </header>
+        <section class="input-section">
+            <input type="text" id="youtube-url" placeholder="{{ _('Paste a YouTube link to check...') }}">
+            <button id="factcheck-btn">{{ _('Run Fact Check') }}</button>
+        </section>
+        <section id="status-section" class="status-section" style="display: none;">
+            <div class="loader"></div>
+            <div id="status-log" class="status-log"></div>
+        </section>
+    </main>
+
+    <aside class="sidebar-feed">
+        <h4 class="feed-header-title">{{ _('Last checked:') }}</h4>
+        <div id="feed-container">
+            {% for analysis in recent_analyses %}
+                {% if analysis.thumbnail_url and analysis.video_title != 'Title Not Found' %}
+                <div class="feed-item" data-timestamp="{{ analysis.created_at }}">
+                    <a href="/report/{{ analysis.id }}" class="feed-item-link">
+                        <img src="{{ analysis.thumbnail_url }}" alt="" class="feed-thumbnail">
+                        <div class="feed-info">
+                            <h3 class="feed-title">{{ analysis.video_title }}</h3>
+                            <p class="feed-stats">
+                                {{ _('%(credibility)s%% Credibility / %(confidence)s%% Confidence', credibility=analysis.confirmed_credibility, confidence=analysis.average_confidence) }}
+                            </p>
+                        </div>
+                    </a>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div id="feed-loader" class="feed-loader" style="display: none;">{{ _('Loading more...') }}</div>
+    </aside>
+</div>
+{% endblock %}

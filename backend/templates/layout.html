@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="{{ CURRENT_LANG }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ _('AI Fact Checker') }}{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+	<link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
+</head>
+<body>
+    <div class="top-bar">
+        <a href="/" class="logo-link">
+            <img src="{{ url_for('static', filename='favicon.png') }}" alt="Logo" class="logo-image">
+            <span>Propacondom</span>
+        </a>
+
+        <div class="lang-switcher">
+            <div class="lang-switcher-current">
+                <span>{{ LANGUAGES[CURRENT_LANG]['flag'] }}</span>
+            </div>
+            <div class="lang-dropdown">
+                {% for lang_code, lang_info in LANGUAGES.items() %}
+                    <a href="{{ url_for('set_language', lang=lang_code) }}" class="lang-option {% if lang_code == CURRENT_LANG %}active{% endif %}">
+                        <span>{{ lang_info['flag'] }}</span>
+                        <span>{{ lang_info['name'] }}</span>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+        </div>
+
+    {% block content %}{% endblock %}
+    
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
