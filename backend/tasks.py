@@ -96,7 +96,25 @@ def fact_check_video(self, video_url, target_lang='en'):
         model = genai.GenerativeModel('gemini-1.5-pro')
         safety_settings = {'HARM_CATEGORY_HARASSMENT': 'BLOCK_NONE', 'HARM_CATEGORY_HATE_SPEECH': 'BLOCK_NONE'}
 
-        prompt_claims = f"Analyze the following transcript. Your task is to extract the 5 main factual claims that can be verified against public information. Focus on specific, checkable statements. Present them as a numbered list. Transcript: --- {clean_text} ---"
+
+        prompt_fc = f"""
+        You are a meticulous, real-time fact-checker. Your primary task is to verify each claim from the provided list by conducting a fresh, real-time search on the internet.
+
+        **CRITICAL INSTRUCTIONS:**
+        1.  **You MUST perform a real-time internet search for every claim.** Do not rely on your pre-existing knowledge, especially for recent events.
+        2.  Your response MUST be ONLY a single, valid JSON array of objects. Do not add any text before or after the array.
+        3.  Each object in the array must have these exact keys: "claim", "verdict", "confidence_percentage", "explanation", "sources".
+        4.  **Verdict:** Must be one of: "True", "False", "Misleading", "Partly True", "Unverifiable".
+        5.  **Explanation:** Briefly summarize the evidence you found during your web search. If an event is very recent, mention this and cite the latest available reports.
+        6.  **Sources:** Provide a JSON list of URL strings for the high-authority news sites, official reports, or scientific papers you used. Prioritize primary sources.
+        7.  **DO NOT state you need "access to the speaker".** Your job is to check claims against public information on the internet. If no reliable information can be found online, the verdict is "Unverifiable".
+
+        List of claims to check:
+        {json.dumps(claims_list)}
+
+        Respond in {target_lang}.
+        """
+        
         response_claims = model.generate_content(prompt_claims, safety_settings=safety_settings)
         claims_list = [re.sub(r'^\d+\.\s*', '', line).strip() for line in response_claims.text.strip().split('\n') if line.strip() and re.match(r'^\d+\.', line)]
         
