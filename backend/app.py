@@ -50,16 +50,17 @@ def get_analyses(last_timestamp_str=None):
     """Вспомогательная функция для получения порции анализов из Firestore."""
     query = db.collection('analyses').order_by('created_at', direction=Query.DESCENDING)
     
-    # --- ИЗМЕНЕНИЕ: Добавляем проверку, что last_timestamp_str не пустой ---
-    if last_timestamp_str:
+    # Более надежная проверка и обработка timestamp
+    if last_timestamp_str and isinstance(last_timestamp_str, str) and last_timestamp_str.strip():
         try:
-            # Конвертируем строку обратно в объект datetime
-            last_timestamp = datetime.datetime.fromisoformat(last_timestamp_str.replace("Z", "+00:00"))
+            # Преобразуем строку ISO формата обратно в объект datetime
+            last_timestamp = datetime.datetime.fromisoformat(last_timestamp_str)
             query = query.start_after({'created_at': last_timestamp})
-        except (ValueError, TypeError):
-            # Если формат некорректный, просто игнорируем его
-            print(f"Warning: Invalid timestamp format received: {last_timestamp_str}")
-            pass
+        except ValueError:
+            print(f"Warning: Could not parse timestamp: '{last_timestamp_str}'")
+            # Если формат некорректный, просто продолжаем без пагинации (вернется пустой список)
+            # Чтобы избежать бесконечных запросов, можно просто вернуть пустой список
+            return []
     
     query = query.limit(5)
     

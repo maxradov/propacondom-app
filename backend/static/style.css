@@ -315,3 +315,12 @@ main.container > header {
     font-size: 1.1rem;
     padding: 0.5rem 0;
 }
+
+.feed-header-title {
+    font-size: 0.85rem;          /* Маленький шрифт */
+    font-weight: 500;
+    color: var(--secondary-color); /* Серый цвет из наших переменных */
+    text-transform: uppercase;   /* Все буквы заглавные для стиля */
+    letter-spacing: 0.5px;
+    margin: 0 0 1rem 8px;      /* Отступ снизу и небольшой отступ слева, чтобы выровнять с элементами ленты */
+}

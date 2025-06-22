@@ -96,57 +96,62 @@ document.addEventListener('DOMContentLoaded', () => {
     const loader = document.getElementById('feed-loader');
     let isLoading = false;
 
-    const loadMoreAnalyses = async () => {
-        if (isLoading) return; // Предотвращаем повторные запросы
+	const loadMoreAnalyses = async () => {
+		if (isLoading) return;
 
-        const lastItem = feedContainer.querySelector('.feed-item:last-child');
-        // Если элементов нет, ничего не делаем
-        if (!lastItem) return;
+		const lastItem = feedContainer.querySelector('.feed-item:last-child');
+		if (!lastItem) return;
 
-        isLoading = true;
-        if(loader) loader.style.display = 'block';
+		isLoading = true;
+		if(loader) loader.style.display = 'block';
 
-        const lastTimestamp = lastItem.dataset.timestamp;
+		const lastTimestamp = lastItem.dataset.timestamp;
 
-        try {
-            const response = await fetch(`/api/get_recent_analyses?last_timestamp=${lastTimestamp}`);
-            const newAnalyses = await response.json();
+		try {
+			// --- ИЗМЕНЕНИЕ: Кодируем timestamp для безопасной передачи в URL ---
+			const response = await fetch(`/api/get_recent_analyses?last_timestamp=${encodeURIComponent(lastTimestamp)}`);
+			
+			// Добавляем проверку, что ответ действительно успешный
+			if (!response.ok) {
+				throw new Error(`Server responded with status: ${response.status}`);
+			}
 
-            if (newAnalyses.length > 0) {
-                newAnalyses.forEach(analysis => {
-                    // Создаем HTML для нового элемента
-                    const itemHTML = `
-                        <a href="/report/${analysis.id}" class="feed-item-link">
-                            <img src="${analysis.thumbnail_url}" alt="" class="feed-thumbnail">
-                            <div class="feed-info">
-                                <h3 class="feed-title">${analysis.video_title}</h3>
-                                <p class="feed-stats">
-                                    ${analysis.confirmed_credibility}% Credibility / ${analysis.average_confidence}% Confidence
-                                </p>
-                            </div>
-                        </a>
-                    `;
-                    const newItem = document.createElement('div');
-                    newItem.className = 'feed-item';
-                    newItem.dataset.timestamp = analysis.created_at;
-                    newItem.innerHTML = itemHTML;
-                    feedContainer.appendChild(newItem);
-                });
-            } else {
-                // Если больше нет данных, отключаем скролл
-                window.removeEventListener('scroll', handleScroll);
-                if(loader) loader.textContent = 'No more results';
-            }
-        } catch (error) {
-            console.error('Failed to load more analyses:', error);
-            if(loader) loader.textContent = 'Failed to load';
-        }
+			const newAnalyses = await response.json();
 
-        isLoading = false;
-        if(loader && loader.textContent !== 'No more results') {
-            loader.style.display = 'none';
-        }
-    };
+			if (newAnalyses.length > 0) {
+				newAnalyses.forEach(analysis => {
+					const itemHTML = `
+						<a href="/report/${analysis.id}" class="feed-item-link">
+							<img src="${analysis.thumbnail_url}" alt="" class="feed-thumbnail">
+							<div class="feed-info">
+								<h3 class="feed-title">${analysis.video_title}</h3>
+								<p class="feed-stats">
+									${analysis.confirmed_credibility}% Credibility / ${analysis.average_confidence}% Confidence
+								</p>
+							</div>
+						</a>
+					`;
+					const newItem = document.createElement('div');
+					newItem.className = 'feed-item';
+					newItem.dataset.timestamp = analysis.created_at;
+					newItem.innerHTML = itemHTML;
+					feedContainer.appendChild(newItem);
+				});
+			} else {
+				window.removeEventListener('scroll', handleScroll);
+				if(loader) loader.textContent = 'No more results';
+			}
+		} catch (error) {
+			console.error('Failed to load more analyses:', error);
+			if(loader) loader.textContent = 'Failed to load'; // <-- Теперь вы видите это сообщение
+		}
+
+		isLoading = false;
+		// Скрываем загрузчик, только если он не показывает финальное сообщение
+		if(loader && loader.textContent !== 'No more results' && loader.textContent !== 'Failed to load') {
+			loader.style.display = 'none';
+		}
+	};
 
     const handleScroll = () => {
         // Проверяем, доскроллил ли пользователь до низа страницы
