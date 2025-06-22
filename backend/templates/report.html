@@ -8,6 +8,13 @@
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
 </head>
 <body>
+    <div class="top-bar">
+        <a href="/" class="logo-link">
+            <img src="{{ url_for('static', filename='favicon.png') }}" alt="Logo" class="logo-image">
+            <span>Propacondom</span>
+        </a>
+    </div>
+
     <main class="container">
         <section class="input-section top-form">
 			<input type="text" id="youtube-url" placeholder="Paste a new YouTube link to check...">
@@ -20,7 +27,7 @@
 		</section>
 
         <div class="report-wrapper">
-            <header>
+            <header class="page-header">
                 <p class="description">Fact-check report for:</p>
                 <h1>{{ report.video_title }}</h1>
                 <a href="{{ report.video_url }}" target="_blank" class="video-link">Watch on YouTube</a>

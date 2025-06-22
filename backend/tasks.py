@@ -9,8 +9,7 @@ from google.cloud import firestore
 
 # --- Settings ---
 REDIS_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379/0')
-celery = Celery(__name__, broker=REDIS_URL, backend=REDIS_URL)
-
+celery = Celery('tasks', broker=REDIS_URL, backend=REDIS_URL)
 GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')
 if GEMINI_API_KEY:
     genai.configure(api_key=GEMINI_API_KEY)
