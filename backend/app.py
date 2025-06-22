@@ -6,7 +6,6 @@ from datetime import datetime
 from google.cloud.firestore_v1.query import Query
 from flask_babel import Babel, _
 
-# --- ИСПРАВЛЕНИЕ 1: Правильные, раздельные импорты ---
 from celery_init import celery as celery_app
 from tasks import get_db_client
 
@@ -14,15 +13,12 @@ from tasks import get_db_client
 app = Flask(__name__)
 CORS(app)
 
-# --- ИСПРАВЛЕНИЕ 2: Добавляем класс для связывания контекста Flask и Celery ---
 class FlaskTask(celery_app.Task):
     def __call__(self, *args, **kwargs):
         with app.app_context():
             return self.run(*args, **kwargs)
 
 celery_app.Task = FlaskTask
-# --- КОНЕЦ ИСПРАВЛЕНИЙ ---
-
 
 # --- Babel (i18n) Configuration ---
 LANGUAGES = {
@@ -39,24 +35,18 @@ LANGUAGES = {
 }
 app.config['BABEL_DEFAULT_LOCALE'] = 'en'
 
-# --- ИЗМЕНЕНИЕ: Мы определяем функцию ДО инициализации Babel ---
+# Определяем нашу функцию для выбора языка
 def get_locale():
-    # Сначала проверяем язык, установленный в cookie
     lang_code = request.cookies.get('lang')
     if lang_code in LANGUAGES:
         return lang_code
-    # Если в cookie ничего нет, используем заголовок браузера
     return request.accept_languages.best_match(list(LANGUAGES.keys()))
 
-# --- ИЗМЕНЕНИЕ: Убираем декоратор и передаем функцию напрямую в конструктор ---
+# Инициализируем Babel, передавая функцию выбора языка НАПРЯМУЮ.
+# Декоратор @babel.localeselector больше не нужен и УДАЛЕН.
 babel = Babel(app, locale_selector=get_locale)
-@babel.localeselector
-def get_locale():
-    lang_code = request.cookies.get('lang')
-    if lang_code in LANGUAGES:
-        return lang_code
-    return request.accept_languages.best_match(list(LANGUAGES.keys()))
 
+# Этот декоратор отвечает за передачу переменных в шаблоны, он должен остаться
 @app.context_processor
 def inject_conf_var():
     return dict(
@@ -103,7 +93,6 @@ def get_status(task_id):
         return jsonify({'status': 'FAILURE', 'result': 'Could not retrieve task status from backend.'}), 500
 
 def get_analyses(last_timestamp_str=None):
-    # --- ИЗМЕНЕНИЕ: Получаем клиент БД через функцию ---
     db = get_db_client()
     query = db.collection('analyses').order_by('created_at', direction=Query.DESCENDING)
     
@@ -151,7 +140,6 @@ def serve_index():
 @app.route('/report/<analysis_id>', methods=['GET'])
 def serve_report(analysis_id):
     try:
-        # --- ИЗМЕНЕНИЕ: Получаем клиент БД через функцию ---
         db = get_db_client()
         doc_ref = db.collection('analyses').document(analysis_id)
         doc = doc_ref.get()
