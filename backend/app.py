@@ -42,6 +42,7 @@ def get_analyses(last_timestamp_str=None):
     """Вспомогательная функция для получения порции анализов из Firestore."""
     query = db.collection('analyses').order_by('created_at', direction=Query.DESCENDING)
     
+    # ... (логика с timestamp остается без изменений) ...
     if last_timestamp_str and isinstance(last_timestamp_str, str) and last_timestamp_str.strip():
         try:
             last_timestamp = datetime.fromisoformat(last_timestamp_str)
@@ -50,7 +51,9 @@ def get_analyses(last_timestamp_str=None):
             print(f"Warning: Could not parse timestamp: '{last_timestamp_str}'")
             return []
     
-    query = query.limit(5)
+    # ИЗМЕНЕНИЕ: Увеличиваем лимит с 5 до 10
+    query = query.limit(10)
+    
     results = []
     for doc in query.stream():
         data = doc.to_dict()

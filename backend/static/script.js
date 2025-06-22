@@ -1,9 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // --- Секция для формы анализа (без изменений) ---
     const urlInput = document.getElementById('youtube-url');
     const checkBtn = document.getElementById('factcheck-btn');
     const statusSection = document.getElementById('status-section');
     const statusLog = document.getElementById('status-log');
-    
     let pollingInterval;
     let lastStatusMessage = '';
 
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    function pollStatus(taskId, videoUrl, userLang) {
+	function pollStatus(taskId, videoUrl, userLang) {
         pollingInterval = setInterval(async () => {
             try {
                 const statusResponse = await fetch(`/api/status/${taskId}`);
@@ -84,81 +84,95 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }, 3000);
     }
-});
 
-// Добавьте этот код в конец вашего файла script.js
-
-document.addEventListener('DOMContentLoaded', () => {
-    // ... (существующий код для формы остается здесь) ...
-
-    // --- НОВЫЙ КОД ДЛЯ БЕСКОНЕЧНОЙ ПРОКРУТКИ ---
+    // --- НОВАЯ ЛОГИКА ДЛЯ ДИНАМИЧЕСКОЙ ЛЕНТЫ ---
     const feedContainer = document.getElementById('feed-container');
     const loader = document.getElementById('feed-loader');
+    if (!feedContainer) return; // Если ленты нет на странице, ничего не делаем
+
     let isLoading = false;
+    let totalLoadedCount = feedContainer.children.length; // Считаем, сколько уже загружено сервером
+    const MAX_ITEMS = 50; // Максимальное количество видео
 
-	const loadMoreAnalyses = async () => {
-		if (isLoading) return;
+    // Функция для загрузки следующей порции видео
+    const loadMoreAnalyses = async () => {
+        if (isLoading || totalLoadedCount >= MAX_ITEMS) return;
 
-		const lastItem = feedContainer.querySelector('.feed-item:last-child');
-		if (!lastItem) return;
+        const lastItem = feedContainer.querySelector('.feed-item:last-child');
+        if (!lastItem) { // На случай, если лента изначально пуста
+             if(loader) loader.style.display = 'none';
+             return;
+        }
 
-		isLoading = true;
-		if(loader) loader.style.display = 'block';
+        isLoading = true;
+        if (loader) loader.style.display = 'block';
 
-		const lastTimestamp = lastItem.dataset.timestamp;
+        const lastTimestamp = lastItem.dataset.timestamp;
 
-		try {
-			// --- ИЗМЕНЕНИЕ: Кодируем timestamp для безопасной передачи в URL ---
-			const response = await fetch(`/api/get_recent_analyses?last_timestamp=${encodeURIComponent(lastTimestamp)}`);
-			
-			// Добавляем проверку, что ответ действительно успешный
-			if (!response.ok) {
-				throw new Error(`Server responded with status: ${response.status}`);
-			}
+        try {
+            const response = await fetch(`/api/get_recent_analyses?last_timestamp=${encodeURIComponent(lastTimestamp)}`);
+            if (!response.ok) throw new Error(`Server responded with status: ${response.status}`);
+            const newAnalyses = await response.json();
 
-			const newAnalyses = await response.json();
+            if (newAnalyses.length > 0) {
+                newAnalyses.forEach(analysis => {
+                    // Проверяем, не превысим ли мы лимит
+                    if (totalLoadedCount < MAX_ITEMS) {
+                        const itemHTML = `
+                            <a href="/report/${analysis.id}" class="feed-item-link">
+                                <img src="${analysis.thumbnail_url}" alt="" class="feed-thumbnail">
+                                <div class="feed-info">
+                                    <h3 class="feed-title">${analysis.video_title}</h3>
+                                    <p class="feed-stats">
+                                        ${analysis.confirmed_credibility}% Credibility / ${analysis.average_confidence}% Confidence
+                                    </p>
+                                </div>
+                            </a>`;
+                        const newItem = document.createElement('div');
+                        newItem.className = 'feed-item';
+                        newItem.dataset.timestamp = analysis.created_at;
+                        newItem.innerHTML = itemHTML;
+                        feedContainer.appendChild(newItem);
+                        totalLoadedCount++; // Увеличиваем счетчик
+                    }
+                });
+            }
+            
+            // Если достигли лимита или больше нет данных
+            if (newAnalyses.length === 0 || totalLoadedCount >= MAX_ITEMS) {
+                window.removeEventListener('scroll', handleScroll);
+                if (loader) loader.textContent = 'No more results';
+            }
 
-			if (newAnalyses.length > 0) {
-				newAnalyses.forEach(analysis => {
-					const itemHTML = `
-						<a href="/report/${analysis.id}" class="feed-item-link">
-							<img src="${analysis.thumbnail_url}" alt="" class="feed-thumbnail">
-							<div class="feed-info">
-								<h3 class="feed-title">${analysis.video_title}</h3>
-								<p class="feed-stats">
-									${analysis.confirmed_credibility}% Credibility / ${analysis.average_confidence}% Confidence
-								</p>
-							</div>
-						</a>
-					`;
-					const newItem = document.createElement('div');
-					newItem.className = 'feed-item';
-					newItem.dataset.timestamp = analysis.created_at;
-					newItem.innerHTML = itemHTML;
-					feedContainer.appendChild(newItem);
-				});
-			} else {
-				window.removeEventListener('scroll', handleScroll);
-				if(loader) loader.textContent = 'No more results';
-			}
-		} catch (error) {
-			console.error('Failed to load more analyses:', error);
-			if(loader) loader.textContent = 'Failed to load'; // <-- Теперь вы видите это сообщение
-		}
+        } catch (error) {
+            console.error('Failed to load more analyses:', error);
+            if (loader) loader.textContent = 'Failed to load';
+        }
 
-		isLoading = false;
-		// Скрываем загрузчик, только если он не показывает финальное сообщение
-		if(loader && loader.textContent !== 'No more results' && loader.textContent !== 'Failed to load') {
-			loader.style.display = 'none';
-		}
-	};
+        isLoading = false;
+        if (loader && loader.textContent === 'Loading more...') {
+            loader.style.display = 'none';
+        }
+    };
 
+    // Функция для проверки, нужно ли догружать видео, чтобы заполнить экран
+    const fillScreen = async () => {
+        // Выполняем, только если есть скроллбар (т.е. контент не помещается)
+        // или если контент помещается, но его мало
+        if (feedContainer.offsetHeight < window.innerHeight && totalLoadedCount < MAX_ITEMS) {
+            await loadMoreAnalyses();
+            // Рекурсивно вызываем снова, пока экран не заполнится или не достигнем лимита
+            fillScreen(); 
+        }
+    };
+
+    // Обработчик скролла
     const handleScroll = () => {
-        // Проверяем, доскроллил ли пользователь до низа страницы
-        if (window.innerHeight + window.scrollY >= document.documentElement.offsetHeight - 100) {
+        if (window.innerHeight + window.scrollY >= document.documentElement.offsetHeight - 200) {
             loadMoreAnalyses();
         }
     };
 
     window.addEventListener('scroll', handleScroll);
+    fillScreen(); // <-- Запускаем начальное заполнение экрана
 });
