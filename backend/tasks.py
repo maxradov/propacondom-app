@@ -99,7 +99,7 @@ def fact_check_video(self, video_url, target_lang='en'):
 
         self.update_state(state='PROGRESS', meta={'status_message': 'Analyzing text...'})
         safety_settings = {'HARM_CATEGORY_HARASSMENT': 'BLOCK_NONE', 'HARM_CATEGORY_HATE_SPEECH': 'BLOCK_NONE'}
-        prompt_claims = f"Analyze the transcript. Extract 5 main factual claims that can be verified. Focus on specific, checkable statements. Present them as a numbered list. Transcript: --- {clean_text} ---"
+        prompt_claims = f"Analyze the transcript of the YouTube video. Try to understand the context and what could that script be about. Extract 5 main factual claims that can be verified. Focus on specific, checkable statements. Present them as a numbered list. Transcript: --- {clean_text} ---"
         response_claims = gemini_model.generate_content(prompt_claims, safety_settings=safety_settings)
         claims_list = [re.sub(r'^\d+\.\s*', '', line).strip() for line in response_claims.text.strip().split('\n') if line.strip() and re.match(r'^\d+\.', line)]
         if not claims_list: raise ValueError("AI did not return claims in the expected format.")
