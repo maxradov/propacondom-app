@@ -28,7 +28,25 @@
 .page-header {
     text-align: center;
 }
+/* Стили для блока с дисклеймером */
+.disclaimer-box {
+    background-color: #fffbe6; /* Светло-желтый фон */
+    border: 1px solid #ffe58f;   /* Желтая рамка */
+    color: #664d03;             /* Темный, читаемый текст */
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 2rem;       /* Отступ снизу до заголовка отчета */
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
 
+.disclaimer-box p {
+    margin: 0;
+}
+
+.disclaimer-box strong {
+    margin-right: 0.5em;
+}
 
 :root {
     --bg-color: #f4f6f8;

@@ -27,12 +27,17 @@
 		</section>
 
         <div class="report-wrapper">
-            <header class="page-header">
-                <p class="description">Fact-check report for:</p>
-                <h1>{{ report.video_title }}</h1>
-                <a href="{{ report.video_url }}" target="_blank" class="video-link">Watch on YouTube</a>
-                <button id="share-btn" class="share-button-header">Share Results</button>
-            </header>
+            <div class="disclaimer-box">
+				<p><strong>Disclaimer:</strong> This report is AI-generated. It may contain errors and may not have access to real-time data. Please verify the information independently.</p>
+			</div>
+			<header class="page-header">
+				<p class="description">Fact-check report for:</p>
+				<h1>{{ report.video_title }}</h1>
+				<a href="{{ report.video_url }}" target="_blank" class="video-link">Watch on YouTube</a>
+				<button id="share-btn" class="share-button-header">Share Results</button>
+			</header>
+			
+			</div>
             
             <img src="{{ report.thumbnail_url }}" alt="Video Thumbnail" class="video-thumbnail" onerror="this.style.display='none'">
 
