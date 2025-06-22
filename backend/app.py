@@ -6,7 +6,7 @@ from datetime import datetime
 from google.cloud.firestore_v1.query import Query
 
 # Импортируем объекты из tasks.py
-from tasks import celery_app, db
+from tasks import celery as celery_app, db
 
 app = Flask(__name__)
 CORS(app)
