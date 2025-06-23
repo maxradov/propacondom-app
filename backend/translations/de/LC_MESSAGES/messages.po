@@ -76,7 +76,10 @@ msgstr "Haftungsausschluss:"
 msgid ""
 "This report is AI-generated. It may contain errors and may not have "
 "access to real-time data. Please verify the information independently."
-msgstr "Dieser Bericht wird von einer KI erstellt. Er kann Fehler enthalten und hat möglicherweise keinen Zugriff auf Echtzeitdaten. Bitte überprüfen Sie die Informationen unabhängig."
+msgstr ""
+"Dieser Bericht wird von einer KI erstellt. Er kann Fehler enthalten und "
+"hat möglicherweise keinen Zugriff auf Echtzeitdaten. Bitte überprüfen Sie"
+" die Informationen unabhängig."
 
 #: backend/templates/report.html:22
 msgid "Fact-check report for:"
@@ -93,3 +96,55 @@ msgstr "Ergebnisse teilen"
 #: backend/templates/report.html:28
 msgid "Video Thumbnail"
 msgstr "Video-Miniaturbild"
+
+#~ msgid "Please paste a video link."
+#~ msgstr "Bitte fügen Sie einen Videolink ein."
+
+#~ msgid "Please enter a valid YouTube video link!"
+#~ msgstr "Bitte geben Sie einen gültigen YouTube-Link ein!"
+
+#~ msgid "Sending request for analysis..."
+#~ msgstr "Analyse-Anfrage wird gesendet..."
+
+#~ msgid "Error starting analysis."
+#~ msgstr "Fehler beim Starten der Analyse."
+
+#~ msgid "Critical polling error:"
+#~ msgstr "Kritischer Fehler beim Statusabruf:"
+
+#~ msgid "An error occurred during processing:"
+#~ msgstr "Während der Verarbeitung ist ein Fehler aufgetreten:"
+
+#~ msgid "No more results"
+#~ msgstr "Keine weiteren Ergebnisse"
+
+#~ msgid "Failed to load"
+#~ msgstr "Laden fehlgeschlagen"
+
+#~ msgid "Credibility"
+#~ msgstr "Glaubwürdigkeit"
+
+#~ msgid "Confidence"
+#~ msgstr "Vertrauenswürdigkeit"
+
+#~ msgid "Sources:"
+#~ msgstr "Quellen:"
+
+#~ msgid "Show Detailed Analysis"
+#~ msgstr "Detaillierte Analyse anzeigen"
+
+#~ msgid "Hide Detailed Analysis"
+#~ msgstr "Detaillierte Analyse ausblenden"
+
+#~ msgid "Link Copied!"
+#~ msgstr "Link kopiert!"
+
+#~ msgid "Failed to copy link."
+#~ msgstr "Link konnte nicht kopiert werden."
+
+#~ msgid "Fact-Check Report"
+#~ msgstr "Faktencheck-Bericht"
+
+#~ msgid "Check out the fact-check report for this video:"
+#~ msgstr "Schauen Sie sich den Faktencheck-Bericht zu diesem Video an:"
+

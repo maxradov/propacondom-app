@@ -17,21 +17,21 @@ document.addEventListener('DOMContentLoaded', () => {
     checkBtn.addEventListener('click', async () => {
         const videoUrl = urlInput.value.trim();
         if (!videoUrl) {
-            alert('Please paste a video link.');
+            alert(window.translations.please_paste_video);
             return;
         }
-		
-		const videoIdForCheck = getVideoId(videoUrl);
+
+        const videoIdForCheck = getVideoId(videoUrl);
         if (!videoIdForCheck) {
-            alert('Please enter a valid YouTube video link!');
-            return; // Останавливаем выполнение, если ссылка некорректна
+            alert(window.translations.invalid_youtube);
+            return;
         }
 
         clearInterval(pollingInterval);
-        statusLog.innerHTML = ''; 
+        statusLog.innerHTML = '';
         lastStatusMessage = '';
-        
-        statusLog.innerHTML = '<p>Sending request for analysis...</p>';
+
+        statusLog.innerHTML = '<p>' + window.translations.sending_request + '</p>';
         statusSection.style.display = 'block';
 
         try {
@@ -44,11 +44,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!analyzeResponse.ok) {
                 const errData = await analyzeResponse.json();
-                throw new Error(errData.error || 'Error starting analysis.');
+                throw new Error(errData.error || window.translations.error_starting);
             }
 
             const data = await analyzeResponse.json();
-            // Passing URL and language to build the report ID
             pollStatus(data.task_id, videoUrl, userLang);
 
         } catch (error) {
@@ -56,12 +55,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-	function pollStatus(taskId, videoUrl, userLang) {
+    function pollStatus(taskId, videoUrl, userLang) {
         pollingInterval = setInterval(async () => {
             try {
                 const statusResponse = await fetch(`/api/status/${taskId}`);
                 if (!statusResponse.ok) throw new Error('Server returned an error when checking status.');
-                
+
                 const data = await statusResponse.json();
 
                 if (data.status === 'SUCCESS') {
@@ -71,11 +70,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (videoId) {
                         window.location.href = `/report/${videoId}_${userLang}`;
                     } else {
-                         throw new Error("Could not extract video ID for redirection.");
+                        throw new Error("Could not extract video ID for redirection.");
                     }
                 } else if (data.status === 'FAILURE') {
                     clearInterval(pollingInterval);
-                    statusLog.innerHTML += `<p style="color:red;">An error occurred during processing: ${data.result}</p>`;
+                    statusLog.innerHTML += `<p style="color:red;">${window.translations.processing_error} ${data.result}</p>`;
                 } else {
                     const newMessage = data.info && data.info.status_message ? data.info.status_message : null;
                     if (newMessage && newMessage !== lastStatusMessage) {
@@ -86,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             } catch (error) {
                 clearInterval(pollingInterval);
-                statusLog.innerHTML += `<p style="color:red;">Critical polling error: ${error.message}</p>`;
+                statusLog.innerHTML += `<p style="color:red;">${window.translations.polling_error} ${error.message}</p>`;
             }
         }, 3000);
     }
@@ -94,23 +93,23 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- НОВАЯ ЛОГИКА ДЛЯ ДИНАМИЧЕСКОЙ ЛЕНТЫ ---
     const feedContainer = document.getElementById('feed-container');
     const loader = document.getElementById('feed-loader');
-    if (!feedContainer) return; // Если ленты нет на странице, ничего не делаем
+    if (!feedContainer) return;
 
     let isLoading = false;
-    let totalLoadedCount = feedContainer.children.length; // Считаем, сколько уже загружено сервером
-    const MAX_ITEMS = 50; // Максимальное количество видео
+    let totalLoadedCount = feedContainer.children.length;
+    const MAX_ITEMS = 50;
 
-    // Функция для загрузки следующей порции видео
     const loadMoreAnalyses = async () => {
         if (isLoading || totalLoadedCount >= MAX_ITEMS) return;
 
         const lastItem = feedContainer.querySelector('.feed-item:last-child');
-        if (!lastItem) { // На случай, если лента изначально пуста
-             if(loader) loader.style.display = 'none';
-             return;
+        if (!lastItem) {
+            if (loader) loader.style.display = 'none';
+            return;
         }
 
         isLoading = true;
+        if (loader) loader.textContent = window.translations.loading_more;
         if (loader) loader.style.display = 'block';
 
         const lastTimestamp = lastItem.dataset.timestamp;
@@ -122,7 +121,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (newAnalyses.length > 0) {
                 newAnalyses.forEach(analysis => {
-                    // Проверяем, не превысим ли мы лимит
                     if (totalLoadedCount < MAX_ITEMS) {
                         const itemHTML = `
                             <a href="/report/${analysis.id}" class="feed-item-link">
@@ -130,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <div class="feed-info">
                                     <h3 class="feed-title">${analysis.video_title}</h3>
                                     <p class="feed-stats">
-                                        ${analysis.confirmed_credibility}% Credibility / ${analysis.average_confidence}% Confidence
+                                        ${analysis.confirmed_credibility}% ${window.translations.credibility} / ${analysis.average_confidence}% ${window.translations.confidence}
                                     </p>
                                 </div>
                             </a>`;
@@ -139,57 +137,60 @@ document.addEventListener('DOMContentLoaded', () => {
                         newItem.dataset.timestamp = analysis.created_at;
                         newItem.innerHTML = itemHTML;
                         feedContainer.appendChild(newItem);
-                        totalLoadedCount++; // Увеличиваем счетчик
+                        totalLoadedCount++;
                     }
                 });
             }
-            
-            // Если достигли лимита или больше нет данных
+
             if (newAnalyses.length === 0 || totalLoadedCount >= MAX_ITEMS) {
                 window.removeEventListener('scroll', handleScroll);
-                if (loader) loader.textContent = 'No more results';
+                if (loader) loader.textContent = window.translations.no_more_results;
             }
 
         } catch (error) {
             console.error('Failed to load more analyses:', error);
-            if (loader) loader.textContent = 'Failed to load';
+            if (loader) loader.textContent = window.translations.failed_to_load;
         }
 
         isLoading = false;
-        if (loader && loader.textContent === 'Loading more...') {
+        if (loader && loader.textContent === window.translations.loading_more) {
             loader.style.display = 'none';
         }
     };
 
-    // Функция для проверки, нужно ли догружать видео, чтобы заполнить экран
     const fillScreen = async () => {
-        // Выполняем, только если есть скроллбар (т.е. контент не помещается)
-        // или если контент помещается, но его мало
         if (feedContainer.offsetHeight < window.innerHeight && totalLoadedCount < MAX_ITEMS) {
             await loadMoreAnalyses();
-            // Рекурсивно вызываем снова, пока экран не заполнится или не достигнем лимита
-            fillScreen(); 
+            fillScreen();
         }
     };
 
-    // Обработчик скролла
     const handleScroll = () => {
         if (window.innerHeight + window.scrollY >= document.documentElement.offsetHeight - 200) {
             loadMoreAnalyses();
         }
     };
-	
-	// --- ЛОГИКА ДЛЯ ПЕРЕКЛЮЧАТЕЛЯ ЯЗЫКОВ ---
+
+    // --- ЛОГИКА ДЛЯ ПЕРЕКЛЮЧАТЕЛЯ ЯЗЫКОВ ---
     const langSwitcher = document.querySelector('.lang-switcher');
     if (langSwitcher) {
         const currentLang = langSwitcher.querySelector('.lang-switcher-current');
-        
+
         currentLang.addEventListener('click', (event) => {
-            event.stopPropagation(); // Предотвращаем закрытие по клику на самом элементе
+            event.stopPropagation();
             langSwitcher.classList.toggle('open');
         });
 
-        // Закрываем дропдаун, если клик был вне его области
+        // Замена перехода по ссылке на смену куки и reload
+        document.querySelectorAll('.lang-option').forEach(option => {
+            option.addEventListener('click', function(e) {
+                e.preventDefault();
+                const lang = this.getAttribute('href').split('/').pop();
+                document.cookie = "lang=" + lang + "; path=/";
+                location.reload();
+            });
+        });
+
         window.addEventListener('click', () => {
             if (langSwitcher.classList.contains('open')) {
                 langSwitcher.classList.remove('open');
@@ -198,5 +199,5 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     window.addEventListener('scroll', handleScroll);
-    fillScreen(); // <-- Запускаем начальное заполнение экрана
+    fillScreen();
 });

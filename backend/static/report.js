@@ -18,7 +18,7 @@ function displayResults(data) {
     const reportContainer = reportWrapper.querySelector('#report-container');
 
     if (!progressContainer || !confidenceContainer || !reportContainer) {
-        console.error('Error: One or more report containers are missing.');
+        reportContainer.innerHTML = '<p>Error: One or more report containers are missing.</p>';
         return;
     }
     if (!data || !data.detailed_results || !data.verdict_counts || !data.summary_data) {
@@ -29,7 +29,7 @@ function displayResults(data) {
     const { verdict_counts, detailed_results, summary_data, average_confidence, confirmed_credibility } = data;
     const totalVerdicts = Object.values(verdict_counts).reduce((a, b) => a + b, 0);
     progressContainer.innerHTML = '';
-    
+
     if (totalVerdicts > 0) {
         const tooltips = {
             'True': 'True statements',
@@ -60,18 +60,15 @@ function displayResults(data) {
         });
     }
 
-    // --- ИЗМЕНЕНИЕ ЗДЕСЬ ---
-    // Просто меняем порядок добавления в массив stats
+    // Локализованные подписи
     const stats = [];
     if (confirmed_credibility !== undefined) {
-        stats.push(`Confirmed credibility: ${confirmed_credibility}%`);
+        stats.push(`${window.translations.credibility}: ${confirmed_credibility}%`);
     }
     if (average_confidence !== undefined) {
-        stats.push(`Average confidence: ${average_confidence}%`);
+        stats.push(`${window.translations.confidence}: ${average_confidence}%`);
     }
     confidenceContainer.innerHTML = stats.join(' <span class="stats-separator">|</span> ');
-    // --- КОНЕЦ ИЗМЕНЕНИЯ ---
-
 
     // Рендеринг текстового отчета
     let reportHTML = `
@@ -82,7 +79,7 @@ function displayResults(data) {
                 ${(summary_data.key_points || []).map(point => `<li>${point}</li>`).join('')}
             </ul>
         </div>
-        <button id="details-toggle" class="details-toggle">Show Detailed Analysis</button>
+        <button id="details-toggle" class="details-toggle">${window.translations.show_detailed}</button>
         <div id="claim-list-container" style="display: none;">
             <div class="claim-list">
     `;
@@ -96,7 +93,7 @@ function displayResults(data) {
                 <div class="claim-explanation"><p>${claim.explanation || ''}</p></div>
         `;
         if (claim.sources && claim.sources.length > 0) {
-            reportHTML += `<div class="claim-sources"><strong>Sources:</strong> `;
+            reportHTML += `<div class="claim-sources"><strong>${window.translations.sources}</strong> `;
             claim.sources.forEach((source, index) => {
                 reportHTML += `<a href="${source}" target="_blank" rel="noopener noreferrer">[${index + 1}]</a> `;
             });
@@ -106,40 +103,18 @@ function displayResults(data) {
     });
     reportHTML += `</div></div>`;
     reportContainer.innerHTML = reportHTML;
-    
+
     const toggleButton = document.getElementById('details-toggle');
     const detailsContainer = document.getElementById('claim-list-container');
     if (toggleButton && detailsContainer) {
         toggleButton.addEventListener('click', () => {
             const isHidden = detailsContainer.style.display === 'none';
             detailsContainer.style.display = isHidden ? 'block' : 'none';
-            toggleButton.textContent = isHidden ? 'Hide Detailed Analysis' : 'Show Detailed Analysis';
+            toggleButton.textContent = isHidden ? window.translations.hide_detailed : window.translations.show_detailed;
         });
     }
 }
 
 function shareResults() {
     const shareData = {
-        title: 'Fact-Check Report',
-        text: `Check out the fact-check report for this video:`,
-        url: window.location.href
-    };
-    const shareBtn = document.getElementById('share-btn');
-
-    if (navigator.share) {
-        navigator.share(shareData)
-            .then(() => console.log('Successful share'))
-            .catch((error) => console.log('Error sharing', error));
-    } else {
-        navigator.clipboard.writeText(window.location.href).then(() => {
-            const originalText = shareBtn.textContent;
-            shareBtn.textContent = 'Link Copied!';
-            setTimeout(() => {
-                shareBtn.textContent = originalText;
-            }, 2000);
-        }).catch(err => {
-            console.error('Failed to copy text: ', err);
-            alert('Failed to copy link.');
-        });
-    }
-}
+        title: window.translations.share_report,

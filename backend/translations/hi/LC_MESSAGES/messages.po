@@ -76,7 +76,10 @@ msgstr "अस्वीकरण:"
 msgid ""
 "This report is AI-generated. It may contain errors and may not have "
 "access to real-time data. Please verify the information independently."
-msgstr "यह रिपोर्ट एआई-जनित है। इसमें त्रुटियाँ हो सकती हैं और हो सकता है कि इसमें वास्तविक समय के डेटा तक पहुंच न हो। कृपया जानकारी को स्वतंत्र रूप से सत्यापित करें।"
+msgstr ""
+"यह रिपोर्ट एआई-जनित है। इसमें त्रुटियाँ हो सकती हैं और हो सकता है कि "
+"इसमें वास्तविक समय के डेटा तक पहुंच न हो। कृपया जानकारी को स्वतंत्र रूप "
+"से सत्यापित करें।"
 
 #: backend/templates/report.html:22
 msgid "Fact-check report for:"
@@ -93,3 +96,55 @@ msgstr "परिणाम साझा करें"
 #: backend/templates/report.html:28
 msgid "Video Thumbnail"
 msgstr "वीडियो थंबनेल"
+
+#~ msgid "Please paste a video link."
+#~ msgstr "कृपया एक वीडियो लिंक पेस्ट करें।"
+
+#~ msgid "Please enter a valid YouTube video link!"
+#~ msgstr "कृपया एक मान्य YouTube वीडियो लिंक दर्ज करें!"
+
+#~ msgid "Sending request for analysis..."
+#~ msgstr "विश्लेषण के लिए अनुरोध भेजा जा रहा है..."
+
+#~ msgid "Error starting analysis."
+#~ msgstr "विश्लेषण शुरू करने में त्रुटि।"
+
+#~ msgid "Critical polling error:"
+#~ msgstr "स्थिति जांच में गंभीर त्रुटि:"
+
+#~ msgid "An error occurred during processing:"
+#~ msgstr "प्रसंस्करण के दौरान त्रुटि हुई:"
+
+#~ msgid "No more results"
+#~ msgstr "कोई और परिणाम नहीं"
+
+#~ msgid "Failed to load"
+#~ msgstr "लोड करने में विफल"
+
+#~ msgid "Credibility"
+#~ msgstr "विश्वसनीयता"
+
+#~ msgid "Confidence"
+#~ msgstr "आत्मविश्वास"
+
+#~ msgid "Sources:"
+#~ msgstr "स्रोत:"
+
+#~ msgid "Show Detailed Analysis"
+#~ msgstr "विस्तृत विश्लेषण दिखाएँ"
+
+#~ msgid "Hide Detailed Analysis"
+#~ msgstr "विस्तृत विश्लेषण छिपाएँ"
+
+#~ msgid "Link Copied!"
+#~ msgstr "लिंक कॉपी हो गया!"
+
+#~ msgid "Failed to copy link."
+#~ msgstr "लिंक कॉपी करने में विफल।"
+
+#~ msgid "Fact-Check Report"
+#~ msgstr "तथ्य-जांच रिपोर्ट"
+
+#~ msgid "Check out the fact-check report for this video:"
+#~ msgstr "इस वीडियो के लिए तथ्य-जांच रिपोर्ट देखें:"
+

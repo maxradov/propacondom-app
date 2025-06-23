@@ -95,3 +95,55 @@ msgstr "Share Results"
 #: backend/templates/report.html:28
 msgid "Video Thumbnail"
 msgstr "Video Thumbnail"
+
+#~ msgid "Please paste a video link."
+#~ msgstr "Please paste a video link."
+
+#~ msgid "Please enter a valid YouTube video link!"
+#~ msgstr "Please enter a valid YouTube video link!"
+
+#~ msgid "Sending request for analysis..."
+#~ msgstr "Sending request for analysis..."
+
+#~ msgid "Error starting analysis."
+#~ msgstr "Error starting analysis."
+
+#~ msgid "Critical polling error:"
+#~ msgstr "Critical polling error:"
+
+#~ msgid "An error occurred during processing:"
+#~ msgstr "An error occurred during processing:"
+
+#~ msgid "No more results"
+#~ msgstr "No more results"
+
+#~ msgid "Failed to load"
+#~ msgstr "Failed to load"
+
+#~ msgid "Credibility"
+#~ msgstr "Credibility"
+
+#~ msgid "Confidence"
+#~ msgstr "Confidence"
+
+#~ msgid "Sources:"
+#~ msgstr "Sources:"
+
+#~ msgid "Show Detailed Analysis"
+#~ msgstr "Show Detailed Analysis"
+
+#~ msgid "Hide Detailed Analysis"
+#~ msgstr "Hide Detailed Analysis"
+
+#~ msgid "Link Copied!"
+#~ msgstr "Link Copied!"
+
+#~ msgid "Failed to copy link."
+#~ msgstr "Failed to copy link."
+
+#~ msgid "Fact-Check Report"
+#~ msgstr "Fact-Check Report"
+
+#~ msgid "Check out the fact-check report for this video:"
+#~ msgstr "Check out the fact-check report for this video:"
+

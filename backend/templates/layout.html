@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{{ _('AI Fact Checker') }}{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-	<link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
 </head>
 <body>
     <div class="top-bar">
@@ -27,10 +27,33 @@
                 {% endfor %}
             </div>
         </div>
-        </div>
+    </div>
 
     {% block content %}{% endblock %}
-    
+
+    <!-- ГЛОБАЛЬНЫЕ ПЕРЕВОДЫ ДЛЯ JS -->
+    <script>
+      window.translations = {{ {
+        'please_paste_video': _('Please paste a video link.'),
+        'invalid_youtube': _('Please enter a valid YouTube video link!'),
+        'sending_request': _('Sending request for analysis...'),
+        'error_starting': _('Error starting analysis.'),
+        'polling_error': _('Critical polling error:'),
+        'processing_error': _('An error occurred during processing:'),
+        'no_more_results': _('No more results'),
+        'failed_to_load': _('Failed to load'),
+        'loading_more': _('Loading more...'),
+        'credibility': _('Credibility'),
+        'confidence': _('Confidence'),
+        'sources': _('Sources:'),
+        'show_detailed': _('Show Detailed Analysis'),
+        'hide_detailed': _('Hide Detailed Analysis'),
+        'link_copied': _('Link Copied!'),
+        'failed_copy': _('Failed to copy link.'),
+        'share_report': _('Fact-Check Report'),
+        'share_text': _('Check out the fact-check report for this video:'),
+      } | tojson }};
+    </script>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
     {% block extra_js %}{% endblock %}
 </body>

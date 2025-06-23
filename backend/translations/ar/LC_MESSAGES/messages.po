@@ -77,7 +77,10 @@ msgstr "إخلاء مسؤولية:"
 msgid ""
 "This report is AI-generated. It may contain errors and may not have "
 "access to real-time data. Please verify the information independently."
-msgstr "هذا التقرير تم إنشاؤه بواسطة الذكاء الاصطناعي. قد يحتوي على أخطاء وقد لا يتمكن من الوصول إلى البيانات في الوقت الفعلي. يرجى التحقق من المعلومات بشكل مستقل."
+msgstr ""
+"هذا التقرير تم إنشاؤه بواسطة الذكاء الاصطناعي. قد يحتوي على أخطاء وقد لا "
+"يتمكن من الوصول إلى البيانات في الوقت الفعلي. يرجى التحقق من المعلومات "
+"بشكل مستقل."
 
 #: backend/templates/report.html:22
 msgid "Fact-check report for:"
@@ -94,3 +97,55 @@ msgstr "مشاركة النتائج"
 #: backend/templates/report.html:28
 msgid "Video Thumbnail"
 msgstr "الصورة المصغرة للفيديو"
+
+#~ msgid "Please paste a video link."
+#~ msgstr "يرجى لصق رابط الفيديو."
+
+#~ msgid "Please enter a valid YouTube video link!"
+#~ msgstr "يرجى إدخال رابط يوتيوب صالح!"
+
+#~ msgid "Sending request for analysis..."
+#~ msgstr "يتم إرسال الطلب للتحليل..."
+
+#~ msgid "Error starting analysis."
+#~ msgstr "حدث خطأ أثناء بدء التحليل."
+
+#~ msgid "Critical polling error:"
+#~ msgstr "خطأ حرج أثناء التحقق من الحالة:"
+
+#~ msgid "An error occurred during processing:"
+#~ msgstr "حدث خطأ أثناء المعالجة:"
+
+#~ msgid "No more results"
+#~ msgstr "لا مزيد من النتائج"
+
+#~ msgid "Failed to load"
+#~ msgstr "فشل في التحميل"
+
+#~ msgid "Credibility"
+#~ msgstr "المصداقية"
+
+#~ msgid "Confidence"
+#~ msgstr "الثقة"
+
+#~ msgid "Sources:"
+#~ msgstr "المصادر:"
+
+#~ msgid "Show Detailed Analysis"
+#~ msgstr "إظهار التحليل التفصيلي"
+
+#~ msgid "Hide Detailed Analysis"
+#~ msgstr "إخفاء التحليل التفصيلي"
+
+#~ msgid "Link Copied!"
+#~ msgstr "تم نسخ الرابط!"
+
+#~ msgid "Failed to copy link."
+#~ msgstr "فشل في نسخ الرابط."
+
+#~ msgid "Fact-Check Report"
+#~ msgstr "تقرير التحقق من الحقائق"
+
+#~ msgid "Check out the fact-check report for this video:"
+#~ msgstr "اطلع على تقرير التحقق من الحقائق لهذا الفيديو:"
+

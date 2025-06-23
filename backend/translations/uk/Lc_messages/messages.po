@@ -1,4 +1,4 @@
-# Russian translations for PROJECT.
+# Ukrainian translations for PROJECT.
 # Copyright (C) 2025 ORGANIZATION
 # This file is distributed under the same license as the PROJECT project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
@@ -8,10 +8,10 @@ msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-06-22 23:16+0000\n"
-"PO-Revision-Date: 2025-06-22 23:18+0000\n"
+"PO-Revision-Date: 2025-06-22 23:24+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language: ru\n"
-"Language-Team: ru <LL@li.org>\n"
+"Language: uk\n"
+"Language-Team: uk <LL@li.org>\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "MIME-Version: 1.0\n"
@@ -21,131 +21,131 @@ msgstr ""
 
 #: backend/app.py:152
 msgid "Report not found"
-msgstr "Отчёт не найден"
+msgstr "Звіт не знайдено"
 
 #: backend/app.py:155
 msgid "An error occurred"
-msgstr "Произошла ошибка"
+msgstr "Виникла помилка"
 
 #: backend/templates/index.html:3 backend/templates/index.html:9
 #: backend/templates/layout.html:6
 msgid "AI Fact Checker"
-msgstr "Проверка фактов с ИИ"
+msgstr "AI перевірка фактів"
 
 #: backend/templates/index.html:10
 msgid "Don't be fooled. Check factual accuracy."
-msgstr "Не дайте себя обмануть. Проверяйте точность фактов."
+msgstr "Не дайте себе обдурити. Перевіряйте достовірність фактів."
 
 #: backend/templates/index.html:13
 msgid "Paste a YouTube link to check..."
-msgstr "Вставьте ссылку на YouTube для проверки..."
+msgstr "Вставте посилання на YouTube для перевірки..."
 
 #: backend/templates/index.html:14
 msgid "Run Fact Check"
-msgstr "Запустить проверку фактов"
+msgstr "Запустити перевірку фактів"
 
 #: backend/templates/index.html:23
 msgid "Last checked:"
-msgstr "Последняя проверка:"
+msgstr "Останні перевірки:"
 
 #: backend/templates/index.html:33
 #, python-format
 msgid "%(credibility)s%% Credibility / %(confidence)s%% Confidence"
-msgstr "%(credibility)s%% достоверность / %(confidence)s%% уверенность"
+msgstr "%(credibility)s%% достовірності / %(confidence)s%% впевненості"
 
 #: backend/templates/index.html:41
 msgid "Loading more..."
-msgstr "Загрузка..."
+msgstr "Завантаження ще..."
 
 #: backend/templates/report.html:3
 msgid "Fact-Check Report for:"
-msgstr "Отчёт о проверке фактов для:"
+msgstr "Звіт про перевірку фактів для:"
 
 #: backend/templates/report.html:8
 msgid "Paste a new YouTube link to check..."
-msgstr "Вставьте новую ссылку на YouTube для проверки..."
+msgstr "Вставте нове посилання на YouTube для перевірки..."
 
 #: backend/templates/report.html:9
 msgid "Run Another Fact Check"
-msgstr "Запустить ещё одну проверку"
+msgstr "Запустити ще одну перевірку фактів"
 
 #: backend/templates/report.html:19
 msgid "Disclaimer:"
-msgstr "Отказ от ответственности:"
+msgstr "Застереження:"
 
 #: backend/templates/report.html:19
 msgid ""
 "This report is AI-generated. It may contain errors and may not have "
 "access to real-time data. Please verify the information independently."
 msgstr ""
-"Этот отчёт сгенерирован искусственным интеллектом. Он может содержать "
-"ошибки и не иметь доступа к данным в реальном времени. Пожалуйста, "
-"проверяйте информацию самостоятельно."
+"Цей звіт згенеровано штучним інтелектом. Він може містити помилки і не "
+"мати доступу до актуальних даних. Будь ласка, перевіряйте інформацію "
+"самостійно."
 
 #: backend/templates/report.html:22
 msgid "Fact-check report for:"
-msgstr "Отчёт о проверке фактов для:"
+msgstr "Звіт про перевірку фактів для:"
 
 #: backend/templates/report.html:24
 msgid "Watch on YouTube"
-msgstr "Смотреть на YouTube"
+msgstr "Дивитися на YouTube"
 
 #: backend/templates/report.html:25
 msgid "Share Results"
-msgstr "Поделиться результатами"
+msgstr "Поділитися результатами"
 
 #: backend/templates/report.html:28
 msgid "Video Thumbnail"
-msgstr "Превью видео"
+msgstr "Мініатюра відео"
 
 #~ msgid "Please paste a video link."
-#~ msgstr "Пожалуйста, вставьте ссылку на видео."
+#~ msgstr "Будь ласка, вставте посилання на відео."
 
 #~ msgid "Please enter a valid YouTube video link!"
-#~ msgstr "Пожалуйста, введите корректную ссылку на видео YouTube!"
+#~ msgstr "Будь ласка, введіть коректне посилання на відео YouTube!"
 
 #~ msgid "Sending request for analysis..."
-#~ msgstr "Отправка запроса на анализ..."
+#~ msgstr "Відправлення запиту на аналіз..."
 
 #~ msgid "Error starting analysis."
-#~ msgstr "Ошибка при запуске анализа."
+#~ msgstr "Помилка при запуску аналізу."
 
 #~ msgid "Critical polling error:"
-#~ msgstr "Критическая ошибка при проверке статуса:"
+#~ msgstr "Критична помилка під час перевірки статусу:"
 
 #~ msgid "An error occurred during processing:"
-#~ msgstr "Произошла ошибка во время обработки:"
+#~ msgstr "Під час обробки сталася помилка:"
 
 #~ msgid "No more results"
-#~ msgstr "Больше нет результатов"
+#~ msgstr "Більше немає результатів"
 
 #~ msgid "Failed to load"
-#~ msgstr "Не удалось загрузить"
+#~ msgstr "Не вдалося завантажити"
 
 #~ msgid "Credibility"
-#~ msgstr "Достоверность"
+#~ msgstr "Достовірність"
 
 #~ msgid "Confidence"
-#~ msgstr "Уверенность"
+#~ msgstr "Впевненість"
 
 #~ msgid "Sources:"
-#~ msgstr "Источники:"
+#~ msgstr "Джерела:"
 
 #~ msgid "Show Detailed Analysis"
-#~ msgstr "Показать подробный анализ"
+#~ msgstr "Показати детальний аналіз"
 
 #~ msgid "Hide Detailed Analysis"
-#~ msgstr "Скрыть подробный анализ"
+#~ msgstr "Сховати детальний аналіз"
 
 #~ msgid "Link Copied!"
-#~ msgstr "Ссылка скопирована!"
+#~ msgstr "Посилання скопійовано!"
 
 #~ msgid "Failed to copy link."
-#~ msgstr "Не удалось скопировать ссылку."
+#~ msgstr "Не вдалося скопіювати посилання."
 
 #~ msgid "Fact-Check Report"
-#~ msgstr "Отчёт о проверке фактов"
+#~ msgstr "Звіт про перевірку фактів"
 
 #~ msgid "Check out the fact-check report for this video:"
-#~ msgstr "Посмотрите отчёт о проверке фактов для этого видео:"
+#~ msgstr "Перегляньте звіт про перевірку фактів для цього відео:"
 

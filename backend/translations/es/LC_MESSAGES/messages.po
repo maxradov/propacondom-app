@@ -76,7 +76,10 @@ msgstr "Aviso Legal:"
 msgid ""
 "This report is AI-generated. It may contain errors and may not have "
 "access to real-time data. Please verify the information independently."
-msgstr "Este informe ha sido generado por IA. Puede contener errores y es posible que no tenga acceso a datos en tiempo real. Por favor, verifica la información de forma independiente."
+msgstr ""
+"Este informe ha sido generado por IA. Puede contener errores y es posible"
+" que no tenga acceso a datos en tiempo real. Por favor, verifica la "
+"información de forma independiente."
 
 #: backend/templates/report.html:22
 msgid "Fact-check report for:"
@@ -93,3 +96,55 @@ msgstr "Compartir Resultados"
 #: backend/templates/report.html:28
 msgid "Video Thumbnail"
 msgstr "Miniatura del Video"
+
+#~ msgid "Please paste a video link."
+#~ msgstr "Por favor, pega un enlace de video."
+
+#~ msgid "Please enter a valid YouTube video link!"
+#~ msgstr "¡Por favor, introduce un enlace válido de YouTube!"
+
+#~ msgid "Sending request for analysis..."
+#~ msgstr "Enviando solicitud para el análisis..."
+
+#~ msgid "Error starting analysis."
+#~ msgstr "Error al iniciar el análisis."
+
+#~ msgid "Critical polling error:"
+#~ msgstr "Error crítico al comprobar el estado:"
+
+#~ msgid "An error occurred during processing:"
+#~ msgstr "Ocurrió un error durante el procesamiento:"
+
+#~ msgid "No more results"
+#~ msgstr "No hay más resultados"
+
+#~ msgid "Failed to load"
+#~ msgstr "No se pudo cargar"
+
+#~ msgid "Credibility"
+#~ msgstr "Credibilidad"
+
+#~ msgid "Confidence"
+#~ msgstr "Confianza"
+
+#~ msgid "Sources:"
+#~ msgstr "Fuentes:"
+
+#~ msgid "Show Detailed Analysis"
+#~ msgstr "Mostrar análisis detallado"
+
+#~ msgid "Hide Detailed Analysis"
+#~ msgstr "Ocultar análisis detallado"
+
+#~ msgid "Link Copied!"
+#~ msgstr "¡Enlace copiado!"
+
+#~ msgid "Failed to copy link."
+#~ msgstr "No se pudo copiar el enlace."
+
+#~ msgid "Fact-Check Report"
+#~ msgstr "Informe de verificación de hechos"
+
+#~ msgid "Check out the fact-check report for this video:"
+#~ msgstr "Consulta el informe de verificación de hechos para este video:"
+

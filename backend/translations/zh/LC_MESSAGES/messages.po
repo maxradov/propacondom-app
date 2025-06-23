@@ -93,3 +93,55 @@ msgstr "分享结果"
 #: backend/templates/report.html:28
 msgid "Video Thumbnail"
 msgstr "视频缩略图"
+
+#~ msgid "Please paste a video link."
+#~ msgstr "请粘贴视频链接。"
+
+#~ msgid "Please enter a valid YouTube video link!"
+#~ msgstr "请输入有效的 YouTube 视频链接！"
+
+#~ msgid "Sending request for analysis..."
+#~ msgstr "正在发送分析请求……"
+
+#~ msgid "Error starting analysis."
+#~ msgstr "启动分析时出错。"
+
+#~ msgid "Critical polling error:"
+#~ msgstr "状态检查时发生严重错误："
+
+#~ msgid "An error occurred during processing:"
+#~ msgstr "处理过程中发生错误："
+
+#~ msgid "No more results"
+#~ msgstr "没有更多结果"
+
+#~ msgid "Failed to load"
+#~ msgstr "加载失败"
+
+#~ msgid "Credibility"
+#~ msgstr "可信度"
+
+#~ msgid "Confidence"
+#~ msgstr "置信度"
+
+#~ msgid "Sources:"
+#~ msgstr "来源："
+
+#~ msgid "Show Detailed Analysis"
+#~ msgstr "显示详细分析"
+
+#~ msgid "Hide Detailed Analysis"
+#~ msgstr "隐藏详细分析"
+
+#~ msgid "Link Copied!"
+#~ msgstr "链接已复制！"
+
+#~ msgid "Failed to copy link."
+#~ msgstr "复制链接失败。"
+
+#~ msgid "Fact-Check Report"
+#~ msgstr "事实核查报告"
+
+#~ msgid "Check out the fact-check report for this video:"
+#~ msgstr "查看该视频的事实核查报告："
+

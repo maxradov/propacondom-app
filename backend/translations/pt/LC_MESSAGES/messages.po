@@ -76,7 +76,10 @@ msgstr "Aviso Legal:"
 msgid ""
 "This report is AI-generated. It may contain errors and may not have "
 "access to real-time data. Please verify the information independently."
-msgstr "Este relatório é gerado por IA. Pode conter erros e não ter acesso a dados em tempo real. Por favor, verifique as informações de forma independente."
+msgstr ""
+"Este relatório é gerado por IA. Pode conter erros e não ter acesso a "
+"dados em tempo real. Por favor, verifique as informações de forma "
+"independente."
 
 #: backend/templates/report.html:22
 msgid "Fact-check report for:"
@@ -93,3 +96,55 @@ msgstr "Compartilhar Resultados"
 #: backend/templates/report.html:28
 msgid "Video Thumbnail"
 msgstr "Miniatura do Vídeo"
+
+#~ msgid "Please paste a video link."
+#~ msgstr "Por favor, cole um link de vídeo."
+
+#~ msgid "Please enter a valid YouTube video link!"
+#~ msgstr "Por favor, insira um link válido do YouTube!"
+
+#~ msgid "Sending request for analysis..."
+#~ msgstr "Enviando solicitação para análise..."
+
+#~ msgid "Error starting analysis."
+#~ msgstr "Erro ao iniciar a análise."
+
+#~ msgid "Critical polling error:"
+#~ msgstr "Erro crítico ao verificar o status:"
+
+#~ msgid "An error occurred during processing:"
+#~ msgstr "Ocorreu um erro durante o processamento:"
+
+#~ msgid "No more results"
+#~ msgstr "Não há mais resultados"
+
+#~ msgid "Failed to load"
+#~ msgstr "Falha ao carregar"
+
+#~ msgid "Credibility"
+#~ msgstr "Credibilidade"
+
+#~ msgid "Confidence"
+#~ msgstr "Confiança"
+
+#~ msgid "Sources:"
+#~ msgstr "Fontes:"
+
+#~ msgid "Show Detailed Analysis"
+#~ msgstr "Mostrar análise detalhada"
+
+#~ msgid "Hide Detailed Analysis"
+#~ msgstr "Ocultar análise detalhada"
+
+#~ msgid "Link Copied!"
+#~ msgstr "Link copiado!"
+
+#~ msgid "Failed to copy link."
+#~ msgstr "Falha ao copiar o link."
+
+#~ msgid "Fact-Check Report"
+#~ msgstr "Relatório de verificação de fatos"
+
+#~ msgid "Check out the fact-check report for this video:"
+#~ msgstr "Confira o relatório de verificação de fatos deste vídeo:"
+
