@@ -7,7 +7,6 @@ import google.generativeai as genai
 from celery import Celery
 from google.cloud import firestore
 
-# --- ИЗМЕНЕНИЕ: Импортируем готовый объект Celery ---
 from celery_init import celery
 
 # --- Ключи API ---
@@ -16,7 +15,7 @@ SEARCHAPI_KEY = os.environ.get('SEARCHAPI_KEY')
 GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY')
 SEARCH_ENGINE_ID = os.environ.get('SEARCH_ENGINE_ID')
 
-# --- ИЗМЕНЕНИЕ: Ленивая (lazy) инициализация клиентов ---
+# --- Ленивая инициализация клиентов ---
 db = None
 model = None
 
@@ -36,7 +35,6 @@ def get_gemini_model():
         genai.configure(api_key=GEMINI_API_KEY)
         model = genai.GenerativeModel('gemini-1.5-pro-latest')
     return model
-# --- КОНЕЦ ИЗМЕНЕНИЯ ---
 
 def get_video_id(url):
     if not url: return None
@@ -44,20 +42,18 @@ def get_video_id(url):
     match = re.search(regex, url)
     return match.group(1) if match else None
 
-# --- ИЗМЕНЕНИЕ: Указываем, что этот файл содержит наши задачи ---
 celery.conf.update(
     task_serializer='json',
     accept_content=['json'],
     result_serializer='json',
     timezone='Europe/Sofia',
     enable_utc=True,
-    imports=('tasks',) # Явно указываем, где искать задачи
+    imports=('tasks',)
 )
 
 @celery.task(bind=True, name='tasks.fact_check_video', time_limit=900)
 def fact_check_video(self, video_url, target_lang='en'):
     try:
-        # --- ИЗМЕНЕНИЕ: Получаем клиентов через новые функции ---
         local_db = get_db_client()
         gemini_model = get_gemini_model()
 
@@ -99,7 +95,15 @@ def fact_check_video(self, video_url, target_lang='en'):
 
         self.update_state(state='PROGRESS', meta={'status_message': 'Analyzing text...'})
         safety_settings = {'HARM_CATEGORY_HARASSMENT': 'BLOCK_NONE', 'HARM_CATEGORY_HATE_SPEECH': 'BLOCK_NONE'}
-        prompt_claims = f"Analyze the transcript. Extract 5 main factual claims that can be verified. Focus on specific, checkable statements. Present them as a numbered list. Transcript: --- {clean_text} ---"
+        
+        # --- ИЗМЕНЕНИЕ ЗДЕСЬ ---
+        # Извлекаем утверждения на языке субтитров (detected_lang) для качественного поиска
+        prompt_claims = f"""Analyze the transcript. Extract 5 main factual claims that can be verified. 
+        Focus on specific, checkable statements. Present them as a numbered list. 
+        IMPORTANT: The claims must be written in {detected_lang}.
+        Transcript: --- {clean_text} ---"""
+        # --- КОНЕЦ ИЗМЕНЕНИЯ ---
+
         response_claims = gemini_model.generate_content(prompt_claims, safety_settings=safety_settings)
         claims_list = [re.sub(r'^\d+\.\s*', '', line).strip() for line in response_claims.text.strip().split('\n') if line.strip() and re.match(r'^\d+\.', line)]
         if not claims_list: raise ValueError("AI did not return claims in the expected format.")
@@ -108,6 +112,7 @@ def fact_check_video(self, video_url, target_lang='en'):
 
         all_results = []
         for claim in claims_list:
+            # Поиск происходит на языке, на котором были извлечены утверждения
             search_params = {'q': claim, 'key': GOOGLE_API_KEY, 'cx': SEARCH_ENGINE_ID, 'num': 4}
             search_response = requests.get("https://www.googleapis.com/customsearch/v1", params=search_params)
             search_results = search_response.json().get('items', [])
@@ -118,20 +123,24 @@ def fact_check_video(self, video_url, target_lang='en'):
                 for i, result in enumerate(search_results):
                     search_context += f"Source {i+1}: URL: {result.get('link')}, Snippet: {result.get('snippet')}\n"
             
+            # А вот объяснение для пользователя генерируем на выбранном им языке (target_lang)
             prompt_fc = f"""
             Based on the provided web search results, fact-check the following claim.
             Claim: "{claim}"
+
             Web Search Results:
             ---
             {search_context}
             ---
+
             Your task is to return a single JSON object with these keys: "claim", "verdict", "confidence_percentage", "explanation", "sources".
             - The "claim" value MUST be the original claim provided above.
             - The "verdict" MUST be one of: "True", "False", "Misleading", "Partly True", "Unverifiable".
-            - The "explanation" MUST be a concise, neutral summary of the evidence from the search results, written in {target_lang}.
+            - The "explanation" MUST be a concise, neutral summary of the evidence, written STRICTLY in the following language: {target_lang}.
             - The "sources" MUST be a list of the URLs from the search results that you used for your conclusion.
             - Your entire response must be ONLY a single JSON object.
             """
+            
             fc_response = gemini_model.generate_content(prompt_fc, safety_settings=safety_settings)
             
             match = re.search(r'\{.*\}', fc_response.text, re.DOTALL)
@@ -152,7 +161,7 @@ def fact_check_video(self, video_url, target_lang='en'):
             if verdict in verdict_counts:
                 verdict_counts[verdict] += 1
             else:
-                verdict_counts["Unverifiable"] += 1
+                verdict_counts["Unverifiable] += 1
             if "confidence_percentage" in res and isinstance(res["confidence_percentage"], int):
                 confidence_sum += res["confidence_percentage"]
                 claims_with_confidence += 1
@@ -164,13 +173,15 @@ def fact_check_video(self, video_url, target_lang='en'):
         
         summary_context = [{"claim": res.get("claim"), "verdict": res.get("verdict")} for res in all_results]
         
+        # Итоговый отчет тоже генерируем на языке пользователя (target_lang)
         summary_prompt = f"""Analyze the fact-checking results. Return a single, clean JSON object.
         It must have these keys: "overall_verdict", "overall_assessment", and "key_points".
         - "overall_verdict" must be one of: "Mostly True", "Mostly False", "Mixed Veracity", "Largely Unverifiable".
-        - "overall_assessment" must be a neutral, one-paragraph summary in {target_lang}.
-        - "key_points" must be a JSON array of simple STRINGS (in {target_lang}). Each string is a key takeaway.
-        Data: {json.dumps(summary_context)}
+        - "overall_assessment" must be a neutral, one-paragraph summary written STRICTLY in the following language: {target_lang}.
+        - "key_points" must be a JSON array of simple STRINGS, and each string must be written STRICTLY in the following language: {target_lang}.
+        Data: {json.dumps(summary_context, ensure_ascii=False)}
         """
+        
         final_report_response = gemini_model.generate_content(summary_prompt, safety_settings=safety_settings)
         
         summary_match = re.search(r'\{.*\}', final_report_response.text, re.DOTALL)

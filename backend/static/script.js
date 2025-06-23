@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
         statusSection.style.display = 'block';
 
         try {
-            const userLang = (navigator.language || navigator.userLanguage).split('-')[0];
+            const userLang = document.documentElement.lang;
             const analyzeResponse = await fetch('/api/analyze', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
