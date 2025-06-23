@@ -38,7 +38,7 @@ def get_gemini_model():
 
 def get_video_id(url):
     if not url: return None
-    regex = r"(?:v=|\/embed\/|\/v\/|youtu\.be\/|\/shorts\/|googleusercontent\.com\/youtube\.com\/)([a-zA-Z0-9_-]{11})"
+    regex = r"(?:v=|\/embed\/|\/v\/|youtu\.be\/|\/shorts\/|\/live\/|googleusercontent\.com\/youtube\.com\/)([a-zA-Z0-9_-]{11})"
     match = re.search(regex, url)
     return match.group(1) if match else None
 
