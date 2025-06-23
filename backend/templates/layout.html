@@ -16,7 +16,7 @@
 
         <div class="lang-switcher">
             <div class="lang-switcher-current">
-                <span>{{ LANGUAGES[CURRENT_LANG]['flag'] }}</span>
+                <span>{{ LANGUAGES.get(CURRENT_LANG, LANGUAGES['en'])['flag'] }}</span>
             </div>
             <div class="lang-dropdown">
                 {% for lang_code, lang_info in LANGUAGES.items() %}

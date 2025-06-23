@@ -41,7 +41,12 @@ def get_locale():
     lang_code = request.cookies.get('lang')
     if lang_code in LANGUAGES:
         return lang_code
-    return request.accept_languages.best_match(list(LANGUAGES.keys()))
+    # Фикс: Если best_match не найден — явно возвращать язык по умолчанию
+    best = request.accept_languages.best_match(list(LANGUAGES.keys()))
+    if best:
+        return best
+    return app.config['BABEL_DEFAULT_LOCALE']
+
 
 # Инициализируем Babel, передавая функцию выбора языка НАПРЯМУЮ.
 # Декоратор @babel.localeselector больше не нужен и УДАЛЕН.
