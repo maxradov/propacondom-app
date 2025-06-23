@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Simple function to extract video ID from URL
     function getVideoId(url) {
-        const regex = /(?:v=|\/embed\/|\/v\/|youtu\.be\/|\/shorts\/)([a-zA-Z0-9_-]{11})/;
+        const regex = /(?:v=|\/embed\/|\/v\/|youtu\.be\/|\/shorts\/|\/live\/|googleusercontent\.com\/youtube\.com\/)([a-zA-Z0-9_-]{11})/;
         const match = url.match(regex);
         return match ? match[1] : null;
     }
@@ -19,6 +19,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!videoUrl) {
             alert('Please paste a video link.');
             return;
+        }
+		
+		const videoIdForCheck = getVideoId(videoUrl);
+        if (!videoIdForCheck) {
+            alert('Please enter a valid YouTube video link!');
+            return; // Останавливаем выполнение, если ссылка некорректна
         }
 
         clearInterval(pollingInterval);
