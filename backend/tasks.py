@@ -161,7 +161,7 @@ def fact_check_video(self, video_url, target_lang='en'):
             if verdict in verdict_counts:
                 verdict_counts[verdict] += 1
             else:
-                verdict_counts["Unverifiable] += 1
+                verdict_counts["Unverifiable"] += 1
             if "confidence_percentage" in res and isinstance(res["confidence_percentage"], int):
                 confidence_sum += res["confidence_percentage"]
                 claims_with_confidence += 1
