@@ -147,7 +147,9 @@ def serve_report(analysis_id):
             report_data = doc.to_dict()
             if 'created_at' in report_data and hasattr(report_data['created_at'], 'isoformat'):
                 report_data['created_at'] = report_data['created_at'].isoformat()
-            return render_template('report.html', report=report_data)
+            # Получаем список последних анализов для боковой панели
+            recent_analyses = get_analyses()
+            return render_template('report.html', report=report_data, recent_analyses=recent_analyses)    
         else:
             return _("Report not found"), 404
     except Exception as e:
