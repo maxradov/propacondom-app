@@ -535,9 +535,7 @@ main.container > header {
     margin-bottom: 0.45em;
     display: inline-block;
 }
-.original-text textarea {
-    width: 100%;
-    min-
+
 
 /* Увеличиваем размер заголовка отчёта */
 .page-header .description {
