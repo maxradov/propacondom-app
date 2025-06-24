@@ -118,3 +118,25 @@ function displayResults(data) {
 function shareResults() {
     const shareData = {
         title: window.translations.share_report,
+        text: window.translations.share_text,
+        url: window.location.href
+    };
+    const shareBtn = document.getElementById('share-btn');
+
+    if (navigator.share) {
+        navigator.share(shareData)
+            .then(() => console.log('Successful share'))
+            .catch((error) => console.log('Error sharing', error));
+    } else {
+        navigator.clipboard.writeText(window.location.href).then(() => {
+            const originalText = shareBtn.textContent;
+            shareBtn.textContent = window.translations.link_copied;
+            setTimeout(() => {
+                shareBtn.textContent = originalText;
+            }, 2000);
+        }).catch(err => {
+            console.error('Failed to copy text: ', err);
+            alert(window.translations.failed_copy);
+        });
+    }
+}
