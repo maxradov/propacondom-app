@@ -538,3 +538,49 @@ main.container > header {
 .original-text textarea {
     width: 100%;
     min-
+
+/* Увеличиваем размер заголовка отчёта */
+.page-header .description {
+    font-size: 1.6rem !important;
+    margin-bottom: 0.5rem !important;
+}
+
+/* Уменьшаем шрифт заголовка видео и межстрочный интервал */
+.page-header h1 {
+    font-size: 1.3rem !important;
+    line-height: 1.3 !important;
+    margin-bottom: 0.75rem !important;
+}
+
+/* Уменьшаем отступ между "Watch on YouTube" и кнопкой "Share Results" */
+.video-link {
+    margin-bottom: 0.75rem !important;
+    display: inline-block;
+}
+
+/* Отступ от кнопки "Share Results" до thumbnail */
+.share-button-header {
+    margin-bottom: 1rem !important;
+}
+
+/* Уменьшаем отступ от thumbnail до следующего блока */
+.video-thumbnail {
+    margin-bottom: 1rem !important;
+}
+
+/* Уменьшаем отступ от начала блока с оценкой и саммари и репортом и оценками (4 Confirmed etc.) */
+#report-summary {
+    padding-top: 0.5rem !important;
+    margin-top: 0.5rem !important;
+}
+
+.verdict-summary-icons {
+    margin-bottom: 0.75rem !important;
+}
+
+/* Дисклеймер тоже уменьшим отступы для компактности */
+.disclaimer-box {
+    margin-top: 0.5rem !important;
+    margin-bottom: 1rem !important;
+    padding: 0.5rem 1rem !important;
+}
