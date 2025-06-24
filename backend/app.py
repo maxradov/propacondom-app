@@ -13,6 +13,23 @@ from tasks import get_db_client
 app = Flask(__name__)
 CORS(app)
 
+from flask import request, redirect
+
+@app.before_request
+def redirect_to_new_domain():
+    # Твой старый домен (без https://)
+    old_domain = "propacondom.com"
+    new_domain = "factchecking.pro"
+    # Редиректим только если хост == старый домен (чтобы не было циклов)
+    if request.host.startswith(old_domain):
+        # Собираем новый URL с тем же path и query string
+        new_url = f"https://{new_domain}{request.full_path}"
+        # Удаляем лишний ? если нет query string
+        if new_url.endswith('?'):
+            new_url = new_url[:-1]
+        return redirect(new_url, code=301)  # Permanent redirect
+
+
 class FlaskTask(celery_app.Task):
     def __call__(self, *args, **kwargs):
         with app.app_context():
