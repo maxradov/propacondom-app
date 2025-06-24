@@ -5,41 +5,39 @@
 {% block content %}
 <div class="main-layout">
     <main class="main-content">
-        <section class="input-section top-form">
+        <header class="page-header">
+            <p class="description" style="font-size: 1.4rem; font-weight: bold;">{{ _('Fact-check report for:') }}</p>
+            <h1>{{ report.video_title }}</h1>
+            {% if report.input_type == 'youtube' and report.video_url %}
+                <a href="{{ report.video_url }}" target="_blank" class="video-link">{{ _('Watch on YouTube') }}</a>
+            {% endif %}
+            <button id="share-btn" class="share-button-header">{{ _('Share Results') }}</button>
+        </header>
+
+        {% if report.input_type == 'youtube' and report.thumbnail_url %}
+            <img src="{{ report.thumbnail_url }}" alt="{{ _('Video Thumbnail') }}" class="video-thumbnail" onerror="this.style.display='none'">
+        {% endif %}
+
+        <section id="result-section" class="result-section">
+            <div id="progress-container" class="progress-container"></div>
+            <div id="confidence-container" class="confidence-container"></div>
+
+            <div class="disclaimer-box">
+                <p><strong>{{ _('Disclaimer:') }}</strong> {{ _('This report is AI-generated. It may contain errors and may not have access to real-time data. Please verify the information independently.') }}</p>
+            </div>
+
+            <div id="report-container" class="report-container"></div>
+        </section>
+
+        <section class="input-section top-form" style="margin-top: 2rem;">
             <input type="text" id="youtube-url" placeholder="{{ _('Paste a YouTube link, article URL, or text to check...') }}">
             <button id="factcheck-btn">{{ _('Run Another Fact Check') }}</button>
         </section>
-        
+
         <section id="status-section" class="status-section" style="display: none;">
             <div class="loader"></div>
             <div id="status-log" class="status-log"></div>
         </section>
-    
-        <div class="report-wrapper">
-            <div class="disclaimer-box">
-                <p><strong>{{ _('Disclaimer:') }}</strong> {{ _('This report is AI-generated. It may contain errors and may not have access to real-time data. Please verify the information independently.') }}</p>
-            </div>
-            <header class="page-header">
-                <p class="description">{{ _('Fact-check report for:') }}</p>
-                <h1>{{ report.video_title }}</h1>
-                {# Показывать кнопку и thumbnail только для YouTube-видео #}
-                {% if report.input_type == 'youtube' and report.video_url %}
-                    <a href="{{ report.video_url }}" target="_blank" class="video-link">{{ _('Watch on YouTube') }}</a>
-                {% endif %}
-                <button id="share-btn" class="share-button-header">{{ _('Share Results') }}</button>
-            </header>
-
-            {# Только для YouTube — картинка #}
-            {% if report.input_type == 'youtube' and report.thumbnail_url %}
-                <img src="{{ report.thumbnail_url }}" alt="{{ _('Video Thumbnail') }}" class="video-thumbnail" onerror="this.style.display='none'">
-            {% endif %}
-
-            <section id="result-section" class="result-section">
-                <div id="progress-container" class="progress-container"></div>
-                <div id="confidence-container" class="confidence-container"></div>
-                <div id="report-container" class="report-container"></div>
-            </section>
-        </div>
     </main>
 
     <aside class="sidebar-feed">
