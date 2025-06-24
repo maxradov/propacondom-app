@@ -22,12 +22,18 @@
             <header class="page-header">
                 <p class="description">{{ _('Fact-check report for:') }}</p>
                 <h1>{{ report.video_title }}</h1>
-                <a href="{{ report.video_url }}" target="_blank" class="video-link">{{ _('Watch on YouTube') }}</a>
+                {# Показывать кнопку и thumbnail только для YouTube-видео #}
+                {% if report.input_type == 'youtube' and report.video_url %}
+                    <a href="{{ report.video_url }}" target="_blank" class="video-link">{{ _('Watch on YouTube') }}</a>
+                {% endif %}
                 <button id="share-btn" class="share-button-header">{{ _('Share Results') }}</button>
             </header>
-            
-            <img src="{{ report.thumbnail_url }}" alt="{{ _('Video Thumbnail') }}" class="video-thumbnail" onerror="this.style.display='none'">
-    
+
+            {# Только для YouTube — картинка #}
+            {% if report.input_type == 'youtube' and report.thumbnail_url %}
+                <img src="{{ report.thumbnail_url }}" alt="{{ _('Video Thumbnail') }}" class="video-thumbnail" onerror="this.style.display='none'">
+            {% endif %}
+
             <section id="result-section" class="result-section">
                 <div id="progress-container" class="progress-container"></div>
                 <div id="confidence-container" class="confidence-container"></div>

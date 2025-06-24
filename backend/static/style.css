@@ -475,3 +475,35 @@ main.container > header {
         margin-bottom: 1rem;
     }
 }
+
+.verdict-summary-icons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    margin-bottom: 1.2rem;
+    font-size: 1.15rem;
+}
+.verdict-summary-icons .verdict-icon {
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: #f4f6f8;
+    border-radius: 5px;
+    padding: 0.35em 0.85em;
+}
+.verdict-True { color: var(--color-true);}
+.verdict-False { color: var(--color-false);}
+.verdict-Unverifiable { color: var(--color-unverifiable);}
+.verdict-Misleading, .verdict-Partly-True { color: #ffc107;}
+.original-text {
+    margin: 1.2em 0 1.7em 0;
+}
+.original-text label {
+    font-weight: 500;
+    margin-bottom: 0.45em;
+    display: inline-block;
+}
+.original-text textarea {
+    width: 100%;
+    min-

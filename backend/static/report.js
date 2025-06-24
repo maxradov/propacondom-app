@@ -26,55 +26,55 @@ function displayResults(data) {
         return;
     }
 
-    const { verdict_counts, detailed_results, summary_data, average_confidence, confirmed_credibility } = data;
-    const totalVerdicts = Object.values(verdict_counts).reduce((a, b) => a + b, 0);
-    progressContainer.innerHTML = '';
+    const { verdict_counts, detailed_results, summary_data } = data;
 
-    if (totalVerdicts > 0) {
-        const tooltips = {
-            'True': 'True statements',
-            'False': 'False statements',
-            'Misleading': 'Misleading or Partly True statements',
-            'Partly True': 'Misleading or Partly True statements',
-            'Unverifiable': 'Unverifiable statements'
-        };
-        const segments = [
-            { type: 'True', count: verdict_counts['True'] || 0, id: 'true-segment' },
-            { type: 'False', count: verdict_counts['False'] || 0, id: 'false-segment' },
-            { type: 'Misleading', count: verdict_counts['Misleading'] || 0, id: 'misleading-segment' },
-            { type: 'Partly True', count: verdict_counts['Partly True'] || 0, id: 'misleading-segment' },
-            { type: 'Unverifiable', count: verdict_counts['Unverifiable'] || 0, id: 'unverifiable-segment' }
-        ];
+    // --- Новый блок иконок/статистики ---
+    // Добавь эти строки в messages.pot/.po для всех языков:
+    // true_label, false_label, misleading_label, partly_true_label, unverifiable_label
+    const verdictOrder = [
+        { key: 'True', icon: '✅', label: window.translations.true_label || 'Confirmed' },
+        { key: 'False', icon: '❌', label: window.translations.false_label || 'Refuted' },
+        { key: 'Misleading', icon: '⚠️', label: window.translations.misleading_label || 'Misleading' },
+        { key: 'Partly True', icon: '🟡', label: window.translations.partly_true_label || 'Partly True' },
+        { key: 'Unverifiable', icon: '❓', label: window.translations.unverifiable_label || 'Unverifiable' }
+    ];
+    let iconsSummary = '';
+    verdictOrder.forEach(v => {
+        if (verdict_counts[v.key] && verdict_counts[v.key] > 0) {
+            iconsSummary += `<span class="verdict-icon verdict-${v.key.replace(/\s/g, '-')}">${v.icon} ${verdict_counts[v.key]} ${v.label}</span> `;
+        }
+    });
 
-        segments.forEach(segment_data => {
-            if (segment_data.count > 0) {
-                const percentage = (segment_data.count / totalVerdicts) * 100;
-                const segmentDiv = document.createElement('div');
-                segmentDiv.id = segment_data.id;
-                segmentDiv.className = 'progress-segment';
-                segmentDiv.style.width = percentage + '%';
-                segmentDiv.textContent = segment_data.count;
-                segmentDiv.title = tooltips[segment_data.type];
-                progressContainer.appendChild(segmentDiv);
-            }
-        });
+    // Для текстового анализа — показывать исходный текст (если передан)
+    let showText = '';
+    if (data.input_type === 'text' && data.user_text) {
+        const text = data.user_text;
+        showText = `
+            <div class="original-text">
+                <label>${window.translations.original_text || 'Checked Text'}:</label>
+                <textarea rows="5" readonly style="width:100%;resize:vertical;">${text.length > 800 ? text.substring(0, 800) + '...' : text}</textarea>
+            </div>
+        `;
     }
 
-    // Локализованные подписи
-    const stats = [];
-    if (confirmed_credibility !== undefined) {
-        stats.push(`${window.translations.credibility}: ${confirmed_credibility}%`);
+    // Показываем thumbnail и "Смотреть на YouTube" ТОЛЬКО для YouTube
+    let showThumbnail = '';
+    let showYoutubeLink = '';
+    if (data.input_type === 'youtube' && data.thumbnail_url) {
+        showThumbnail = `<img src="${data.thumbnail_url}" alt="${window.translations.video_thumbnail || 'Video Thumbnail'}" class="video-thumbnail" onerror="this.style.display='none'">`;
     }
-    if (average_confidence !== undefined) {
-        stats.push(`${window.translations.confidence}: ${average_confidence}%`);
+    if (data.input_type === 'youtube' && data.video_url) {
+        showYoutubeLink = `<a href="${data.video_url}" target="_blank" class="video-link">${window.translations.watch_youtube || 'Watch on YouTube'}</a>`;
     }
-    confidenceContainer.innerHTML = stats.join(' <span class="stats-separator">|</span> ');
 
-    // Рендеринг текстового отчета
     let reportHTML = `
         <div id="report-summary">
-            <h2>${summary_data.overall_verdict || 'No summary verdict'}</h2>
-            <p>${summary_data.overall_assessment || 'No summary assessment'}</p>
+            <div class="verdict-summary-icons">${iconsSummary}</div>
+            <h2>${summary_data.overall_verdict || ''}</h2>
+            <p>${summary_data.overall_assessment || ''}</p>
+            ${showText}
+            ${showThumbnail}
+            ${showYoutubeLink}
             <ul>
                 ${(summary_data.key_points || []).map(point => `<li>${point}</li>`).join('')}
             </ul>
@@ -87,15 +87,24 @@ function displayResults(data) {
         const verdictClass = (claim.verdict || 'No-data').replace(/[\s/]+/g, '-');
         reportHTML += `
             <div class="claim-item">
-                <p class="claim-text">${claim.claim || 'Claim text missing'}
-                    <span class="claim-verdict verdict-${verdictClass}">${claim.verdict || 'No verdict'}</span>
+                <p class="claim-text">${claim.claim || (window.translations.claim_text_missing || 'Claim text missing')}
+                    <span class="claim-verdict verdict-${verdictClass}">${claim.verdict || (window.translations.no_verdict || 'No verdict')}</span>
                 </p>
                 <div class="claim-explanation"><p>${claim.explanation || ''}</p></div>
         `;
+
+        // --- Новый формат источников ---
         if (claim.sources && claim.sources.length > 0) {
-            reportHTML += `<div class="claim-sources"><strong>${window.translations.sources}</strong> `;
+            reportHTML += `<div class="claim-sources"><strong>${window.translations.sources}</strong><br>`;
             claim.sources.forEach((source, index) => {
-                reportHTML += `<a href="${source}" target="_blank" rel="noopener noreferrer">[${index + 1}]</a> `;
+                let domain = '';
+                try {
+                    domain = (new URL(source)).hostname.replace(/^www\./, '');
+                } catch (e) { domain = ''; }
+                // Можно будет добавить заголовок, если backend будет возвращать его как claim.source_titles
+                reportHTML += `<div class="source-item">
+                    <a href="${source}" target="_blank" rel="noopener noreferrer">${domain || source}</a>
+                </div>`;
             });
             reportHTML += `</div>`;
         }
@@ -103,6 +112,9 @@ function displayResults(data) {
     });
     reportHTML += `</div></div>`;
     reportContainer.innerHTML = reportHTML;
+
+    progressContainer.innerHTML = ''; // Убираем progress bar
+    confidenceContainer.innerHTML = ''; // Убираем проценты
 
     const toggleButton = document.getElementById('details-toggle');
     const detailsContainer = document.getElementById('claim-list-container');

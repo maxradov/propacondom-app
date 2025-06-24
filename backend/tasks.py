@@ -65,7 +65,7 @@ def fact_check(self, user_input, target_lang='en'):
     elif is_url(user_input):
         return analyze_web_url(self, user_input, target_lang)
     else:
-        return analyze_free_text(self, user_input, target_lang)
+        return analyze_free_text(self, user_input, target_lang, user_text=user_input)
 
 def analyze_youtube_video(self, video_url, target_lang='en'):
     local_db = get_db_client()
@@ -147,7 +147,7 @@ def analyze_web_url(self, url, target_lang='en'):
     except Exception as e:
         return {"error": f"Could not retrieve or parse the site: {str(e)}"}
 
-def analyze_free_text(self, text, target_lang='en', title=None, thumbnail_url=None, source_url=None, analysis_id=None, input_type="text"):
+def analyze_free_text(self, text, target_lang='en', title=None, thumbnail_url=None, source_url=None, analysis_id=None, input_type="text", user_text=None):
     local_db = get_db_client()
     gemini_model = get_gemini_model()
 
@@ -259,6 +259,9 @@ Data: {json.dumps(summary_context, ensure_ascii=False)}
         "detailed_results": all_results,
         "created_at": firestore.SERVER_TIMESTAMP
     }
+    if input_type == "text" and user_text is not None:
+        data_to_save_in_db["user_text"] = user_text
+        
     doc_ref.set(data_to_save_in_db)
     data_to_return = data_to_save_in_db.copy()
     data_to_return["created_at"] = datetime.datetime.now(datetime.timezone.utc).isoformat()
