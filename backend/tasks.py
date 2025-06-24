@@ -258,4 +258,5 @@ Data: {json.dumps(summary_context, ensure_ascii=False)}
     doc_ref.set(data_to_save_in_db)
     data_to_return = data_to_save_in_db.copy()
     data_to_return["created_at"] = datetime.datetime.now(datetime.timezone.utc).isoformat()
+    data_to_return["id"] = doc_ref.id
     return data_to_return

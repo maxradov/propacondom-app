@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- Секция для формы анализа (без изменений) ---
     const urlInput = document.getElementById('youtube-url');
     const checkBtn = document.getElementById('factcheck-btn');
     const statusSection = document.getElementById('status-section');
@@ -7,23 +6,14 @@ document.addEventListener('DOMContentLoaded', () => {
     let pollingInterval;
     let lastStatusMessage = '';
 
-    // Simple function to extract video ID from URL
-    function getVideoId(url) {
-        const regex = /(?:v=|\/embed\/|\/v\/|youtu\.be\/|\/shorts\/|\/live\/|googleusercontent\.com\/youtube\.com\/)([a-zA-Z0-9_-]{11})/;
-        const match = url.match(regex);
-        return match ? match[1] : null;
-    }
-
     checkBtn.addEventListener('click', async () => {
-        const videoUrl = urlInput.value.trim();
-        if (!videoUrl) {
+        const userInput = urlInput.value.trim();
+        if (!userInput) {
             alert(window.translations.please_paste_video);
             return;
         }
-
-        const videoIdForCheck = getVideoId(videoUrl);
-        if (!videoIdForCheck) {
-            alert(window.translations.invalid_youtube);
+        if (userInput.length > 10000) {
+            alert("Input is too long (limit 10000 characters).");
             return;
         }
 
@@ -39,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const analyzeResponse = await fetch('/api/analyze', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ url: videoUrl, lang: userLang })
+                body: JSON.stringify({ url: userInput, lang: userLang })
             });
 
             if (!analyzeResponse.ok) {
@@ -48,14 +38,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const data = await analyzeResponse.json();
-            pollStatus(data.task_id, videoUrl, userLang);
+            pollStatus(data.task_id, userInput, userLang);
 
         } catch (error) {
             statusLog.innerHTML += `<p style="color:red;">Error: ${error.message}</p>`;
         }
     });
 
-    function pollStatus(taskId, videoUrl, userLang) {
+    function pollStatus(taskId, userInput, userLang) {
         pollingInterval = setInterval(async () => {
             try {
                 const statusResponse = await fetch(`/api/status/${taskId}`);
@@ -65,12 +55,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (data.status === 'SUCCESS') {
                     clearInterval(pollingInterval);
-                    // REDIRECT to the report page
-                    const videoId = getVideoId(videoUrl);
-                    if (videoId) {
-                        window.location.href = `/report/${videoId}_${userLang}`;
+                    // Для новых результатов backend возвращает result.id
+                    const id = data.result && data.result.id;
+                    if (id) {
+                        window.location.href = `/report/${id}`;
                     } else {
-                        throw new Error("Could not extract video ID for redirection.");
+                        // fallback для старых данных: просто перезагрузить
+                        window.location.reload();
                     }
                 } else if (data.status === 'FAILURE') {
                     clearInterval(pollingInterval);
@@ -90,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 3000);
     }
 
-    // --- НОВАЯ ЛОГИКА ДЛЯ ДИНАМИЧЕСКОЙ ЛЕНТЫ ---
+    // --- Лента, скролл, языки (оставить без изменений) ---
     const feedContainer = document.getElementById('feed-container');
     const loader = document.getElementById('feed-loader');
     if (!feedContainer) return;
@@ -171,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // --- ЛОГИКА ДЛЯ ПЕРЕКЛЮЧАТЕЛЯ ЯЗЫКОВ ---
+    // --- Логика языкового переключателя ---
     const langSwitcher = document.querySelector('.lang-switcher');
     if (langSwitcher) {
         const currentLang = langSwitcher.querySelector('.lang-switcher-current');
@@ -181,7 +172,6 @@ document.addEventListener('DOMContentLoaded', () => {
             langSwitcher.classList.toggle('open');
         });
 
-        // Замена перехода по ссылке на смену куки и reload
         document.querySelectorAll('.lang-option').forEach(option => {
             option.addEventListener('click', function(e) {
                 e.preventDefault();
