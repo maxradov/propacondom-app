@@ -56,8 +56,9 @@
     --surface-color: #ffffff;
     --border-color: #dee2e6;
     --color-true: #28a745;
-    --color-false: #dc3545; /* <-- Красный цвет */
-    --color-unverifiable: #495057; 
+    --color-false: #dc3545;
+    --color-unverifiable: #495057;
+    --color-misleading: #ffc107;
 }
 
 /* Добавьте/измените эти стили в вашем файле style.css */
@@ -315,17 +316,39 @@ main.container > header {
     color: var(--border-color);
 }
 
+
 .claim-list {
     margin-top: 1.5rem;
     border-top: 1px solid var(--border-color);
 }
 
 .claim-item {
-    padding: 1.5rem 0;
+    padding: 1.5rem;
     border-bottom: 1px solid var(--border-color);
+    border-radius: 8px;
+    margin-bottom: 1rem;
 }
-.claim-item:last-child { border-bottom: none; }
-.claim-text { font-weight: 500; font-size: 1.1rem; }
+
+.claim-item:last-child {
+    border-bottom: none;
+}
+
+.claim-item.verdict-True {
+    background-color: rgba(40, 167, 69, 0.05);
+}
+
+.claim-item.verdict-False {
+    background-color: rgba(220, 53, 69, 0.05);
+}
+
+.claim-item.verdict-Misleading,
+.claim-item.verdict-Partly-True {
+    background-color: rgba(255, 193, 7, 0.1);
+}
+
+.claim-item.verdict-Unverifiable {
+    background-color: rgba(73, 80, 87, 0.05);
+}
 
 .claim-verdict {
     font-weight: bold;
@@ -333,13 +356,15 @@ main.container > header {
     border-radius: 4px;
     font-size: 0.85rem;
     margin-left: 0.75rem;
-    color: #fff;
+    color: #000;
     white-space: nowrap;
 }
-.verdict-True { background-color: var(--color-true); }
-.verdict-False { background-color: var(--color-false); }
-.verdict-Partly-True-Manipulation, .verdict-Misleading, .verdict-Partly-True { background-color: #ffc107; color: #212529;}
-.verdict-No-data, .verdict-Processing-Error, .verdict-Unverifiable { background-color: var(--color-unverifiable); }
+
+.verdict-True .claim-verdict { background-color: var(--color-true); }
+.verdict-False .claim-verdict { background-color: var(--color-false); }
+.verdict-Misleading .claim-verdict,
+.verdict-Partly-True .claim-verdict { background-color: var(--color-misleading); }
+.verdict-Unverifiable .claim-verdict { background-color: var(--color-unverifiable); }
 
 .claim-explanation {
     margin-top: 1rem;
@@ -347,12 +372,17 @@ main.container > header {
     padding-left: 1rem;
     border-left: 3px solid var(--border-color);
 }
+
 .claim-sources {
     margin-top: 0.75rem;
     font-size: 0.9rem;
     padding-left: 1rem;
 }
-.claim-sources a { color: var(--primary-color); margin-right: 0.5rem; }
+
+.claim-sources a {
+    color: var(--primary-color);
+    margin-right: 0.5rem;
+}
 
 .details-toggle {
     background: none;
@@ -363,6 +393,7 @@ main.container > header {
     font-size: 1.1rem;
     padding: 0.5rem 0;
 }
+
 
 .feed-header-title {
     font-size: 0.85rem;          /* Маленький шрифт */

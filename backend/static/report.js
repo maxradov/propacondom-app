@@ -28,9 +28,6 @@ function displayResults(data) {
 
     const { verdict_counts, detailed_results, summary_data } = data;
 
-    // --- Новый блок иконок/статистики ---
-    // Добавь эти строки в messages.pot/.po для всех языков:
-    // true_label, false_label, misleading_label, partly_true_label, unverifiable_label
     const verdictOrder = [
         { key: 'True', icon: '✅', label: window.translations.true_label || 'Confirmed' },
         { key: 'False', icon: '❌', label: window.translations.false_label || 'Refuted' },
@@ -38,6 +35,7 @@ function displayResults(data) {
         { key: 'Partly True', icon: '🟡', label: window.translations.partly_true_label || 'Partly True' },
         { key: 'Unverifiable', icon: '❓', label: window.translations.unverifiable_label || 'Unverifiable' }
     ];
+
     let iconsSummary = '';
     verdictOrder.forEach(v => {
         if (verdict_counts[v.key] && verdict_counts[v.key] > 0) {
@@ -45,7 +43,6 @@ function displayResults(data) {
         }
     });
 
-    // Для текстового анализа — показывать исходный текст (если передан)
     let showText = '';
     if (data.input_type === 'text' && data.user_text) {
         const text = data.user_text;
@@ -57,24 +54,12 @@ function displayResults(data) {
         `;
     }
 
-    // Показываем thumbnail и "Смотреть на YouTube" ТОЛЬКО для YouTube
-    let showThumbnail = '';
-    let showYoutubeLink = '';
-    if (data.input_type === 'youtube' && data.thumbnail_url) {
-        showThumbnail = `<img src="${data.thumbnail_url}" alt="${window.translations.video_thumbnail || 'Video Thumbnail'}" class="video-thumbnail" onerror="this.style.display='none'">`;
-    }
-    if (data.input_type === 'youtube' && data.video_url) {
-        showYoutubeLink = `<a href="${data.video_url}" target="_blank" class="video-link">${window.translations.watch_youtube || 'Watch on YouTube'}</a>`;
-    }
-
     let reportHTML = `
         <div id="report-summary">
             <div class="verdict-summary-icons">${iconsSummary}</div>
             <h2>${summary_data.overall_verdict || ''}</h2>
             <p>${summary_data.overall_assessment || ''}</p>
             ${showText}
-            ${showThumbnail}
-            ${showYoutubeLink}
             <ul>
                 ${(summary_data.key_points || []).map(point => `<li>${point}</li>`).join('')}
             </ul>
@@ -83,6 +68,7 @@ function displayResults(data) {
         <div id="claim-list-container" style="display: none;">
             <div class="claim-list">
     `;
+
     detailed_results.forEach(claim => {
         const verdictClass = (claim.verdict || 'No-data').replace(/[\s/]+/g, '-');
         reportHTML += `
@@ -93,15 +79,14 @@ function displayResults(data) {
                 <div class="claim-explanation"><p>${claim.explanation || ''}</p></div>
         `;
 
-        // --- Новый формат источников ---
         if (claim.sources && claim.sources.length > 0) {
             reportHTML += `<div class="claim-sources"><strong>${window.translations.sources}</strong><br>`;
-            claim.sources.forEach((source, index) => {
+            claim.sources.forEach(source => {
                 let domain = '';
                 try {
                     domain = (new URL(source)).hostname.replace(/^www\./, '');
                 } catch (e) { domain = ''; }
-                // Можно будет добавить заголовок, если backend будет возвращать его как claim.source_titles
+
                 reportHTML += `<div class="source-item">
                     <a href="${source}" target="_blank" rel="noopener noreferrer">${domain || source}</a>
                 </div>`;
@@ -113,8 +98,8 @@ function displayResults(data) {
     reportHTML += `</div></div>`;
     reportContainer.innerHTML = reportHTML;
 
-    progressContainer.innerHTML = ''; // Убираем progress bar
-    confidenceContainer.innerHTML = ''; // Убираем проценты
+    progressContainer.innerHTML = '';
+    confidenceContainer.innerHTML = '';
 
     const toggleButton = document.getElementById('details-toggle');
     const detailsContainer = document.getElementById('claim-list-container');
@@ -136,19 +121,12 @@ function shareResults() {
     const shareBtn = document.getElementById('share-btn');
 
     if (navigator.share) {
-        navigator.share(shareData)
-            .then(() => console.log('Successful share'))
-            .catch((error) => console.log('Error sharing', error));
+        navigator.share(shareData).catch(console.log);
     } else {
         navigator.clipboard.writeText(window.location.href).then(() => {
             const originalText = shareBtn.textContent;
             shareBtn.textContent = window.translations.link_copied;
-            setTimeout(() => {
-                shareBtn.textContent = originalText;
-            }, 2000);
-        }).catch(err => {
-            console.error('Failed to copy text: ', err);
-            alert(window.translations.failed_copy);
-        });
+            setTimeout(() => shareBtn.textContent = originalText, 2000);
+        }).catch(console.error);
     }
 }
