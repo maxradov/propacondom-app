@@ -72,9 +72,9 @@ function displayResults(data) {
     detailed_results.forEach(claim => {
         const verdictClass = (claim.verdict || 'No-data').replace(/[\s/]+/g, '-');
         reportHTML += `
-            <div class="claim-item">
+            <div class="claim-item verdict-${verdictClass}">
                 <p class="claim-text">${claim.claim || (window.translations.claim_text_missing || 'Claim text missing')}
-                    <span class="claim-verdict verdict-${verdictClass}">${claim.verdict || (window.translations.no_verdict || 'No verdict')}</span>
+                    <span class="claim-verdict">${claim.verdict || (window.translations.no_verdict || 'No verdict')}</span>
                 </p>
                 <div class="claim-explanation"><p>${claim.explanation || ''}</p></div>
         `;
