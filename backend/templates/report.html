@@ -18,11 +18,14 @@
             <img src="{{ report.thumbnail_url }}" alt="{{ _('Video Thumbnail') }}" class="video-thumbnail" onerror="this.style.display='none'">
         {% endif %}
 
-        <section id="result-section" class="result-section">
-            <div id="progress-container" class="progress-container"></div>
-            <div id="confidence-container" class="confidence-container"></div>
-            <div id="report-container" class="report-container"></div>
-        </section>
+        <div class="report-wrapper">
+            <section id="result-section" class="result-section">
+                <div id="progress-container" class="progress-container"></div>
+                <div id="confidence-container" class="confidence-container"></div>
+                <div id="report-container" class="report-container"></div>
+            </section>
+        </div>
+
         <section class="input-section top-form" style="margin-top: 2rem;">
             <input type="text" id="youtube-url" placeholder="{{ _('Paste a YouTube link, article URL, or text to check...') }}">
             <button id="factcheck-btn">{{ _('Run Another Fact Check') }}</button>
