@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, jsonify, render_template, g, make_response, redirect, url_for
+from flask import Flask, request, jsonify, render_template, make_response, redirect, url_for
 from flask_cors import CORS
 from celery.result import AsyncResult
 from datetime import datetime
@@ -9,26 +9,18 @@ from flask_babel import Babel, _
 from celery_init import celery as celery_app
 from tasks import get_db_client
 
-# --- App Configuration ---
 app = Flask(__name__)
 CORS(app)
 
-from flask import request, redirect
-
 @app.before_request
 def redirect_to_new_domain():
-    # Твой старый домен (без https://)
     old_domain = "propacondom.com"
     new_domain = "factchecking.pro"
-    # Редиректим только если хост == старый домен (чтобы не было циклов)
     if request.host.startswith(old_domain):
-        # Собираем новый URL с тем же path и query string
         new_url = f"https://{new_domain}{request.full_path}"
-        # Удаляем лишний ? если нет query string
         if new_url.endswith('?'):
             new_url = new_url[:-1]
-        return redirect(new_url, code=301)  # Permanent redirect
-
+        return redirect(new_url, code=301)
 
 class FlaskTask(celery_app.Task):
     def __call__(self, *args, **kwargs):
@@ -37,7 +29,6 @@ class FlaskTask(celery_app.Task):
 
 celery_app.Task = FlaskTask
 
-# --- Babel (i18n) Configuration ---
 LANGUAGES = {
     'en': {'name': 'English', 'flag': '🇺🇸'},
     'es': {'name': 'Español', 'flag': '🇪🇸'},
@@ -53,23 +44,17 @@ LANGUAGES = {
 }
 app.config['BABEL_DEFAULT_LOCALE'] = 'en'
 
-# Определяем нашу функцию для выбора языка
 def get_locale():
     lang_code = request.cookies.get('lang')
     if lang_code in LANGUAGES:
         return lang_code
-    # Фикс: Если best_match не найден — явно возвращать язык по умолчанию
     best = request.accept_languages.best_match(list(LANGUAGES.keys()))
     if best:
         return best
     return app.config['BABEL_DEFAULT_LOCALE']
 
-
-# Инициализируем Babel, передавая функцию выбора языка НАПРЯМУЮ.
-# Декоратор @babel.localeselector больше не нужен и УДАЛЕН.
 babel = Babel(app, locale_selector=get_locale)
 
-# Этот декоратор отвечает за передачу переменных в шаблоны, он должен остаться
 @app.context_processor
 def inject_conf_var():
     return dict(
@@ -85,20 +70,16 @@ def set_language(lang):
     response.set_cookie('lang', lang, max_age=60*60*24*365*2)
     return response
 
-# --- API Эндпоинты ---
-
 @app.route('/api/analyze', methods=['POST'])
 def analyze():
     data = request.get_json()
     if not data or 'url' not in data:
-        return jsonify({"error": "URL is required"}), 400
-    
-    video_url = data['url']
+        return jsonify({"error": "Input is required"}), 400
+    user_input = data['url']
     target_lang = data.get('lang', get_locale())
     if target_lang not in LANGUAGES:
         target_lang = app.config['BABEL_DEFAULT_LOCALE']
-        
-    task = celery_app.send_task('tasks.fact_check_video', args=[video_url, target_lang])
+    task = celery_app.send_task('tasks.fact_check', args=[user_input, target_lang])
     return jsonify({"task_id": task.id}), 202
 
 @app.route('/api/status/<task_id>', methods=['GET'])
@@ -118,7 +99,7 @@ def get_status(task_id):
 def get_analyses(last_timestamp_str=None):
     db = get_db_client()
     query = db.collection('analyses').order_by('created_at', direction=Query.DESCENDING)
-    
+
     if last_timestamp_str and isinstance(last_timestamp_str, str) and last_timestamp_str.strip():
         try:
             last_timestamp = datetime.fromisoformat(last_timestamp_str)
@@ -126,9 +107,9 @@ def get_analyses(last_timestamp_str=None):
         except ValueError:
             print(f"Warning: Could not parse timestamp: '{last_timestamp_str}'")
             return []
-    
+
     query = query.limit(10)
-    
+
     results = []
     for doc in query.stream():
         data = doc.to_dict()
@@ -147,8 +128,6 @@ def api_get_recent_analyses():
     except Exception as e:
         print(f"Error in /api/get_recent_analyses: {e}")
         return jsonify({"error": "Failed to fetch more analyses"}), 500
-
-# --- Эндпоинты для отображения страниц ---
 
 @app.route('/', methods=['GET'])
 def serve_index():
@@ -170,7 +149,6 @@ def serve_report(analysis_id):
             report_data = doc.to_dict()
             if 'created_at' in report_data and hasattr(report_data['created_at'], 'isoformat'):
                 report_data['created_at'] = report_data['created_at'].isoformat()
-            # Получаем список последних анализов для боковой панели
             recent_analyses = get_analyses()
             return render_template('report.html', report=report_data, recent_analyses=recent_analyses)    
         else:
