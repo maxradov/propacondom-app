@@ -60,6 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (id) {
                         window.location.href = `/report/${id}`;
                     } else {
+						console.log('No ID in backend result!', data.result);
                         // fallback для старых данных: просто перезагрузить
                         window.location.reload();
                     }

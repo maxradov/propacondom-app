@@ -85,6 +85,8 @@ def analyze_youtube_video(self, video_url, target_lang='en'):
         cached_data = doc.to_dict()
         if 'created_at' in cached_data and hasattr(cached_data['created_at'], 'isoformat'):
             cached_data['created_at'] = cached_data['created_at'].isoformat()
+            cached_data["id"] = doc_ref.id
+            print(f"=== Returning cached result: {cached_data}")
         return cached_data
 
     self.update_state(state='PROGRESS', meta={'status_message': 'Fetching video details...'})
@@ -160,6 +162,8 @@ def analyze_free_text(self, text, target_lang='en', title=None, thumbnail_url=No
         cached_data = doc.to_dict()
         if 'created_at' in cached_data and hasattr(cached_data['created_at'], 'isoformat'):
             cached_data['created_at'] = cached_data['created_at'].isoformat()
+            cached_data["id"] = doc_ref.id
+            print(f"=== Returning cached result: {cached_data}")
         return cached_data
 
     prompt_claims = f"""Analyze the following text. Extract 5 main factual claims that can be verified.
@@ -259,4 +263,5 @@ Data: {json.dumps(summary_context, ensure_ascii=False)}
     data_to_return = data_to_save_in_db.copy()
     data_to_return["created_at"] = datetime.datetime.now(datetime.timezone.utc).isoformat()
     data_to_return["id"] = doc_ref.id
+    print(f"=== Returning result from analyze_free_text: {data_to_return}")
     return data_to_return
