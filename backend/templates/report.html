@@ -21,14 +21,8 @@
         <section id="result-section" class="result-section">
             <div id="progress-container" class="progress-container"></div>
             <div id="confidence-container" class="confidence-container"></div>
-
-            <div class="disclaimer-box">
-                <p><strong>{{ _('Disclaimer:') }}</strong> {{ _('This report is AI-generated. It may contain errors and may not have access to real-time data. Please verify the information independently.') }}</p>
-            </div>
-
             <div id="report-container" class="report-container"></div>
         </section>
-
         <section class="input-section top-form" style="margin-top: 2rem;">
             <input type="text" id="youtube-url" placeholder="{{ _('Paste a YouTube link, article URL, or text to check...') }}">
             <button id="factcheck-btn">{{ _('Run Another Fact Check') }}</button>
@@ -39,7 +33,6 @@
             <div id="status-log" class="status-log"></div>
         </section>
     </main>
-
     <aside class="sidebar-feed">
         <h4 class="feed-header-title">{{ _('Last checked:') }}</h4>
         <div id="feed-container">

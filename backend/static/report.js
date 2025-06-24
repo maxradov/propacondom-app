@@ -58,6 +58,11 @@ function displayResults(data) {
         <div id="report-summary">
             <div class="verdict-summary-icons">${iconsSummary}</div>
             <h2>${summary_data.overall_verdict || ''}</h2>
+
+            <div class="disclaimer-box">
+                <p><strong>${window.translations.disclaimer_title || 'Disclaimer:'}</strong> ${window.translations.disclaimer_text || 'This report is AI-generated. It may contain errors and may not have access to real-time data. Please verify the information independently.'}</p>
+            </div>
+
             <p>${summary_data.overall_assessment || ''}</p>
             ${showText}
             <ul>
