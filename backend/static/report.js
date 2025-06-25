@@ -16,7 +16,7 @@ function displayResults(data) {
     const confidenceContainer = reportWrapper.querySelector('#confidence-container');
     const reportContainer = reportWrapper.querySelector('#report-container');
 
-    if (!progressContainer || !confidenceContainer || !reportContainer) {
+    if (!confidenceContainer || !reportContainer) {
         reportContainer.innerHTML = '<p>Error: One or more report containers are missing.</p>';
         return;
     }
@@ -102,7 +102,6 @@ function displayResults(data) {
     reportHTML += `</div></div>`;
     reportContainer.innerHTML = reportHTML;
 
-    progressContainer.innerHTML = '';
     confidenceContainer.innerHTML = '';
 
     const toggleButton = document.getElementById('details-toggle');
