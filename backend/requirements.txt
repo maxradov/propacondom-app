@@ -8,3 +8,5 @@ Flask-Cors
 gunicorn
 eventlet
 Flask-Babel
+beautifulsoup4==4.12.3
+
