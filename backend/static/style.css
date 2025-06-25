@@ -660,3 +660,53 @@ main.container > header {
   }
 }
 
+/* Финальные правки отступов и размера шрифта для мобильных устройств */
+@media (max-width: 768px) {
+  /* Убираем лишний отступ сверху */
+  .main-content {
+      padding-top: 0 !important;
+      margin-top: 0 !important;
+  }
+
+  .page-header {
+      padding-top: 0.15rem !important;
+      margin-bottom: 0.15rem !important;
+  }
+
+  /* Уменьшаем размер заголовка видео ещё на 30% */
+  .page-header h1 {
+      font-size: 0.9rem !important;
+      line-height: 1.2 !important;
+      margin-top: 0 !important;
+      margin-bottom: 0.2rem !important;
+  }
+
+  /* Максимально сокращаем отступы вокруг кнопки Share Results и thumbnail */
+  .share-button-header {
+      margin-top: 0.25rem !important;
+      margin-bottom: 0.25rem !important;
+  }
+
+  .video-thumbnail {
+      margin-bottom: 0.25rem !important;
+  }
+
+  /* Убираем большой отступ сверху блока с оценками и саммари */
+  #report-summary {
+      padding-top: 0.2rem !important;
+      margin-top: 0.2rem !important;
+  }
+
+  /* Дополнительно сокращаем верхний отступ блока иконок с результатами */
+  .verdict-summary-icons {
+      margin-top: 0 !important;
+      margin-bottom: 0.5rem !important;
+  }
+
+  /* Дисклеймер: делаем минимальным отступы */
+  .disclaimer-box {
+      margin-top: 0.25rem !important;
+      margin-bottom: 0.5rem !important;
+      padding: 0.5rem !important;
+  }
+}
