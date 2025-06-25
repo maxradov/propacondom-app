@@ -8,15 +8,14 @@
         <header class="page-header">
             <p class="description" style="font-size: 1.4rem; font-weight: bold;">{{ _('Fact-check report for:') }}</p>
             <h1>{{ report.video_title }}</h1>
-            {% if report.input_type == 'youtube' and report.video_url %}
-                <a href="{{ report.video_url }}" target="_blank" class="video-link">{{ _('Watch on YouTube') }}</a>
-            {% endif %}
             <button id="share-btn" class="share-button-header">{{ _('Share Results') }}</button>
         </header>
 
-        {% if report.input_type == 'youtube' and report.thumbnail_url %}
-            <img src="{{ report.thumbnail_url }}" alt="{{ _('Video Thumbnail') }}" class="video-thumbnail" onerror="this.style.display='none'">
-        {% endif %}
+		{% if report.input_type == 'youtube' and report.thumbnail_url %}
+			<a href="{{ report.video_url }}" target="_blank">
+				<img src="{{ report.thumbnail_url }}" alt="{{ _('Video Thumbnail') }}" class="video-thumbnail" onerror="this.style.display='none'">
+			</a>
+		{% endif %}
 
         <div class="report-wrapper">
             <section id="result-section" class="result-section">
