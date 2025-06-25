@@ -622,3 +622,41 @@ main.container > header {
         padding: 0.5rem !important;
     }
 }
+
+/* Убираем большие отступы сверху и снизу header для мобильных */
+@media (max-width: 768px) {
+  .page-header {
+    padding-top: 0.25rem !important;
+    margin-bottom: 0.25rem !important;
+  }
+
+  .page-header .description {
+    margin-top: 0 !important;
+    margin-bottom: 0.25rem !important;
+  }
+
+  .page-header h1 {
+    margin-top: 0 !important;
+    margin-bottom: 0.25rem !important;
+  }
+
+  .share-button-header {
+    margin-top: 0.25rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+  .video-thumbnail {
+    margin-bottom: 0.25rem !important;
+  }
+
+  /* Сокращаем отступ после thumbnail до блока с репортом */
+  .report-wrapper {
+    padding-top: 0.5rem !important;
+  }
+
+  #report-summary {
+    padding-top: 0.25rem !important;
+    margin-top: 0.25rem !important;
+  }
+}
+
