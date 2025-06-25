@@ -20,25 +20,34 @@
     </main>
 
     <aside class="sidebar-feed">
-        <h4 class="feed-header-title">{{ _('Last checked:') }}</h4>
-        <div id="feed-container">
-            {% for analysis in recent_analyses %}
-                {% if analysis.thumbnail_url and analysis.video_title != 'Title Not Found' %}
-                <div class="feed-item" data-timestamp="{{ analysis.created_at }}">
-                    <a href="/report/{{ analysis.id }}" class="feed-item-link">
-                        <img src="{{ analysis.thumbnail_url }}" alt="" class="feed-thumbnail">
-                        <div class="feed-info">
-                            <h3 class="feed-title">{{ analysis.video_title }}</h3>
-                            <p class="feed-stats">
-                                {{ _('%(credibility)s%% Credibility / %(confidence)s%% Confidence', credibility=analysis.confirmed_credibility, confidence=analysis.average_confidence) }}
-                            </p>
-                        </div>
-                    </a>
-                </div>
-                {% endif %}
-            {% endfor %}
-        </div>
-        <div id="feed-loader" class="feed-loader" style="display: none;">{{ _('Loading more...') }}</div>
-    </aside>
+    <h4 class="feed-header-title">{{ _('Last checked:') }}</h4>
+    <div id="feed-container">
+        {% for analysis in recent_analyses %}
+            {% if analysis.video_title != 'Title Not Found' %}
+            <div class="feed-item" data-timestamp="{{ analysis.created_at }}">
+                <a href="/report/{{ analysis.id }}" class="feed-item-link">
+                    {% if analysis.input_type == 'text' %}
+                        <img src="{{ url_for('static', filename='text-placeholder.png') }}" alt="Text Analysis" class="feed-thumbnail">
+                    {% elif analysis.input_type == 'url' %}
+                        <img src="{{ url_for('static', filename='url-placeholder.png') }}" alt="URL Analysis" class="feed-thumbnail">
+                    {% elif analysis.thumbnail_url %}
+                        <img src="{{ analysis.thumbnail_url }}" alt="Thumbnail" class="feed-thumbnail">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='default-placeholder.png') }}" alt="Default" class="feed-thumbnail">
+                    {% endif %}
+                    <div class="feed-info">
+                        <h3 class="feed-title">{{ analysis.video_title }}</h3>
+                        <p class="feed-stats">
+                            {{ _('%(credibility)s%% Credibility / %(confidence)s%% Confidence', credibility=analysis.confirmed_credibility, confidence=analysis.average_confidence) }}
+                        </p>
+                    </div>
+                </a>
+            </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+    <div id="feed-loader" class="feed-loader" style="display: none;">{{ _('Loading more...') }}</div>
+</aside>
+
 </div>
 {% endblock %}
