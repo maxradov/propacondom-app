@@ -1,43 +1,24 @@
 {% extends "layout.html" %}
 
-{% block title %}{{ _('Fact-Check Report for:') }} {{ report.video_title }}{% endblock %}
+{% block title %}{{ _('AI Fact Checker for YouTube, Articles & Text | Verify Sources') }}{% endblock %}
 
 {% block content %}
 <div class="main-layout">
     <main class="main-content">
         <header class="page-header">
-            <p class="description" style="font-size: 1.4rem; font-weight: bold;">{{ _('Fact-check report for:') }}</p>
-            {% if report.input_type == 'url' and report.video_url %}
-                <h1><a href="{{ report.video_url }}" target="_blank">{{ report.video_title }}</a></h1>
-            {% else %}
-                <h1>{{ report.video_title }}</h1>
-            {% endif %}
-            <button id="share-btn" class="share-button-header">{{ _('Share Results') }}</button>
+            <h1>{{ _('Uncover the Truth in Any Content') }}</h1>
+            <p class="description">{{ _('Our AI instantly analyzes YouTube videos, articles, and text to verify claims and check sources. Stop misinformation before you share it.') }}</p>
         </header>
-
-		{% if report.input_type == 'youtube' and report.thumbnail_url %}
-			<a href="{{ report.video_url }}" target="_blank">
-				<img src="{{ report.thumbnail_url }}" alt="{{ _('Video Thumbnail') }}" class="video-thumbnail" onerror="this.style.display='none'">
-			</a>
-		{% endif %}
-
-        <div class="report-wrapper">
-            <section id="result-section" class="result-section">
-                <div id="confidence-container" class="confidence-container"></div>
-                <div id="report-container" class="report-container"></div>
-            </section>
-        </div>
-
-        <section class="input-section top-form" style="margin-top: 2rem;">
+        <section class="input-section">
             <input type="text" id="youtube-url" placeholder="{{ _('Paste a YouTube link, article URL, or text to check...') }}">
-            <button id="factcheck-btn">{{ _('Run Another Fact Check') }}</button>
+            <button id="factcheck-btn">{{ _('Run Fact Check') }}</button>
         </section>
-
         <section id="status-section" class="status-section" style="display: none;">
             <div class="loader"></div>
             <div id="status-log" class="status-log"></div>
         </section>
     </main>
+
     <aside class="sidebar-feed">
         <h4 class="feed-header-title">{{ _('Last checked:') }}</h4>
         <div id="feed-container">
@@ -60,11 +41,4 @@
         <div id="feed-loader" class="feed-loader" style="display: none;">{{ _('Loading more...') }}</div>
     </aside>
 </div>
-{% endblock %}
-
-{% block extra_js %}
-<script>
-    const reportData = {{ report | tojson }};
-</script>
-<script src="{{ url_for('static', filename='report.js') }}"></script>
 {% endblock %}

@@ -7,7 +7,11 @@
     <main class="main-content">
         <header class="page-header">
             <p class="description" style="font-size: 1.4rem; font-weight: bold;">{{ _('Fact-check report for:') }}</p>
-            <h1>{{ report.video_title }}</h1>
+            {% if report.input_type == 'url' and report.video_url %}
+                <h1><a href="{{ report.video_url }}" target="_blank">{{ report.video_title }}</a></h1>
+            {% else %}
+                <h1>{{ report.video_title }}</h1>
+            {% endif %}
             <button id="share-btn" class="share-button-header">{{ _('Share Results') }}</button>
         </header>
 
