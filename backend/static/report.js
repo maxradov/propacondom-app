@@ -13,7 +13,6 @@ function displayResults(data) {
     const reportWrapper = document.querySelector('.report-wrapper');
     if (!reportWrapper) { return; }
 
-    const progressContainer = reportWrapper.querySelector('#progress-container');
     const confidenceContainer = reportWrapper.querySelector('#confidence-container');
     const reportContainer = reportWrapper.querySelector('#report-container');
 
