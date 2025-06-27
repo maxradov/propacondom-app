@@ -84,6 +84,7 @@ def extract_claims(self, user_input, target_lang='en'):
 
 def analyze_youtube_video(self, video_url, target_lang='en'):
     """Получает и обрабатывает данные с YouTube."""
+
     if not all([SEARCHAPI_KEY, GOOGLE_API_KEY, SEARCH_ENGINE_ID]):
         raise ValueError("One or more API keys are not configured.")
 
@@ -91,8 +92,25 @@ def analyze_youtube_video(self, video_url, target_lang='en'):
     if not video_id:
         raise ValueError(f"Could not extract video ID from URL: {video_url}")
 
-    # ID анализа для YouTube всегда уникален для видео и языка
     analysis_id = f"{video_id}_{target_lang}"
+    local_db = get_db_client()
+    analysis_doc_ref = local_db.collection('analyses').document(analysis_id)
+    analysis_doc = analysis_doc_ref.get()
+    if analysis_doc.exists:
+        # Если анализ уже был — сразу возвращаем клеймы из БД
+        report_data = analysis_doc.to_dict()
+        claims_for_selection = [
+            {
+                "hash": claim["hash"],
+                "text": claim["text"],
+                "is_cached": False  # если нужно — можно добавить доп.логику для кэша
+            }
+            for claim in report_data.get("extracted_claims", [])
+        ]
+        return {
+            "id": analysis_id,
+            "claims_for_selection": claims_for_selection
+        }
 
     self.update_state(state='PROGRESS', meta={'status_message': 'Fetching video details...'})
     params_details = {'engine': 'youtube_video', 'video_id': video_id, 'api_key': SEARCHAPI_KEY}
@@ -112,7 +130,6 @@ def analyze_youtube_video(self, video_url, target_lang='en'):
     return analyze_free_text(self, clean_text, target_lang, title=video_title, thumbnail_url=thumbnail_url,
                              source_url=video_url, analysis_id=analysis_id, input_type="youtube")
 
-
 def analyze_web_url(self, url, target_lang='en'):
     """Получает и обрабатывает данные с веб-страницы."""
     import bs4
@@ -121,21 +138,39 @@ def analyze_web_url(self, url, target_lang='en'):
         response = requests.get(url, timeout=10, headers={"User-Agent": "Mozilla/5.0"})
         response.raise_for_status()
         soup = bs4.BeautifulSoup(response.text, "html.parser")
-        
+
         for tag in soup(['script', 'style', 'noscript', 'header', 'footer', 'nav', 'aside']):
             tag.decompose()
-            
+
         text = soup.get_text(separator=' ', strip=True)
         if not text or len(text) < 200: raise ValueError("No readable content found.")
-        
+
         title = soup.title.string.strip() if soup.title and soup.title.string else url
-        # ID анализа для URL основан на хеше содержимого
         analysis_id = f"url_{get_text_hash(text)}_{target_lang}"
-        
+        local_db = get_db_client()
+        analysis_doc_ref = local_db.collection('analyses').document(analysis_id)
+        analysis_doc = analysis_doc_ref.get()
+        if analysis_doc.exists:
+            # Если анализ уже был — сразу возвращаем клеймы из БД
+            report_data = analysis_doc.to_dict()
+            claims_for_selection = [
+                {
+                    "hash": claim["hash"],
+                    "text": claim["text"],
+                    "is_cached": False  # если нужно — можно добавить доп.логику для кэша
+                }
+                for claim in report_data.get("extracted_claims", [])
+            ]
+            return {
+                "id": analysis_id,
+                "claims_for_selection": claims_for_selection
+            }
+
         return analyze_free_text(self, text[:15000], target_lang, title=title, source_url=url,
                                  analysis_id=analysis_id, input_type="url")
     except Exception as e:
         raise ValueError(f"Could not retrieve or parse the site: {str(e)}")
+
 
 
 def analyze_free_text(self, text, target_lang='en', title=None, thumbnail_url=None, source_url=None, analysis_id=None, input_type="text", user_text=None):
@@ -149,6 +184,24 @@ def analyze_free_text(self, text, target_lang='en', title=None, thumbnail_url=No
     # Если ID не был создан ранее (для случая с простым текстом)
     if not analysis_id:
         analysis_id = f"text_{get_text_hash(text)}_{target_lang}"
+
+    analysis_doc_ref = local_db.collection('analyses').document(analysis_id)
+    analysis_doc = analysis_doc_ref.get()
+    if analysis_doc.exists:
+        # Если анализ уже был — возвращаем клеймы из БД
+        report_data = analysis_doc.to_dict()
+        claims_for_selection = [
+            {
+                "hash": claim["hash"],
+                "text": claim["text"],
+                "is_cached": False  # если надо, тут можно добавить логику кэша
+            }
+            for claim in report_data.get("extracted_claims", [])
+        ]
+        return {
+            "id": analysis_id,
+            "claims_for_selection": claims_for_selection
+        }
 
     self.update_state(state='PROGRESS', meta={'status_message': 'AI is extracting claims...'})
     prompt_claims = f"""Analyze the following text. Extract up to {MAX_CLAIMS_EXTRACTED} main factual claims that can be verified.
@@ -182,7 +235,6 @@ Text: --- {text[:15000]} ---"""
             cached_data = claim_doc.to_dict()
             last_checked = cached_data.get('last_checked_at')
             if last_checked and last_checked.replace(tzinfo=timezone.utc) > cache_expiry_date:
-                # Кэш валиден
                 claims_for_frontend.append({
                     "hash": claim_hash,
                     "text": claim_text,
@@ -190,12 +242,8 @@ Text: --- {text[:15000]} ---"""
                     "cached_data": cached_data
                 })
                 continue
-        
-        # Кэш не найден или устарел
         claims_for_frontend.append({"hash": claim_hash, "text": claim_text, "is_cached": False})
 
-    # Сохраняем документ в коллекцию 'analyses'
-    analysis_doc_ref = local_db.collection('analyses').document(analysis_id)
     analysis_data = {
         "status": "PENDING_SELECTION",
         "input_type": input_type,
@@ -211,11 +259,11 @@ Text: --- {text[:15000]} ---"""
 
     analysis_doc_ref.set(analysis_data)
     
-    # Возвращаем на фронтенд полные данные для рендеринга
     return {
         "id": analysis_id,
         "claims_for_selection": claims_for_frontend
     }
+
 
 @celery.task(bind=True, name='tasks.fact_check_selected', time_limit=600)
 def fact_check_selected_claims(self, analysis_id, selected_claims_data):
