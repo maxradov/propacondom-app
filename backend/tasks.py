@@ -144,7 +144,21 @@ def analyze_youtube_video(self, video_url, target_lang='en'):
     transcript_data = requests.get('https://www.searchapi.io/api/v1/search', params=params_get_transcript).json()
     if not transcript_data.get('transcripts'):
         raise ValueError(f"API did not return subtitles for '{target_lang}'.")
-    clean_text = " ".join([item['text'] for item in transcript_data['transcripts']])
+    transcripts = transcript_data.get('transcripts', [])
+    clean_text_chunks = []
+    for item in transcripts:
+        text = item.get('text')
+        if isinstance(text, str) and text.strip():
+            clean_text_chunks.append(text.strip())
+        else:
+            # Логируем "битые" или не текстовые элементы для отладки
+            print(f"[YouTube transcripts] Skipping non-text or empty element: {item}")
+    clean_text = " ".join(clean_text_chunks)
+
+    if not clean_text.strip():
+        raise ValueError("No valid subtitles (text) found in the returned transcripts.")
+
+
 
     return analyze_free_text(self, clean_text, target_lang, title=video_title, thumbnail_url=thumbnail_url,
                              source_url=video_url, analysis_id=analysis_id, input_type="youtube")
