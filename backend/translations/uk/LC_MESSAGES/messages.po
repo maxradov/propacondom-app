@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-06-22 23:16+0000\n"
+"POT-Creation-Date: 2025-06-26 10:32+0000\n"
 "PO-Revision-Date: 2025-06-22 23:24+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: uk\n"
@@ -19,41 +19,47 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: backend/app.py:152
+#: backend/app.py:171
 msgid "Report not found"
 msgstr "Звіт не знайдено"
 
-#: backend/app.py:155
+#: backend/app.py:174
 msgid "An error occurred"
 msgstr "Виникла помилка"
 
-#: backend/templates/index.html:3 backend/templates/index.html:9
-#: backend/templates/layout.html:6
-msgid "AI Fact Checker"
-msgstr "AI перевірка фактів"
+#: backend/templates/index.html:3
+msgid "AI Fact Checker for YouTube, Articles & Text | Verify Sources"
+msgstr ""
+
+#: backend/templates/index.html:9
+msgid "Uncover the Truth in Any Content"
+msgstr ""
 
 #: backend/templates/index.html:10
-msgid "Don't be fooled. Check factual accuracy."
-msgstr "Не дайте себе обдурити. Перевіряйте достовірність фактів."
+msgid ""
+"Our AI instantly analyzes YouTube videos, articles, and text to verify "
+"claims and check sources. Stop misinformation before you share it."
+msgstr ""
 
 #: backend/templates/index.html:13
-msgid "Paste a YouTube link to check..."
+#, fuzzy
+msgid "Paste a YouTube link, article URL, or text to check..."
 msgstr "Вставте посилання на YouTube для перевірки..."
 
 #: backend/templates/index.html:14
 msgid "Run Fact Check"
 msgstr "Запустити перевірку фактів"
 
-#: backend/templates/index.html:23
+#: backend/templates/index.html:23 backend/templates/report.html:37
 msgid "Last checked:"
 msgstr "Останні перевірки:"
 
-#: backend/templates/index.html:33
+#: backend/templates/index.html:41 backend/templates/report.html:55
 #, python-format
 msgid "%(credibility)s%% Credibility / %(confidence)s%% Confidence"
 msgstr "%(credibility)s%% достовірності / %(confidence)s%% впевненості"
 
-#: backend/templates/index.html:41
+#: backend/templates/index.html:49 backend/templates/report.html:63
 msgid "Loading more..."
 msgstr "Завантаження ще..."
 
@@ -61,40 +67,15 @@ msgstr "Завантаження ще..."
 msgid "Fact-Check Report for:"
 msgstr "Звіт про перевірку фактів для:"
 
-#: backend/templates/report.html:8
-msgid "Paste a new YouTube link to check..."
-msgstr "Вставте нове посилання на YouTube для перевірки..."
-
 #: backend/templates/report.html:9
-msgid "Run Another Fact Check"
-msgstr "Запустити ще одну перевірку фактів"
-
-#: backend/templates/report.html:19
-msgid "Disclaimer:"
-msgstr "Застереження:"
-
-#: backend/templates/report.html:19
-msgid ""
-"This report is AI-generated. It may contain errors and may not have "
-"access to real-time data. Please verify the information independently."
-msgstr ""
-"Цей звіт згенеровано штучним інтелектом. Він може містити помилки і не "
-"мати доступу до актуальних даних. Будь ласка, перевіряйте інформацію "
-"самостійно."
-
-#: backend/templates/report.html:22
 msgid "Fact-check report for:"
 msgstr "Звіт про перевірку фактів для:"
 
-#: backend/templates/report.html:24
-msgid "Watch on YouTube"
-msgstr "Дивитися на YouTube"
-
-#: backend/templates/report.html:25
+#: backend/templates/report.html:15
 msgid "Share Results"
 msgstr "Поділитися результатами"
 
-#: backend/templates/report.html:28
+#: backend/templates/report.html:20
 msgid "Video Thumbnail"
 msgstr "Мініатюра відео"
 
@@ -148,4 +129,33 @@ msgstr "Мініатюра відео"
 
 #~ msgid "Check out the fact-check report for this video:"
 #~ msgstr "Перегляньте звіт про перевірку фактів для цього відео:"
+
+#~ msgid "AI Fact Checker"
+#~ msgstr "AI перевірка фактів"
+
+#~ msgid "Don't be fooled. Check factual accuracy."
+#~ msgstr "Не дайте себе обдурити. Перевіряйте достовірність фактів."
+
+#~ msgid "Paste a new YouTube link to check..."
+#~ msgstr "Вставте нове посилання на YouTube для перевірки..."
+
+#~ msgid "Run Another Fact Check"
+#~ msgstr "Запустити ще одну перевірку фактів"
+
+#~ msgid "Disclaimer:"
+#~ msgstr "Застереження:"
+
+#~ msgid ""
+#~ "This report is AI-generated. It "
+#~ "may contain errors and may not "
+#~ "have access to real-time data. "
+#~ "Please verify the information independently."
+#~ msgstr ""
+#~ "Цей звіт згенеровано штучним інтелектом. "
+#~ "Він може містити помилки і не мати"
+#~ " доступу до актуальних даних. Будь "
+#~ "ласка, перевіряйте інформацію самостійно."
+
+#~ msgid "Watch on YouTube"
+#~ msgstr "Дивитися на YouTube"
 

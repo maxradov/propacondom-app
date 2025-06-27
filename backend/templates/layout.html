@@ -52,8 +52,20 @@
         'failed_copy': _('Failed to copy link.'),
         'share_report': _('Fact-Check Report'),
         'share_text': _('Check out the fact-check report for this video:'),
+        
+        /* --- НОВЫЕ ПЕРЕВОДЫ ДЛЯ ВЫБОРА УТВЕРЖДЕНИЙ --- */
+        'select_claims_title': _('Select up to 5 claims to verify'),
+        'fact_check_selected_button': _('Fact-Check Selected'),
+        'limit_selection_alert': _('You can only select up to'),
+        'claims_alert': _('claims'),
+        'already_checked': _('Already checked'),
+        'no_claims_found': _('Could not extract any claims to check.'),
+        'sending_request_for_checking': _('Sending selected claims for final analysis...')
+
       } | tojson }};
     </script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    {% block extra_js %}{% endblock %}
     <script src="{{ url_for('static', filename='script.js') }}"></script>
     {% block extra_js %}{% endblock %}
 </body>

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-06-22 23:16+0000\n"
+"POT-Creation-Date: 2025-06-26 10:32+0000\n"
 "PO-Revision-Date: 2025-06-23 02:40+0300\n"
 "Last-Translator: Gemini AI Assistant\n"
 "Language: ar\n"
@@ -19,41 +19,47 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: backend/app.py:152
+#: backend/app.py:171
 msgid "Report not found"
 msgstr "لم يتم العثور على التقرير"
 
-#: backend/app.py:155
+#: backend/app.py:174
 msgid "An error occurred"
 msgstr "حدث خطأ"
 
-#: backend/templates/index.html:3 backend/templates/index.html:9
-#: backend/templates/layout.html:6
-msgid "AI Fact Checker"
-msgstr "مدقق الحقائق بالذكاء الاصطناعي"
+#: backend/templates/index.html:3
+msgid "AI Fact Checker for YouTube, Articles & Text | Verify Sources"
+msgstr ""
+
+#: backend/templates/index.html:9
+msgid "Uncover the Truth in Any Content"
+msgstr ""
 
 #: backend/templates/index.html:10
-msgid "Don't be fooled. Check factual accuracy."
-msgstr "لا تنخدع. تحقق من دقة الحقائق."
+msgid ""
+"Our AI instantly analyzes YouTube videos, articles, and text to verify "
+"claims and check sources. Stop misinformation before you share it."
+msgstr ""
 
 #: backend/templates/index.html:13
-msgid "Paste a YouTube link to check..."
+#, fuzzy
+msgid "Paste a YouTube link, article URL, or text to check..."
 msgstr "الصق رابط يوتيوب للتحقق..."
 
 #: backend/templates/index.html:14
 msgid "Run Fact Check"
 msgstr "بدء التحقق من الحقائق"
 
-#: backend/templates/index.html:23
+#: backend/templates/index.html:23 backend/templates/report.html:37
 msgid "Last checked:"
 msgstr "آخر فحص:"
 
-#: backend/templates/index.html:33
+#: backend/templates/index.html:41 backend/templates/report.html:55
 #, python-format
 msgid "%(credibility)s%% Credibility / %(confidence)s%% Confidence"
 msgstr "مصداقية %(credibility)s%% / ثقة %(confidence)s%%"
 
-#: backend/templates/index.html:41
+#: backend/templates/index.html:49 backend/templates/report.html:63
 msgid "Loading more..."
 msgstr "جاري تحميل المزيد..."
 
@@ -61,40 +67,15 @@ msgstr "جاري تحميل المزيد..."
 msgid "Fact-Check Report for:"
 msgstr "تقرير التحقق من الحقائق لـ:"
 
-#: backend/templates/report.html:8
-msgid "Paste a new YouTube link to check..."
-msgstr "الصق رابط يوتيوب جديد للتحقق..."
-
 #: backend/templates/report.html:9
-msgid "Run Another Fact Check"
-msgstr "إجراء تحقق آخر من الحقائق"
-
-#: backend/templates/report.html:19
-msgid "Disclaimer:"
-msgstr "إخلاء مسؤولية:"
-
-#: backend/templates/report.html:19
-msgid ""
-"This report is AI-generated. It may contain errors and may not have "
-"access to real-time data. Please verify the information independently."
-msgstr ""
-"هذا التقرير تم إنشاؤه بواسطة الذكاء الاصطناعي. قد يحتوي على أخطاء وقد لا "
-"يتمكن من الوصول إلى البيانات في الوقت الفعلي. يرجى التحقق من المعلومات "
-"بشكل مستقل."
-
-#: backend/templates/report.html:22
 msgid "Fact-check report for:"
 msgstr "تقرير التحقق من الحقائق لـ:"
 
-#: backend/templates/report.html:24
-msgid "Watch on YouTube"
-msgstr "شاهد على يوتيوب"
-
-#: backend/templates/report.html:25
+#: backend/templates/report.html:15
 msgid "Share Results"
 msgstr "مشاركة النتائج"
 
-#: backend/templates/report.html:28
+#: backend/templates/report.html:20
 msgid "Video Thumbnail"
 msgstr "الصورة المصغرة للفيديو"
 
@@ -148,4 +129,34 @@ msgstr "الصورة المصغرة للفيديو"
 
 #~ msgid "Check out the fact-check report for this video:"
 #~ msgstr "اطلع على تقرير التحقق من الحقائق لهذا الفيديو:"
+
+#~ msgid "AI Fact Checker"
+#~ msgstr "مدقق الحقائق بالذكاء الاصطناعي"
+
+#~ msgid "Don't be fooled. Check factual accuracy."
+#~ msgstr "لا تنخدع. تحقق من دقة الحقائق."
+
+#~ msgid "Paste a new YouTube link to check..."
+#~ msgstr "الصق رابط يوتيوب جديد للتحقق..."
+
+#~ msgid "Run Another Fact Check"
+#~ msgstr "إجراء تحقق آخر من الحقائق"
+
+#~ msgid "Disclaimer:"
+#~ msgstr "إخلاء مسؤولية:"
+
+#~ msgid ""
+#~ "This report is AI-generated. It "
+#~ "may contain errors and may not "
+#~ "have access to real-time data. "
+#~ "Please verify the information independently."
+#~ msgstr ""
+#~ "هذا التقرير تم إنشاؤه بواسطة الذكاء "
+#~ "الاصطناعي. قد يحتوي على أخطاء وقد "
+#~ "لا يتمكن من الوصول إلى البيانات في"
+#~ " الوقت الفعلي. يرجى التحقق من "
+#~ "المعلومات بشكل مستقل."
+
+#~ msgid "Watch on YouTube"
+#~ msgstr "شاهد على يوتيوب"
 

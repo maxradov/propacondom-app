@@ -62,6 +62,22 @@ def inject_conf_var():
         CURRENT_LANG=get_locale()
     )
 
+@# app.py, исправленная версия эндпоинта
+
+@app.route('/api/fact_check_selected', methods=['POST'])
+def fact_check_selected():
+    data = request.get_json()
+    # ИСПРАВЛЕНО: Проверяем и используем ключ 'selected_claims_data'
+    if not data or 'analysis_id' not in data or 'selected_claims_data' not in data:
+        return jsonify({"error": "analysis_id and a list of selected_claims_data are required"}), 400
+    
+    analysis_id = data['analysis_id']
+    selected_claims = data['selected_claims_data'] # ИСПРАВЛЕНО
+
+    # Start the *fact-checking* task
+    task = celery_app.send_task('tasks.fact_check_selected', args=[analysis_id, selected_claims])
+    return jsonify({"task_id": task.id}), 202
+
 @app.route('/set_language/<lang>')
 def set_language(lang):
     if lang not in LANGUAGES:
@@ -79,7 +95,7 @@ def analyze():
     target_lang = data.get('lang', get_locale())
     if target_lang not in LANGUAGES:
         target_lang = app.config['BABEL_DEFAULT_LOCALE']
-    task = celery_app.send_task('tasks.fact_check', args=[user_input, target_lang])
+    task = celery_app.send_task('tasks.extract_claims', args=[user_input, target_lang])
     return jsonify({"task_id": task.id}), 202
 
 @app.route('/api/status/<task_id>', methods=['GET'])

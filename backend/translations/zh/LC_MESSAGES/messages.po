@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-06-22 23:16+0000\n"
+"POT-Creation-Date: 2025-06-26 10:32+0000\n"
 "PO-Revision-Date: 2025-06-23 00:00+0000\n"
 "Last-Translator: Gemini AI Translator\n"
 "Language: zh\n"
@@ -18,41 +18,47 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: backend/app.py:152
+#: backend/app.py:171
 msgid "Report not found"
 msgstr "报告未找到"
 
-#: backend/app.py:155
+#: backend/app.py:174
 msgid "An error occurred"
 msgstr "发生错误"
 
-#: backend/templates/index.html:3 backend/templates/index.html:9
-#: backend/templates/layout.html:6
-msgid "AI Fact Checker"
-msgstr "人工智能事实核查员"
+#: backend/templates/index.html:3
+msgid "AI Fact Checker for YouTube, Articles & Text | Verify Sources"
+msgstr ""
+
+#: backend/templates/index.html:9
+msgid "Uncover the Truth in Any Content"
+msgstr ""
 
 #: backend/templates/index.html:10
-msgid "Don't be fooled. Check factual accuracy."
-msgstr "不要被愚弄。检查事实准确性。"
+msgid ""
+"Our AI instantly analyzes YouTube videos, articles, and text to verify "
+"claims and check sources. Stop misinformation before you share it."
+msgstr ""
 
 #: backend/templates/index.html:13
-msgid "Paste a YouTube link to check..."
+#, fuzzy
+msgid "Paste a YouTube link, article URL, or text to check..."
 msgstr "粘贴YouTube链接以进行检查..."
 
 #: backend/templates/index.html:14
 msgid "Run Fact Check"
 msgstr "运行事实核查"
 
-#: backend/templates/index.html:23
+#: backend/templates/index.html:23 backend/templates/report.html:37
 msgid "Last checked:"
 msgstr "上次检查："
 
-#: backend/templates/index.html:33
+#: backend/templates/index.html:41 backend/templates/report.html:55
 #, python-format
 msgid "%(credibility)s%% Credibility / %(confidence)s%% Confidence"
 msgstr "%(credibility)s%% 可信度 / %(confidence)s%% 置信度"
 
-#: backend/templates/index.html:41
+#: backend/templates/index.html:49 backend/templates/report.html:63
 msgid "Loading more..."
 msgstr "加载更多..."
 
@@ -60,37 +66,15 @@ msgstr "加载更多..."
 msgid "Fact-Check Report for:"
 msgstr "事实核查报告："
 
-#: backend/templates/report.html:8
-msgid "Paste a new YouTube link to check..."
-msgstr "粘贴新的YouTube链接以进行检查..."
-
 #: backend/templates/report.html:9
-msgid "Run Another Fact Check"
-msgstr "再次运行事实核查"
-
-#: backend/templates/report.html:19
-msgid "Disclaimer:"
-msgstr "免责声明："
-
-#: backend/templates/report.html:19
-msgid ""
-"This report is AI-generated. It may contain errors and may not have "
-"access to real-time data. Please verify the information independently."
-msgstr "本报告由人工智能生成。它可能包含错误，并且可能无法访问实时数据。请独立核实信息。"
-
-#: backend/templates/report.html:22
 msgid "Fact-check report for:"
 msgstr "事实核查报告："
 
-#: backend/templates/report.html:24
-msgid "Watch on YouTube"
-msgstr "在YouTube上观看"
-
-#: backend/templates/report.html:25
+#: backend/templates/report.html:15
 msgid "Share Results"
 msgstr "分享结果"
 
-#: backend/templates/report.html:28
+#: backend/templates/report.html:20
 msgid "Video Thumbnail"
 msgstr "视频缩略图"
 
@@ -144,4 +128,29 @@ msgstr "视频缩略图"
 
 #~ msgid "Check out the fact-check report for this video:"
 #~ msgstr "查看该视频的事实核查报告："
+
+#~ msgid "AI Fact Checker"
+#~ msgstr "人工智能事实核查员"
+
+#~ msgid "Don't be fooled. Check factual accuracy."
+#~ msgstr "不要被愚弄。检查事实准确性。"
+
+#~ msgid "Paste a new YouTube link to check..."
+#~ msgstr "粘贴新的YouTube链接以进行检查..."
+
+#~ msgid "Run Another Fact Check"
+#~ msgstr "再次运行事实核查"
+
+#~ msgid "Disclaimer:"
+#~ msgstr "免责声明："
+
+#~ msgid ""
+#~ "This report is AI-generated. It "
+#~ "may contain errors and may not "
+#~ "have access to real-time data. "
+#~ "Please verify the information independently."
+#~ msgstr "本报告由人工智能生成。它可能包含错误，并且可能无法访问实时数据。请独立核实信息。"
+
+#~ msgid "Watch on YouTube"
+#~ msgstr "在YouTube上观看"
 

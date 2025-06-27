@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-06-22 23:16+0000\n"
+"POT-Creation-Date: 2025-06-26 10:32+0000\n"
 "PO-Revision-Date: 2025-06-22 23:20+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: bn\n"
@@ -18,41 +18,47 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: backend/app.py:152
+#: backend/app.py:171
 msgid "Report not found"
 msgstr "রিপোর্ট পাওয়া যায়নি"
 
-#: backend/app.py:155
+#: backend/app.py:174
 msgid "An error occurred"
 msgstr "একটি ত্রুটি ঘটেছে"
 
-#: backend/templates/index.html:3 backend/templates/index.html:9
-#: backend/templates/layout.html:6
-msgid "AI Fact Checker"
-msgstr "এআই ফ্যাক্ট চেকার"
+#: backend/templates/index.html:3
+msgid "AI Fact Checker for YouTube, Articles & Text | Verify Sources"
+msgstr ""
+
+#: backend/templates/index.html:9
+msgid "Uncover the Truth in Any Content"
+msgstr ""
 
 #: backend/templates/index.html:10
-msgid "Don't be fooled. Check factual accuracy."
-msgstr "ধোঁকা খাবেন না। বাস্তবতার সঠিকতা যাচাই করুন।"
+msgid ""
+"Our AI instantly analyzes YouTube videos, articles, and text to verify "
+"claims and check sources. Stop misinformation before you share it."
+msgstr ""
 
 #: backend/templates/index.html:13
-msgid "Paste a YouTube link to check..."
+#, fuzzy
+msgid "Paste a YouTube link, article URL, or text to check..."
 msgstr "যাচাই করার জন্য একটি ইউটিউব লিঙ্ক পেস্ট করুন..."
 
 #: backend/templates/index.html:14
 msgid "Run Fact Check"
 msgstr "ফ্যাক্ট চেক চালান"
 
-#: backend/templates/index.html:23
+#: backend/templates/index.html:23 backend/templates/report.html:37
 msgid "Last checked:"
 msgstr "সর্বশেষ যাচাই:"
 
-#: backend/templates/index.html:33
+#: backend/templates/index.html:41 backend/templates/report.html:55
 #, python-format
 msgid "%(credibility)s%% Credibility / %(confidence)s%% Confidence"
 msgstr "%(credibility)s%% বিশ্বাসযোগ্যতা / %(confidence)s%% আস্থা"
 
-#: backend/templates/index.html:41
+#: backend/templates/index.html:49 backend/templates/report.html:63
 msgid "Loading more..."
 msgstr "আরও লোড হচ্ছে..."
 
@@ -60,39 +66,15 @@ msgstr "আরও লোড হচ্ছে..."
 msgid "Fact-Check Report for:"
 msgstr "ফ্যাক্ট-চেক রিপোর্ট এর জন্য:"
 
-#: backend/templates/report.html:8
-msgid "Paste a new YouTube link to check..."
-msgstr "যাচাই করার জন্য একটি নতুন ইউটিউব লিঙ্ক পেস্ট করুন..."
-
 #: backend/templates/report.html:9
-msgid "Run Another Fact Check"
-msgstr "আরেকটি ফ্যাক্ট চেক চালান"
-
-#: backend/templates/report.html:19
-msgid "Disclaimer:"
-msgstr "দাবিত্যাগ:"
-
-#: backend/templates/report.html:19
-msgid ""
-"This report is AI-generated. It may contain errors and may not have "
-"access to real-time data. Please verify the information independently."
-msgstr ""
-"এই রিপোর্টটি এআই-জেনারেটেড। এতে ত্রুটি থাকতে পারে এবং রিয়েল-টাইম ডেটাতে "
-"অ্যাক্সেস নাও থাকতে পারে। অনুগ্রহ করে স্বাধীনভাবে তথ্য যাচাই করুন।"
-
-#: backend/templates/report.html:22
 msgid "Fact-check report for:"
 msgstr "ফ্যাক্ট-চেক রিপোর্ট এর জন্য:"
 
-#: backend/templates/report.html:24
-msgid "Watch on YouTube"
-msgstr "ইউটিউবে দেখুন"
-
-#: backend/templates/report.html:25
+#: backend/templates/report.html:15
 msgid "Share Results"
 msgstr "ফলাফল শেয়ার করুন"
 
-#: backend/templates/report.html:28
+#: backend/templates/report.html:20
 msgid "Video Thumbnail"
 msgstr "ভিডিও থাম্বনেইল"
 
@@ -146,4 +128,33 @@ msgstr "ভিডিও থাম্বনেইল"
 
 #~ msgid "Check out the fact-check report for this video:"
 #~ msgstr "এই ভিডিওর তথ্য যাচাইকরণ প্রতিবেদন দেখুন:"
+
+#~ msgid "AI Fact Checker"
+#~ msgstr "এআই ফ্যাক্ট চেকার"
+
+#~ msgid "Don't be fooled. Check factual accuracy."
+#~ msgstr "ধোঁকা খাবেন না। বাস্তবতার সঠিকতা যাচাই করুন।"
+
+#~ msgid "Paste a new YouTube link to check..."
+#~ msgstr "যাচাই করার জন্য একটি নতুন ইউটিউব লিঙ্ক পেস্ট করুন..."
+
+#~ msgid "Run Another Fact Check"
+#~ msgstr "আরেকটি ফ্যাক্ট চেক চালান"
+
+#~ msgid "Disclaimer:"
+#~ msgstr "দাবিত্যাগ:"
+
+#~ msgid ""
+#~ "This report is AI-generated. It "
+#~ "may contain errors and may not "
+#~ "have access to real-time data. "
+#~ "Please verify the information independently."
+#~ msgstr ""
+#~ "এই রিপোর্টটি এআই-জেনারেটেড। এতে ত্রুটি "
+#~ "থাকতে পারে এবং রিয়েল-টাইম ডেটাতে "
+#~ "অ্যাক্সেস নাও থাকতে পারে। অনুগ্রহ করে"
+#~ " স্বাধীনভাবে তথ্য যাচাই করুন।"
+
+#~ msgid "Watch on YouTube"
+#~ msgstr "ইউটিউবে দেখুন"
 
