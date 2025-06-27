@@ -11,7 +11,6 @@ from datetime import datetime, timezone, timedelta
 import google.generativeai as genai
 from celery import Celery
 from google.cloud import firestore
-from google.cloud.firestore import FieldPath
 
 
 # Предполагается, что эти константы определены в файле constants.py
@@ -285,8 +284,10 @@ def fact_check_selected_claims(self, analysis_id, selected_claims_data):
     all_results = []
     for i in range(0, len(all_claim_hashes), 30):
         batch_hashes = all_claim_hashes[i:i+30]
-        docs = claims_ref.where(FieldPath.document_id(), 'in', batch_hashes).stream()
-        all_results.extend([doc.to_dict() for doc in docs])
+        for claim_hash in batch_hashes:
+            doc = claims_ref.document(claim_hash).get()
+            if doc.exists:
+                all_results.append(doc.to_dict())
     
     # --- 3. Генерируем финальное саммари и статистику (код без изменений) ---
     verdict_counts = {"True": 0, "False": 0, "Misleading": 0, "Partly True": 0, "Unverifiable": 0}
