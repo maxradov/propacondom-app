@@ -295,7 +295,7 @@ def analyze_free_text(self, text, target_lang='en', title=None, thumbnail_url=No
 
     **Extract only concrete, objective, significant facts or assertions that can be checked against external sources.**
 
-    Present the extracted claims as a clear, concise, **numbered list** (one claim per line, no explanations).
+    Present the extracted claims as a clear, concise but including necessary for understanding of the context details, **numbered list** (one claim per line, no explanations).
     IMPORTANT: Each claim must be:
     - Specific, checkable, and based on facts present in the text.
     - Standalone, complete, and written in {target_lang}.
