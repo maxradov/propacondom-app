@@ -128,7 +128,10 @@ def analyze_youtube_video(self, video_url, target_lang='en'):
 
         return {
             "id": analysis_id,
-            "claims_for_selection": claims_for_selection
+            "claims_for_selection": claims_for_selection,
+            "video_title": report_data.get("video_title") or report_data.get("title") or "",
+            "thumbnail_url": report_data.get("thumbnail_url", ""),
+            "source_url": report_data.get("source_url", "")
         }
 
     self.update_state(state='PROGRESS', meta={'status_message': 'Fetching video details...'})
@@ -215,7 +218,10 @@ def analyze_web_url(self, url, target_lang='en'):
 
             return {
                 "id": analysis_id,
-                "claims_for_selection": claims_for_selection
+                "claims_for_selection": claims_for_selection,
+                "video_title": report_data.get("video_title") or report_data.get("title") or "",
+                "thumbnail_url": report_data.get("thumbnail_url", ""),
+                "source_url": report_data.get("source_url", "")
             }
 
         return analyze_free_text(self, text[:15000], target_lang, title=title, source_url=url,
@@ -271,7 +277,10 @@ def analyze_free_text(self, text, target_lang='en', title=None, thumbnail_url=No
 
         return {
             "id": analysis_id,
-            "claims_for_selection": claims_for_selection
+            "claims_for_selection": claims_for_selection,
+            "video_title": report_data.get("video_title") or report_data.get("title") or "",
+            "thumbnail_url": report_data.get("thumbnail_url", ""),
+            "source_url": report_data.get("source_url", "")
         }
 
     self.update_state(state='PROGRESS', meta={'status_message': 'AI is extracting claims...'})
@@ -351,7 +360,10 @@ def analyze_free_text(self, text, target_lang='en', title=None, thumbnail_url=No
     
     return {
         "id": analysis_id,
-        "claims_for_selection": claims_for_frontend
+        "claims_for_selection": claims_for_frontend,
+        "video_title": report_data.get("video_title") or report_data.get("title") or "",
+        "thumbnail_url": report_data.get("thumbnail_url", ""),
+        "source_url": report_data.get("source_url", "")
     }
 
 
