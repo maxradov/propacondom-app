@@ -26,7 +26,10 @@ function displayResults(data) {
     }
 
     const { verdict_counts, detailed_results, summary_data } = data;
-
+	const totalClaims = detailed_results.length;
+	let totalClaimsHTML = `<div class="checked-claims-total" style="font-size:1.05rem;color:#6c757d;margin-bottom:0.35em;">
+		${window.translations.checked_claims_total || 'Checked claims'}: <strong>${totalClaims}</strong>
+	</div>`;
     const verdictOrder = [
         { key: 'True', icon: '✅', label: window.translations.true_label || 'Confirmed' },
         { key: 'False', icon: '❌', label: window.translations.false_label || 'Refuted' },
@@ -56,6 +59,7 @@ function displayResults(data) {
     let reportHTML = `
         <div id="report-summary">
             <div class="verdict-summary-icons">${iconsSummary}</div>
+			${totalClaimsHTML}
             <h2>${summary_data.overall_verdict || ''}</h2>
 
             <div class="disclaimer-box">
