@@ -276,7 +276,7 @@ def analyze_free_text(self, text, target_lang='en', title=None, thumbnail_url=No
 
     self.update_state(state='PROGRESS', meta={'status_message': 'AI is extracting claims...'})
     prompt_claims = f"""
-    You are an expert fact-checking assistant. Carefully read the following text and extract up to {MAX_CLAIMS_EXTRACTED} of the most **important, factual, and verifiable claims** made in the text.
+    You are an expert fact-checking assistant. Carefully read the following text and extract up to {MAX_CLAIMS_EXTRACTED} main and the most **important, factual, and verifiable claims** made in the text.
     Your output must **NOT** include:
     - Opinions, subjective statements, or personal views of the author.
     - Unverifiable, vague, or speculative statements.
