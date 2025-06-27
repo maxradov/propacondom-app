@@ -10,7 +10,8 @@ from datetime import datetime, timezone, timedelta
 import google.generativeai as genai
 from celery import Celery
 from google.cloud import firestore
-from google.cloud.firestore_v1 import FieldPath
+from google.cloud.firestore import FieldPath
+
 
 # Предполагается, что эти константы определены в файле constants.py
 from constants import MAX_CLAIMS_EXTRACTED, MAX_CLAIMS_TO_CHECK, CACHE_EXPIRATION_DAYS
