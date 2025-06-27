@@ -261,10 +261,29 @@ def analyze_free_text(self, text, target_lang='en', title=None, thumbnail_url=No
         }
 
     self.update_state(state='PROGRESS', meta={'status_message': 'AI is extracting claims...'})
-    prompt_claims = f"""Analyze the following text. Extract up to {MAX_CLAIMS_EXTRACTED} main factual claims that can be verified.
-Focus on specific, checkable statements. Present them as a numbered list.
-IMPORTANT: The claims must be written in {target_lang}.
-Text: --- {text[:15000]} ---"""
+    prompt_claims = f"""
+    You are an expert fact-checking assistant. Carefully read the following text and extract up to {MAX_CLAIMS_EXTRACTED} of the most **important, factual, and verifiable claims** made in the text.
+    Your output must **NOT** include:
+    - Opinions, subjective statements, or personal views of the author.
+    - Unverifiable, vague, or speculative statements.
+    - Trivial, minor, or redundant claims.
+    - Claims about intentions, beliefs, or predictions.
+    - Statements about the author's own impressions, thoughts, or experiences.
+
+    **Extract only concrete, objective, significant facts or assertions that can be checked against external sources.**
+
+    Present the extracted claims as a clear, concise, **numbered list** (one claim per line, no explanations).
+    IMPORTANT: Each claim must be:
+    - Specific, checkable, and based on facts present in the text.
+    - Standalone, complete, and written in {target_lang}.
+    - Free of subjective phrases ("I think", "it seems", "the author believes", etc.).
+
+    Text to analyze:
+    ---
+    {text[:15000]}
+    ---
+    """
+
 
     response_claims = gemini_model.generate_content(prompt_claims)
     claims_list_text = [re.sub(r'^\d+\.\s*', '', line).strip() for line in response_claims.text.strip().split('\n') if line.strip()]
