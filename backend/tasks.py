@@ -12,6 +12,7 @@ from celery import Celery
 from google.cloud import firestore
 import bs4
 
+# Импорт FieldPath удален, как вы и просили
 from constants import MAX_CLAIMS_EXTRACTED, MAX_CLAIMS_TO_CHECK, CACHE_EXPIRATION_DAYS
 from celery_init import celery
 
@@ -24,7 +25,7 @@ SEARCH_ENGINE_ID = os.environ.get('SEARCH_ENGINE_ID')
 db = None
 model = None
 
-# --- Вспомогательные функции ---
+# --- Вспомогательные функции (без изменений) ---
 
 def get_db_client():
     global db
@@ -61,11 +62,6 @@ def get_video_id(url):
 
 
 def _process_claims_with_cache(claims_data_from_db):
-    """
-    НОВАЯ ВСПОМОГАТЕЛЬНАЯ ФУНКЦИЯ.
-    Принимает список утверждений, проверяет кэш для каждого в коллекции 'claims'
-    и возвращает данные, готовые для отправки на фронтенд.
-    """
     local_db = get_db_client()
     claims_ref = local_db.collection('claims')
     cache_expiry_date = datetime.now(timezone.utc) - timedelta(days=CACHE_EXPIRATION_DAYS)
@@ -97,7 +93,6 @@ def _process_claims_with_cache(claims_data_from_db):
 
 @celery.task(bind=True, name='tasks.extract_claims', time_limit=300)
 def extract_claims(self, user_input, target_lang='en'):
-    """Главная точка входа. Определяет тип ввода и запускает соответствующий анализатор."""
     if is_youtube_url(user_input):
         return analyze_youtube_video(self, user_input, target_lang)
     elif is_url(user_input):
@@ -107,31 +102,22 @@ def extract_claims(self, user_input, target_lang='en'):
 
 
 def analyze_youtube_video(self, video_url, target_lang='en'):
-    """
-    ПЕРЕПИСАНА.
-    Проверяет наличие существующего анализа. Если его нет - извлекает claims и сохраняет.
-    Если есть - сразу возвращает сохраненные claims.
-    """
     local_db = get_db_client()
     video_id = get_video_id(video_url)
     if not video_id:
         raise ValueError(f"Could not extract video ID from URL: {video_url}")
 
-    # Шаг 1: Генерируем ID и проверяем, существует ли анализ в Firestore
     analysis_id = f"{video_id}_{target_lang}"
     analysis_doc_ref = local_db.collection('analyses').document(analysis_id)
     analysis_doc = analysis_doc_ref.get()
 
     if analysis_doc.exists:
-        # --- Логика для ПОВТОРНОГО анализа ---
         self.update_state(state='PROGRESS', meta={'status_message': 'Found existing analysis. Fetching claims...'})
         saved_claims = analysis_doc.to_dict().get('extracted_claims', [])
         claims_for_selection = _process_claims_with_cache(saved_claims)
         return {"id": analysis_id, "claims_for_selection": claims_for_selection}
     else:
-        # --- Логика для ПЕРВОГО анализа ---
         self.update_state(state='PROGRESS', meta={'status_message': 'Fetching video details...'})
-        # (Код для получения данных с YouTube)
         params_details = {'engine': 'youtube_video', 'video_id': video_id, 'api_key': SEARCHAPI_KEY}
         details_response = requests.get('https://www.searchapi.io/api/v1/search', params=params_details)
         details_data = details_response.json().get('video', {})
@@ -155,7 +141,7 @@ def analyze_youtube_video(self, video_url, target_lang='en'):
         analysis_data = {
             "status": "PENDING_SELECTION", "input_type": "youtube", "source_url": video_url,
             "video_title": video_title, "thumbnail_url": thumbnail_url,
-            "extracted_claims": claims_for_db, # Сохраняем утверждения навсегда
+            "extracted_claims": claims_for_db,
             "target_lang": target_lang, "created_at": firestore.SERVER_TIMESTAMP
         }
         analysis_doc_ref.set(analysis_data)
@@ -165,8 +151,6 @@ def analyze_youtube_video(self, video_url, target_lang='en'):
 
 
 def analyze_web_url(self, url, target_lang='en'):
-    """ПЕРЕПИСАНА. Аналогичная логика для URL."""
-    # ... (код для получения текста со страницы, как и раньше)
     try:
         response = requests.get(url, timeout=10, headers={"User-Agent": "Mozilla/5.0"})
         soup = bs4.BeautifulSoup(response.text, "html.parser")
@@ -207,7 +191,6 @@ def analyze_web_url(self, url, target_lang='en'):
 
 
 def analyze_free_text(self, text, target_lang='en'):
-    """ПЕРЕПИСАНА. Аналогичная логика для простого текста."""
     local_db = get_db_client()
     analysis_id = f"text_{get_text_hash(text)}_{target_lang}"
     analysis_doc_ref = local_db.collection('analyses').document(analysis_id)
@@ -237,13 +220,10 @@ def analyze_free_text(self, text, target_lang='en'):
         claims_for_selection = _process_claims_with_cache(claims_for_db)
         return {"id": analysis_id, "claims_for_selection": claims_for_selection}
 
-# ==============================================================================
-# ЗАДАЧА №2 (Проверка выбранных) - ОСТАЛАСЬ БЕЗ ИЗМЕНЕНИЙ
-# ==============================================================================
+
+# --- ЗАДАЧА №2 (Проверка выбранных) ---
 @celery.task(bind=True, name='tasks.fact_check_selected', time_limit=600)
 def fact_check_selected_claims(self, analysis_id, selected_claims_data):
-    # (Весь код этой функции остается прежним, так как он не зависит от того,
-    # откуда были взяты утверждения - из кэша анализа или извлечены впервые.)
     if not isinstance(selected_claims_data, list) or not MAX_CLAIMS_TO_CHECK >= len(selected_claims_data) > 0:
         raise ValueError("Invalid selection of claims.")
 
@@ -274,12 +254,12 @@ def fact_check_selected_claims(self, analysis_id, selected_claims_data):
         sources = [res.get('link') for res in search_results]
 
         prompt_fc = f"""
-        Based on the provided web search results, fact-check the following claim.
+        Based on the provided web search results, fact-check the following claim...
         Claim: "{claim_text}"
         Web Search Results Snippets: "{search_context}"
         Your task is to return a single JSON object with these keys: "verdict", "confidence_percentage", "explanation".
-        - The "verdict" MUST be one of: "True", "False", "Misleading", "Partly True", "Unverifiable".
-        - The "explanation" MUST be a concise, neutral summary, written STRICTLY in the following language: {target_lang}.
+        - "verdict" MUST be one of: "True", "False", "Misleading", "Partly True", "Unverifiable".
+        - "explanation" MUST be a concise, neutral summary, written STRICTLY in the following language: {target_lang}.
         - Your entire response must be ONLY a single JSON object.
         """
         fc_response = gemini_model.generate_content(prompt_fc)
@@ -298,11 +278,16 @@ def fact_check_selected_claims(self, analysis_id, selected_claims_data):
 
     all_claim_hashes = [item['hash'] for item in report_data.get('extracted_claims', [])]
     
+    # --- ИЗМЕНЕНИЕ: Заменен batched-запрос на последовательные .get() ---
     all_results = []
-    # Firestore 'in' query limited to 30, so a loop is more robust
-    docs = claims_ref.where(firestore.FieldPath.document_id(), 'in', all_claim_hashes).stream()
-    all_results.extend([doc.to_dict() for doc in docs])
+    for i in range(0, len(all_claim_hashes), 30):
+        batch_hashes = all_claim_hashes[i:i+30]
+        for claim_hash in batch_hashes:
+            doc = claims_ref.document(claim_hash).get()
+            if doc.exists:
+                all_results.append(doc.to_dict())
     
+    # --- Дальнейший код для генерации саммари и статистики остается без изменений ---
     verdict_counts = {"True": 0, "False": 0, "Misleading": 0, "Partly True": 0, "Unverifiable": 0}
     for res in all_results:
         verdict = res.get("verdict", "Unverifiable")
@@ -345,6 +330,7 @@ def fact_check_selected_claims(self, analysis_id, selected_claims_data):
     if 'updated_at' in data_to_return and hasattr(data_to_return['updated_at'], 'isoformat'):
         data_to_return['updated_at'] = data_to_return['updated_at'].isoformat()
     else:
+        # Fallback for cases where updated_at might not be a datetime object after merge
         data_to_return['updated_at'] = datetime.now(timezone.utc).isoformat()
     
     return data_to_return
