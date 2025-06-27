@@ -1,4 +1,6 @@
 # tasks.py
+import pkg_resources
+print("FIRESTORE VERSION:", pkg_resources.get_distribution("google-cloud-firestore").version)
 
 import os
 import re
