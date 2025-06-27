@@ -6,4 +6,4 @@ MAX_CLAIMS_EXTRACTED = 50
 MAX_CLAIMS_TO_CHECK = 5
 
 # Срок устаревания клейма для recheck (например, 30 дней)
-CLAIM_TTL_DAYS = 30
+CACHE_EXPIRATION_DAYS = 30
