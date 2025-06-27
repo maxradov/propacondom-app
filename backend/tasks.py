@@ -361,9 +361,9 @@ def analyze_free_text(self, text, target_lang='en', title=None, thumbnail_url=No
     return {
         "id": analysis_id,
         "claims_for_selection": claims_for_frontend,
-        "video_title": report_data.get("video_title") or report_data.get("title") or "",
-        "thumbnail_url": report_data.get("thumbnail_url", ""),
-        "source_url": report_data.get("source_url", "")
+        "video_title": analysis_data.get("video_title") or analysis_data.get("title") or "",
+        "thumbnail_url": analysis_data.get("thumbnail_url", ""),
+        "source_url": analysis_data.get("source_url", "")
     }
 
 
