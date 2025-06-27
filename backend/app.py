@@ -62,7 +62,7 @@ def inject_conf_var():
         CURRENT_LANG=get_locale()
     )
 
-@# app.py, исправленная версия эндпоинта
+# app.py, исправленная версия эндпоинта
 
 @app.route('/api/fact_check_selected', methods=['POST'])
 def fact_check_selected():
