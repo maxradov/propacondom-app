@@ -99,14 +99,33 @@ def analyze_youtube_video(self, video_url, target_lang='en'):
     if analysis_doc.exists:
         # Если анализ уже был — сразу возвращаем клеймы из БД
         report_data = analysis_doc.to_dict()
-        claims_for_selection = [
-            {
-                "hash": claim["hash"],
-                "text": claim["text"],
-                "is_cached": False  # если нужно — можно добавить доп.логику для кэша
+        claims_ref = local_db.collection('claims')
+        cache_expiry_date = datetime.now(timezone.utc) - timedelta(days=CACHE_EXPIRATION_DAYS)
+        claims_for_selection = []
+        for claim in report_data.get("extracted_claims", []):
+            claim_hash = claim["hash"]
+            claim_text = claim["text"]
+            claim_doc = claims_ref.document(claim_hash).get()
+            claim_info = {
+                "hash": claim_hash,
+                "text": claim_text
             }
-            for claim in report_data.get("extracted_claims", [])
-        ]
+            if claim_doc.exists:
+                cached_data = claim_doc.to_dict()
+                last_checked = cached_data.get('last_checked_at')
+                # Проверяем, что проверка свежая
+                if last_checked and last_checked.replace(tzinfo=timezone.utc) > cache_expiry_date:
+                    claim_info["is_cached"] = True
+                    claim_info["cached_data"] = {
+                        "verdict": cached_data.get("verdict", ""),
+                        "last_checked_at": str(last_checked)
+                    }
+                else:
+                    claim_info["is_cached"] = False
+            else:
+                claim_info["is_cached"] = False
+            claims_for_selection.append(claim_info)
+
         return {
             "id": analysis_id,
             "claims_for_selection": claims_for_selection
@@ -153,14 +172,33 @@ def analyze_web_url(self, url, target_lang='en'):
         if analysis_doc.exists:
             # Если анализ уже был — сразу возвращаем клеймы из БД
             report_data = analysis_doc.to_dict()
-            claims_for_selection = [
-                {
-                    "hash": claim["hash"],
-                    "text": claim["text"],
-                    "is_cached": False  # если нужно — можно добавить доп.логику для кэша
+            claims_ref = local_db.collection('claims')
+            cache_expiry_date = datetime.now(timezone.utc) - timedelta(days=CACHE_EXPIRATION_DAYS)
+            claims_for_selection = []
+            for claim in report_data.get("extracted_claims", []):
+                claim_hash = claim["hash"]
+                claim_text = claim["text"]
+                claim_doc = claims_ref.document(claim_hash).get()
+                claim_info = {
+                    "hash": claim_hash,
+                    "text": claim_text
                 }
-                for claim in report_data.get("extracted_claims", [])
-            ]
+                if claim_doc.exists:
+                    cached_data = claim_doc.to_dict()
+                    last_checked = cached_data.get('last_checked_at')
+                    # Проверяем, что проверка свежая
+                    if last_checked and last_checked.replace(tzinfo=timezone.utc) > cache_expiry_date:
+                        claim_info["is_cached"] = True
+                        claim_info["cached_data"] = {
+                            "verdict": cached_data.get("verdict", ""),
+                            "last_checked_at": str(last_checked)
+                        }
+                    else:
+                        claim_info["is_cached"] = False
+                else:
+                    claim_info["is_cached"] = False
+                claims_for_selection.append(claim_info)
+
             return {
                 "id": analysis_id,
                 "claims_for_selection": claims_for_selection
@@ -190,14 +228,33 @@ def analyze_free_text(self, text, target_lang='en', title=None, thumbnail_url=No
     if analysis_doc.exists:
         # Если анализ уже был — возвращаем клеймы из БД
         report_data = analysis_doc.to_dict()
-        claims_for_selection = [
-            {
-                "hash": claim["hash"],
-                "text": claim["text"],
-                "is_cached": False  # если надо, тут можно добавить логику кэша
+        claims_ref = local_db.collection('claims')
+        cache_expiry_date = datetime.now(timezone.utc) - timedelta(days=CACHE_EXPIRATION_DAYS)
+        claims_for_selection = []
+        for claim in report_data.get("extracted_claims", []):
+            claim_hash = claim["hash"]
+            claim_text = claim["text"]
+            claim_doc = claims_ref.document(claim_hash).get()
+            claim_info = {
+                "hash": claim_hash,
+                "text": claim_text
             }
-            for claim in report_data.get("extracted_claims", [])
-        ]
+            if claim_doc.exists:
+                cached_data = claim_doc.to_dict()
+                last_checked = cached_data.get('last_checked_at')
+                # Проверяем, что проверка свежая
+                if last_checked and last_checked.replace(tzinfo=timezone.utc) > cache_expiry_date:
+                    claim_info["is_cached"] = True
+                    claim_info["cached_data"] = {
+                        "verdict": cached_data.get("verdict", ""),
+                        "last_checked_at": str(last_checked)
+                    }
+                else:
+                    claim_info["is_cached"] = False
+            else:
+                claim_info["is_cached"] = False
+            claims_for_selection.append(claim_info)
+
         return {
             "id": analysis_id,
             "claims_for_selection": claims_for_selection

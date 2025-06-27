@@ -824,3 +824,33 @@ main.container > header {
     opacity: 0.6;
     cursor: not-allowed;
 }
+
+.claim-checkbox-item.cached label span {
+    font-weight: 600;
+    color: #007bff; /* синий для акцента, можешь заменить на var(--color-true) или другой */
+    background: #e9ecef;
+    border-radius: 5px;
+    padding: 0.15em 0.7em;
+    margin-left: 0.7rem;
+    font-size: 0.93rem;
+    display: inline-block;
+}
+
+.claim-checkbox-item.cached label {
+    color: #8b9097; /* ещё светлее и менее контрастно, чем var(--secondary-color) */
+}
+
+.claim-checkbox-item.cached::before {
+    content: '✓';
+    color: #28a745;
+    margin-right: 0.7rem;
+    font-size: 1.3em;
+    position: relative;
+    top: 2px;
+}
+
+.claim-checkbox-item.cached {
+    border: 2px solid #e0e2e6;
+    background-color: #f7f7f7;
+    opacity: 0.82;
+}

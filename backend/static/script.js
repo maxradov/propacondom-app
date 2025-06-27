@@ -109,23 +109,30 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="claims-list">`;
         
         claims.forEach((claimData, index) => {
-            const { hash, text, is_cached, cached_data } = claimData;
-            const sanitizedText = text.replace(/"/g, '&quot;'); // Экранируем кавычки для data-атрибута
+			const { hash, text, is_cached, cached_data } = claimData;
+			const sanitizedText = text.replace(/"/g, '&quot;'); // Защита от кавычек
 
-            if (is_cached) {
-                claimsHTML += `
-                    <div class="claim-checkbox-item cached">
-                        <input type="checkbox" id="claim-${index}" value="${hash}" checked disabled>
-                        <label for="claim-${index}">${text} <span>(${(window.translations.already_checked || 'Already checked')}: ${cached_data.verdict})</span></label>
-                    </div>`;
-            } else {
-                claimsHTML += `
-                    <div class="claim-checkbox-item">
-                        <input type="checkbox" id="claim-${index}" name="claim-to-check" value="${hash}" data-text="${sanitizedText}">
-                        <label for="claim-${index}">${text}</label>
-                    </div>`;
-            }
-        });
+			if (is_cached) {
+				let verdictText = '';
+				if (cached_data && cached_data.verdict) {
+					verdictText = `${window.translations.already_checked || 'Already checked'}: ${cached_data.verdict}`;
+				} else {
+					verdictText = window.translations.already_checked || 'Already checked';
+				}
+				claimsHTML += `
+					<div class="claim-checkbox-item cached">
+						<input type="checkbox" id="claim-${index}" value="${hash}" checked disabled>
+						<label for="claim-${index}">${text} <span>(${verdictText})</span></label>
+					</div>`;
+			} else {
+				claimsHTML += `
+					<div class="claim-checkbox-item">
+						<input type="checkbox" id="claim-${index}" name="claim-to-check" value="${hash}" data-text="${sanitizedText}">
+						<label for="claim-${index}">${text}</label>
+					</div>`;
+			}
+		});
+
         claimsHTML += `</div><button id="run-selected-factcheck-btn" disabled>${(window.translations.fact_check_selected_button || 'Fact-Check Selected')}</button>`;
         
         claimSelectionContainer.innerHTML = claimsHTML;
