@@ -3,10 +3,12 @@ celery
 redis
 requests
 google-generativeai
-google-cloud-firestore
+google-cloud-firestore==2.13.0
 Flask-Cors
 gunicorn
 eventlet
 Flask-Babel
 beautifulsoup4==4.12.3
+
+
 
