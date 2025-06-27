@@ -16,7 +16,7 @@
         </header>
 
 		{% if report.input_type == 'youtube' and report.thumbnail_url %}
-			<a href="{{ report.video_url }}" target="_blank">
+			<a href="{{ report.source_url }}" target="_blank">
 				<img src="{{ report.thumbnail_url }}" alt="{{ _('Video Thumbnail') }}" class="video-thumbnail" onerror="this.style.display='none'">
 			</a>
 		{% endif %}
