@@ -143,10 +143,37 @@ def analyze_youtube_video(self, video_url, target_lang='en'):
     thumbnail_url = details_data.get('thumbnail', '')
 
     self.update_state(state='PROGRESS', meta={'status_message': 'Extracting subtitles...'})
-    params_get_transcript = {'engine': 'youtube_transcripts', 'video_id': video_id, 'lang': target_lang, 'api_key': SEARCHAPI_KEY}
+    
+    # Получаем список доступных языков субтитров
+    params_list_langs = {
+        'engine': 'youtube_transcripts',
+        'video_id': video_id,
+        'api_key': SEARCHAPI_KEY
+    }
+    metadata = requests.get('https://www.searchapi.io/api/v1/search', params=params_list_langs).json()
+    available_langs = [lang.get('lang') for lang in metadata.get('available_languages', []) if lang.get('lang')]
+
+    # Выбираем язык: сначала target_lang, потом английский, потом любой доступный
+    priority_langs = [target_lang, 'en']
+    detected_lang = next((pl for pl in priority_langs if pl in available_langs), None)
+    if not detected_lang and available_langs:
+        detected_lang = available_langs[0]
+    if not detected_lang:
+        raise ValueError("No subtitles available in any language.")
+
+    # Получаем сабы на реально доступном языке
+    params_get_transcript = {
+        'engine': 'youtube_transcripts',
+        'video_id': video_id,
+        'lang': detected_lang,
+        'api_key': SEARCHAPI_KEY
+    }
     transcript_data = requests.get('https://www.searchapi.io/api/v1/search', params=params_get_transcript).json()
     if not transcript_data.get('transcripts'):
-        raise ValueError(f"API did not return subtitles for '{target_lang}'.")
+        raise ValueError(f"API did not return subtitles for '{detected_lang}'.")
+
+    
+    
     transcripts = transcript_data.get('transcripts', [])
     clean_text_chunks = []
     for item in transcripts:
