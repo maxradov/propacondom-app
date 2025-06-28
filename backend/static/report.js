@@ -41,8 +41,6 @@ function renderClaimSelectionUI(analysisData) {
     const thumbnailUrl = analysisData.thumbnail_url || "";
     const sourceUrl = analysisData.source_url || "";
 
-    let metaHTML = "";
-    
 
     if (!claims || claims.length === 0) {
         reportContainer.innerHTML = `<p>${window.translations.no_claims_found || 'Could not extract any claims to check.'}</p>`;
@@ -170,8 +168,10 @@ function displayResults(data) {
             </ul>
         </div>
         <button id="details-toggle" class="details-toggle">${window.translations.show_detailed}</button>
-        <div id="claim-list-container" style="display: none;">
-            <div class="claim-list">
+		<a href="#" id="toggle-unchecked-claims" class="details-toggle" style="margin-left: 1rem;">Show unchecked claims</a>
+		<div id="unchecked-claims-container" style="display: none; margin-top: 1.3rem;"></div>
+		<div id="claim-list-container" style="display: none;">
+        <div class="claim-list">
     `;
 
     detailed_results.forEach(claim => {
@@ -204,6 +204,23 @@ function displayResults(data) {
     reportContainer.innerHTML = reportHTML;
 
     confidenceContainer.innerHTML = '';
+	
+	const toggleUncheckedLink = document.getElementById('toggle-unchecked-claims');
+	const uncheckedClaimsContainer = document.getElementById('unchecked-claims-container');
+	if (toggleUncheckedLink && uncheckedClaimsContainer) {
+		toggleUncheckedLink.addEventListener('click', (e) => {
+			e.preventDefault();
+			if (uncheckedClaimsContainer.style.display === 'none') {
+				renderUncheckedClaimsSection(data, uncheckedClaimsContainer);
+				uncheckedClaimsContainer.style.display = 'block';
+				toggleUncheckedLink.textContent = 'Hide unchecked claims';
+			} else {
+				uncheckedClaimsContainer.style.display = 'none';
+				toggleUncheckedLink.textContent = 'Show unchecked claims';
+			}
+		});
+	}
+
 
     const toggleButton = document.getElementById('details-toggle');
     const detailsContainer = document.getElementById('claim-list-container');
@@ -215,6 +232,52 @@ function displayResults(data) {
         });
     }
 }
+
+function renderUncheckedClaimsSection(data, container) {
+    const extracted = data.extracted_claims || [];
+    const checkedHashes = new Set((data.detailed_results || []).map(item => item.hash || item.claim_hash));
+    const uncheckedClaims = extracted.filter(claim => !checkedHashes.has(claim.hash));
+    if (!uncheckedClaims.length) {
+        container.innerHTML = `<div style="color: #6c757d;">All claims have been checked.</div>`;
+        return;
+    }
+    let html = `<form id="unchecked-claims-form"><div class="claims-list">`;
+    uncheckedClaims.forEach((claim, idx) => {
+        html += `
+            <div class="claim-checkbox-item">
+                <input type="checkbox" id="unchecked-${idx}" name="unchecked-to-check" value="${claim.hash}" data-text="${claim.text.replace(/"/g, '&quot;')}">
+                <label for="unchecked-${idx}">${claim.text}</label>
+            </div>
+        `;
+    });
+    html += `</div>
+        <button id="check-more-claims-btn" type="submit" disabled style="margin-top:1rem;">Check more claims</button>
+    </form>`;
+    container.innerHTML = html;
+
+    const checkBoxes = container.querySelectorAll('input[name="unchecked-to-check"]');
+    const submitBtn = container.querySelector('#check-more-claims-btn');
+    const MAX_CLAIMS = 5;
+    checkBoxes.forEach(box => {
+        box.addEventListener('change', () => {
+            const selected = Array.from(checkBoxes).filter(i => i.checked);
+            if (selected.length > MAX_CLAIMS) {
+                box.checked = false;
+                alert(`You can only select up to ${MAX_CLAIMS} claims.`);
+            }
+            submitBtn.disabled = selected.length === 0;
+        });
+    });
+
+    container.querySelector('#unchecked-claims-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const selectedClaimsData = Array.from(checkBoxes)
+            .filter(i => i.checked)
+            .map(i => ({ hash: i.value, text: i.dataset.text }));
+        startSelectedFactCheck(data.id, selectedClaimsData);
+    });
+}
+
 
 function startSelectedFactCheck(analysisId, claimsData) {
     const reportContainer = document.getElementById('report-container');

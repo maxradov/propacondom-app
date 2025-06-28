@@ -159,7 +159,8 @@ def analyze_youtube_video(self, video_url, target_lang='en'):
     if not detected_lang and available_langs:
         detected_lang = available_langs[0]
     if not detected_lang:
-        raise ValueError("No subtitles available in any language.")
+        self.update_state(state='FAILURE', meta={'status_message': "No subtitles available in any language."})
+        return {"error": "Try to check another video."}
 
     # Получаем сабы на реально доступном языке
     params_get_transcript = {
