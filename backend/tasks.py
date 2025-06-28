@@ -293,9 +293,10 @@ def analyze_free_text(self, text, target_lang='en', title=None, thumbnail_url=No
     - Claims about intentions, beliefs, or predictions.
     - Statements about the author's own impressions, thoughts, or experiences.
 
-    **Extract only concrete, objective, significant facts or assertions that can be checked against external sources.**
+    **Extract only concrete, objective, significant facts or assertions that can be checked against external sources. **
 
     Present the extracted claims as a clear, concise but including necessary for understanding of the context details, **numbered list** (one claim per line, no explanations).
+    Formulate the statement briefly but completely, so that it is clear what you are talking about, with the names and titles that are discussed in the statement, so that this statement can be understood and then checked by tearing it out from the rest of the text.
     IMPORTANT: Each claim must be:
     - Specific, checkable, and based on facts present in the text.
     - Standalone, complete, and written in {target_lang}.
