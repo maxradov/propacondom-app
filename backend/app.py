@@ -64,6 +64,57 @@ def inject_conf_var():
 
 # app.py, исправленная версия эндпоинта
 
+@app.route('/api/report/<analysis_id>')
+def get_report_or_selection(analysis_id):
+    db = get_db_client()
+    doc = db.collection('analyses').document(analysis_id).get()
+    if not doc.exists:
+        return jsonify({'error': 'Not found'}), 404
+    data = doc.to_dict()
+    status = data.get('status', 'UNKNOWN')
+    if status == 'COMPLETED':
+        # Возвращаем полный отчёт
+        return jsonify(data)
+    elif status == 'PENDING_SELECTION':
+        # Только клеймы и метаданные — для показа выбора на странице репорта
+        claims_ref = db.collection('claims')
+        cache_expiry_date = datetime.now(timezone.utc) - timedelta(days=CACHE_EXPIRATION_DAYS)
+        claims_for_selection = []
+        for claim in data.get("extracted_claims", []):
+            claim_hash = claim["hash"]
+            claim_text = claim["text"]
+            claim_doc = claims_ref.document(claim_hash).get()
+            claim_info = {
+                "hash": claim_hash,
+                "text": claim_text
+            }
+            if claim_doc.exists:
+                cached_data = claim_doc.to_dict()
+                last_checked = cached_data.get('last_checked_at')
+                if last_checked and last_checked.replace(tzinfo=timezone.utc) > cache_expiry_date:
+                    claim_info["is_cached"] = True
+                    claim_info["cached_data"] = {
+                        "verdict": cached_data.get("verdict", ""),
+                        "last_checked_at": str(last_checked)
+                    }
+                else:
+                    claim_info["is_cached"] = False
+            else:
+                claim_info["is_cached"] = False
+            claims_for_selection.append(claim_info)
+        return jsonify({
+            "status": "PENDING_SELECTION",
+            "claims_for_selection": claims_for_selection,
+            "video_title": data.get("video_title") or data.get("title") or "",
+            "thumbnail_url": data.get("thumbnail_url", ""),
+            "source_url": data.get("source_url", ""),
+            "id": analysis_id,
+            "input_type": data.get("input_type", "youtube")
+        })
+    else:
+        return jsonify({'error': 'Analysis not complete.'}), 400
+
+
 @app.route('/api/fact_check_selected', methods=['POST'])
 def fact_check_selected():
     data = request.get_json()

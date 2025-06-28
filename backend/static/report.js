@@ -1,14 +1,124 @@
 document.addEventListener('DOMContentLoaded', () => {
-    if (typeof reportData !== 'undefined') {
-        displayResults(reportData);
-    }
+    const reportWrapper = document.querySelector('.report-wrapper');
+    if (!reportWrapper) return;
 
+    // Получаем analysisId из url
+    const analysisId = window.location.pathname.split('/').pop();
+    fetch(`/api/report/${analysisId}`)
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === "PENDING_SELECTION") {
+                renderClaimSelectionUI(data); // Показать выбор клеймов прямо в report
+            } else {
+                displayResults(data); // Обычный отчёт
+            }
+        })
+        .catch(err => {
+            const reportContainer = reportWrapper.querySelector('#report-container');
+            if (reportContainer) {
+                reportContainer.innerHTML = `<p style="color:red;">${err.message || "Failed to load report."}</p>`;
+            }
+        });
+
+    // Share logic
     const shareBtn = document.getElementById('share-btn');
     if (shareBtn) {
         shareBtn.addEventListener('click', shareResults);
     }
 });
 
+// ----- Отображение выбора клеймов прямо в report.html -----
+function renderClaimSelectionUI(analysisData) {
+    const reportContainer = document.getElementById('report-container');
+    const confidenceContainer = document.getElementById('confidence-container');
+    if (confidenceContainer) confidenceContainer.innerHTML = '';
+    if (!reportContainer) return;
+
+    const analysisId = analysisData.id;
+    const claims = analysisData.claims_for_selection;
+
+    const videoTitle = analysisData.video_title || "";
+    const thumbnailUrl = analysisData.thumbnail_url || "";
+    const sourceUrl = analysisData.source_url || "";
+
+    let metaHTML = "";
+    if (videoTitle || thumbnailUrl) {
+        metaHTML += `<div class="claim-selection-meta" style="display: flex; align-items: flex-start; gap: 1.5rem; margin-bottom: 2rem;">`;
+        if (thumbnailUrl) {
+            metaHTML += `<a href="${sourceUrl}" target="_blank" rel="noopener">
+                <img src="${thumbnailUrl}" alt="Video thumbnail" class="video-thumbnail" style="width: 220px; border-radius: 8px; border: 1px solid #dee2e6;">
+            </a>`;
+        }
+        metaHTML += `<div style="flex: 1;">
+            <a href="${sourceUrl}" target="_blank" rel="noopener" style="font-weight: bold; font-size: 1.25rem; text-decoration: none; color: #007bff; word-break: break-word;">
+                ${videoTitle}
+            </a>
+        </div>`;
+        metaHTML += `</div>`;
+    }
+
+    if (!claims || claims.length === 0) {
+        reportContainer.innerHTML = metaHTML + `<p>${window.translations.no_claims_found || 'Could not extract any claims to check.'}</p>`;
+        return;
+    }
+
+    let claimsHTML = `
+        <h3>${(window.translations.select_claims_title || 'Select up to 5 claims to verify')}</h3>
+        <div class="claims-list">`;
+
+    claims.forEach((claimData, index) => {
+        const { hash, text, is_cached, cached_data } = claimData;
+        const sanitizedText = text.replace(/"/g, '&quot;');
+        if (is_cached) {
+            let verdictText = '';
+            if (cached_data && cached_data.verdict) {
+                verdictText = `${window.translations.already_checked || 'Already checked'}: ${cached_data.verdict}`;
+            } else {
+                verdictText = window.translations.already_checked || 'Already checked';
+            }
+            claimsHTML += `
+                <div class="claim-checkbox-item cached">
+                    <input type="checkbox" id="claim-${index}" value="${hash}" checked disabled>
+                    <label for="claim-${index}">${text} <span>(${verdictText})</span></label>
+                </div>`;
+        } else {
+            claimsHTML += `
+                <div class="claim-checkbox-item">
+                    <input type="checkbox" id="claim-${index}" name="claim-to-check" value="${hash}" data-text="${sanitizedText}">
+                    <label for="claim-${index}">${text}</label>
+                </div>`;
+        }
+    });
+
+    claimsHTML += `</div><button id="run-selected-factcheck-btn" disabled>${(window.translations.fact_check_selected_button || 'Fact-Check Selected')}</button>`;
+
+    reportContainer.innerHTML = metaHTML + claimsHTML;
+
+    const checkBoxes = reportContainer.querySelectorAll('input[name="claim-to-check"]');
+    const runCheckBtn = document.getElementById('run-selected-factcheck-btn');
+    const MAX_CLAIMS_TO_CHECK = 5;
+
+    checkBoxes.forEach(box => {
+        box.addEventListener('change', (e) => {
+            const selected = Array.from(checkBoxes).filter(i => i.checked);
+            if (selected.length > MAX_CLAIMS_TO_CHECK) {
+                e.preventDefault();
+                box.checked = false;
+                alert(`${(window.translations.limit_selection_alert || 'You can only select up to')} ${MAX_CLAIMS_TO_CHECK} ${(window.translations.claims_alert || 'claims')}.`);
+            }
+            runCheckBtn.disabled = selected.length === 0;
+        });
+    });
+
+    runCheckBtn.addEventListener('click', () => {
+        const selectedClaimsData = Array.from(checkBoxes)
+            .filter(i => i.checked)
+            .map(i => ({ hash: i.value, text: i.dataset.text }));
+        startSelectedFactCheck(analysisId, selectedClaimsData);
+    });
+}
+
+// --- Обычный отчёт ---
 function displayResults(data) {
     const reportWrapper = document.querySelector('.report-wrapper');
     if (!reportWrapper) { return; }
@@ -26,10 +136,10 @@ function displayResults(data) {
     }
 
     const { verdict_counts, detailed_results, summary_data } = data;
-	const totalClaims = detailed_results.length;
-	let totalClaimsHTML = `<div class="checked-claims-total" style="font-size:1.05rem;color:#6c757d;margin-bottom:0.35em;">
-		${window.translations.checked_claims_total || 'Checked claims'}: <strong>${totalClaims}</strong>
-	</div>`;
+    const totalClaims = detailed_results.length;
+    let totalClaimsHTML = `<div class="checked-claims-total" style="font-size:1.05rem;color:#6c757d;margin-bottom:0.35em;">
+        ${window.translations.checked_claims_total || 'Checked claims'}: <strong>${totalClaims}</strong>
+    </div>`;
     const verdictOrder = [
         { key: 'True', icon: '✅', label: window.translations.true_label || 'Confirmed' },
         { key: 'False', icon: '❌', label: window.translations.false_label || 'Refuted' },
@@ -59,7 +169,7 @@ function displayResults(data) {
     let reportHTML = `
         <div id="report-summary">
             <div class="verdict-summary-icons">${iconsSummary}</div>
-			${totalClaimsHTML}
+            ${totalClaimsHTML}
             <h2>${summary_data.overall_verdict || ''}</h2>
 
             <div class="disclaimer-box">
@@ -119,6 +229,58 @@ function displayResults(data) {
     }
 }
 
+function startSelectedFactCheck(analysisId, claimsData) {
+    const reportContainer = document.getElementById('report-container');
+    const confidenceContainer = document.getElementById('confidence-container');
+    if (confidenceContainer) confidenceContainer.innerHTML = '';
+    reportContainer.innerHTML = `<p>${(window.translations.sending_request_for_checking || 'Sending selected claims for final analysis...')}</p>`;
+    fetch('/api/fact_check_selected', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ analysis_id: analysisId, selected_claims_data: claimsData })
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(errData => {
+                throw new Error(errData.error || errData.result || (window.translations.error_starting || 'Error starting analysis.'));
+            });
+        }
+        return response.json();
+    })
+    .then(data => {
+        // После завершения анализа — перегрузи страницу, чтобы получить готовый отчёт
+        if (data.task_id) {
+            pollStatus(data.task_id, analysisId);
+        }
+    })
+    .catch(error => {
+        reportContainer.innerHTML = `<p style="color:red;">Error: ${error.message}</p>`;
+    });
+}
+
+// Poll статус выполнения fact_check_selected и показывай репорт после завершения
+function pollStatus(taskId, analysisId) {
+    const interval = setInterval(() => {
+        fetch(`/api/status/${taskId}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'SUCCESS') {
+                    clearInterval(interval);
+                    // Просто перегрузи страницу для показа готового отчёта
+                    window.location.reload();
+                }
+                if (data.status === 'FAILURE') {
+                    clearInterval(interval);
+                    const reportContainer = document.getElementById('report-container');
+                    if (reportContainer) {
+                        reportContainer.innerHTML = `<p style="color:red;">${data.result || 'Fact-check failed.'}</p>`;
+                    }
+                }
+            })
+            .catch(() => clearInterval(interval));
+    }, 3000);
+}
+
 function shareResults() {
     const shareData = {
         title: window.translations.share_report,
@@ -126,7 +288,6 @@ function shareResults() {
         url: window.location.href
     };
     const shareBtn = document.getElementById('share-btn');
-
     if (navigator.share) {
         navigator.share(shareData).catch(console.log);
     } else {
