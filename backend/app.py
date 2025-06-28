@@ -5,6 +5,7 @@ from celery.result import AsyncResult
 from datetime import datetime
 from google.cloud.firestore_v1.query import Query
 from flask_babel import Babel, _
+from datetime import datetime, timezone, timedelta
 
 from celery_init import celery as celery_app
 from tasks import get_db_client
@@ -61,8 +62,6 @@ def inject_conf_var():
         LANGUAGES=LANGUAGES,
         CURRENT_LANG=get_locale()
     )
-
-# app.py, исправленная версия эндпоинта
 
 @app.route('/api/report/<analysis_id>')
 def get_report_or_selection(analysis_id):
