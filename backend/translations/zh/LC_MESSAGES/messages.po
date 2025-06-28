@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-06-26 10:32+0000\n"
+"POT-Creation-Date: 2025-06-28 21:36+0000\n"
 "PO-Revision-Date: 2025-06-23 00:00+0000\n"
 "Last-Translator: Gemini AI Translator\n"
 "Language: zh\n"
@@ -18,36 +18,36 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: backend/app.py:171
+#: backend/app.py:222
 msgid "Report not found"
 msgstr "报告未找到"
 
-#: backend/app.py:174
+#: backend/app.py:225
 msgid "An error occurred"
 msgstr "发生错误"
 
 #: backend/templates/index.html:3
 msgid "AI Fact Checker for YouTube, Articles & Text | Verify Sources"
-msgstr ""
+msgstr "AI事实核查（适用于YouTube、文章和文本）| 核实来源"
 
 #: backend/templates/index.html:9
-msgid "Uncover the Truth in Any Content"
-msgstr ""
+msgid "AI Fact-Checker for YouTube, News & Articles"
+msgstr "AI事实核查 - 适用于YouTube、新闻和文章"
 
 #: backend/templates/index.html:10
 msgid ""
-"Our AI instantly analyzes YouTube videos, articles, and text to verify "
-"claims and check sources. Stop misinformation before you share it."
-msgstr ""
+"Instantly verify facts and detect misinformation in YouTube videos, news,"
+" articles, and any text using advanced AI fact-checking."
+msgstr "用AI技术，快速验证YouTube视频、新闻、文章和文本的真实性，及时发现谣言和误导。"
 
 #: backend/templates/index.html:13
 #, fuzzy
 msgid "Paste a YouTube link, article URL, or text to check..."
-msgstr "粘贴YouTube链接以进行检查..."
+msgstr "粘贴YouTube链接、文章网址或文本进行核查..."
 
 #: backend/templates/index.html:14
 msgid "Run Fact Check"
-msgstr "运行事实核查"
+msgstr "开始事实核查"
 
 #: backend/templates/index.html:23 backend/templates/report.html:37
 msgid "Last checked:"
@@ -58,9 +58,117 @@ msgstr "上次检查："
 msgid "%(credibility)s%% Credibility / %(confidence)s%% Confidence"
 msgstr "%(credibility)s%% 可信度 / %(confidence)s%% 置信度"
 
-#: backend/templates/index.html:49 backend/templates/report.html:63
+#: backend/templates/index.html:49 backend/templates/layout.html:45
+#: backend/templates/report.html:63
 msgid "Loading more..."
 msgstr "加载更多..."
+
+#: backend/templates/layout.html:6
+#, fuzzy
+msgid "AI Fact Checker"
+msgstr "AI事实核查"
+
+#: backend/templates/layout.html:37
+msgid "Please paste a video link."
+msgstr "请粘贴视频链接。"
+
+#: backend/templates/layout.html:38
+msgid "Please enter a valid YouTube video link!"
+msgstr "请输入有效的YouTube视频链接！"
+
+#: backend/templates/layout.html:39
+msgid "Sending request for analysis..."
+msgstr "正在发送分析请求..."
+
+#: backend/templates/layout.html:40
+msgid "Error starting analysis."
+msgstr "启动分析时出错。"
+
+#: backend/templates/layout.html:41
+msgid "Critical polling error:"
+msgstr "状态检测发生严重错误："
+
+#: backend/templates/layout.html:42
+#, fuzzy
+msgid "An error occurred during processing:"
+msgstr "处理过程中发生错误："
+
+#: backend/templates/layout.html:43
+#, fuzzy
+msgid "No more results"
+msgstr "没有更多结果"
+
+#: backend/templates/layout.html:44
+msgid "Failed to load"
+msgstr "加载失败"
+
+#: backend/templates/layout.html:46
+msgid "Credibility"
+msgstr "可信度"
+
+#: backend/templates/layout.html:47
+msgid "Confidence"
+msgstr "置信度"
+
+#: backend/templates/layout.html:48
+msgid "Sources:"
+msgstr "来源："
+
+#: backend/templates/layout.html:49
+msgid "Show Detailed Analysis"
+msgstr "显示详细分析"
+
+#: backend/templates/layout.html:50
+msgid "Hide Detailed Analysis"
+msgstr "隐藏详细分析"
+
+#: backend/templates/layout.html:51
+msgid "Link Copied!"
+msgstr "链接已复制！"
+
+#: backend/templates/layout.html:52
+msgid "Failed to copy link."
+msgstr "复制链接失败。"
+
+#: backend/templates/layout.html:53
+#, fuzzy
+msgid "Fact-Check Report"
+msgstr "事实核查报告"
+
+#: backend/templates/layout.html:54
+#, fuzzy
+msgid "Check out the fact-check report for this video:"
+msgstr "查看该视频的事实核查报告："
+
+#: backend/templates/layout.html:55
+msgid "Select up to 5 claims to verify"
+msgstr "最多可选择5条信息进行核查"
+
+#: backend/templates/layout.html:56
+#, fuzzy
+msgid "Fact-Check Selected"
+msgstr "已选择事实核查"
+
+#: backend/templates/layout.html:57
+msgid "You can only select up to"
+msgstr "最多只能选择"
+
+#: backend/templates/layout.html:58
+msgid "claims"
+msgstr "条信息"
+
+#: backend/templates/layout.html:59
+#, fuzzy
+msgid "Already checked"
+msgstr "已核查"
+
+#: backend/templates/layout.html:60
+msgid "Could not extract any claims to check."
+msgstr "未检测到可核查的信息。"
+
+#: backend/templates/layout.html:61
+msgid "Sending selected claims for final analysis..."
+msgstr "正在分析所选内容..."
 
 #: backend/templates/report.html:3
 msgid "Fact-Check Report for:"
@@ -130,13 +238,13 @@ msgstr "视频缩略图"
 #~ msgstr "查看该视频的事实核查报告："
 
 #~ msgid "AI Fact Checker"
-#~ msgstr "人工智能事实核查员"
+#~ msgstr "AI事实核查"
 
 #~ msgid "Don't be fooled. Check factual accuracy."
-#~ msgstr "不要被愚弄。检查事实准确性。"
+#~ msgstr "别被忽悠了，检查事实真伪。"
 
 #~ msgid "Paste a new YouTube link to check..."
-#~ msgstr "粘贴新的YouTube链接以进行检查..."
+#~ msgstr "粘贴新的YouTube链接进行核查..."
 
 #~ msgid "Run Another Fact Check"
 #~ msgstr "再次运行事实核查"
@@ -149,8 +257,17 @@ msgstr "视频缩略图"
 #~ "may contain errors and may not "
 #~ "have access to real-time data. "
 #~ "Please verify the information independently."
-#~ msgstr "本报告由人工智能生成。它可能包含错误，并且可能无法访问实时数据。请独立核实信息。"
+#~ msgstr "本报告由AI自动生成，可能存在错误，也可能无法访问实时数据。请自行核实信息。"
 
 #~ msgid "Watch on YouTube"
 #~ msgstr "在YouTube上观看"
 
+#~ msgid "Uncover the Truth in Any Content"
+#~ msgstr "发现每条内容背后的真相"
+
+#~ msgid ""
+#~ "Our AI instantly analyzes YouTube "
+#~ "videos, articles, and text to verify "
+#~ "claims and check sources. Stop "
+#~ "misinformation before you share it."
+#~ msgstr "我们的AI可即时分析YouTube视频、文章和文本，核实内容、查找来源，帮你杜绝转发谣言。"

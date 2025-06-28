@@ -7,44 +7,43 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-06-26 10:32+0000\n"
+"POT-Creation-Date: 2025-06-28 21:36+0000\n"
 "PO-Revision-Date: 2025-06-22 23:24+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: uk\n"
 "Language-Team: uk <LL@li.org>\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: backend/app.py:171
+#: backend/app.py:222
 msgid "Report not found"
 msgstr "Звіт не знайдено"
 
-#: backend/app.py:174
+#: backend/app.py:225
 msgid "An error occurred"
 msgstr "Виникла помилка"
 
 #: backend/templates/index.html:3
 msgid "AI Fact Checker for YouTube, Articles & Text | Verify Sources"
-msgstr ""
+msgstr "Перевірка фактів з ШІ для YouTube, статей і тексту | Перевірка джерел"
 
 #: backend/templates/index.html:9
-msgid "Uncover the Truth in Any Content"
-msgstr ""
+msgid "AI Fact-Checker for YouTube, News & Articles"
+msgstr "Перевірка фактів з ШІ для YouTube, новин і статей"
 
 #: backend/templates/index.html:10
 msgid ""
-"Our AI instantly analyzes YouTube videos, articles, and text to verify "
-"claims and check sources. Stop misinformation before you share it."
-msgstr ""
+"Instantly verify facts and detect misinformation in YouTube videos, news,"
+" articles, and any text using advanced AI fact-checking."
+msgstr "Миттєво перевіряйте факти й знаходьте дезінформацію у відео, новинах, статтях чи текстах завдяки ШІ."
 
 #: backend/templates/index.html:13
 #, fuzzy
 msgid "Paste a YouTube link, article URL, or text to check..."
-msgstr "Вставте посилання на YouTube для перевірки..."
+msgstr "Вставте посилання на YouTube, статтю або текст для перевірки..."
 
 #: backend/templates/index.html:14
 msgid "Run Fact Check"
@@ -52,16 +51,124 @@ msgstr "Запустити перевірку фактів"
 
 #: backend/templates/index.html:23 backend/templates/report.html:37
 msgid "Last checked:"
-msgstr "Останні перевірки:"
+msgstr "Остання перевірка:"
 
 #: backend/templates/index.html:41 backend/templates/report.html:55
 #, python-format
 msgid "%(credibility)s%% Credibility / %(confidence)s%% Confidence"
 msgstr "%(credibility)s%% достовірності / %(confidence)s%% впевненості"
 
-#: backend/templates/index.html:49 backend/templates/report.html:63
+#: backend/templates/index.html:49 backend/templates/layout.html:45
+#: backend/templates/report.html:63
 msgid "Loading more..."
-msgstr "Завантаження ще..."
+msgstr "Завантаження..."
+
+#: backend/templates/layout.html:6
+#, fuzzy
+msgid "AI Fact Checker"
+msgstr "Перевірка фактів з ШІ"
+
+#: backend/templates/layout.html:37
+msgid "Please paste a video link."
+msgstr "Будь ласка, вставте посилання на відео."
+
+#: backend/templates/layout.html:38
+msgid "Please enter a valid YouTube video link!"
+msgstr "Будь ласка, введіть коректне посилання на YouTube!"
+
+#: backend/templates/layout.html:39
+msgid "Sending request for analysis..."
+msgstr "Відправка запиту на аналіз..."
+
+#: backend/templates/layout.html:40
+msgid "Error starting analysis."
+msgstr "Помилка при запуску аналізу."
+
+#: backend/templates/layout.html:41
+msgid "Critical polling error:"
+msgstr "Критична помилка під час перевірки статусу:"
+
+#: backend/templates/layout.html:42
+#, fuzzy
+msgid "An error occurred during processing:"
+msgstr "Під час обробки сталася помилка:"
+
+#: backend/templates/layout.html:43
+#, fuzzy
+msgid "No more results"
+msgstr "Більше немає результатів"
+
+#: backend/templates/layout.html:44
+msgid "Failed to load"
+msgstr "Не вдалося завантажити"
+
+#: backend/templates/layout.html:46
+msgid "Credibility"
+msgstr "Достовірність"
+
+#: backend/templates/layout.html:47
+msgid "Confidence"
+msgstr "Впевненість"
+
+#: backend/templates/layout.html:48
+msgid "Sources:"
+msgstr "Джерела:"
+
+#: backend/templates/layout.html:49
+msgid "Show Detailed Analysis"
+msgstr "Показати детальний аналіз"
+
+#: backend/templates/layout.html:50
+msgid "Hide Detailed Analysis"
+msgstr "Сховати детальний аналіз"
+
+#: backend/templates/layout.html:51
+msgid "Link Copied!"
+msgstr "Посилання скопійовано!"
+
+#: backend/templates/layout.html:52
+msgid "Failed to copy link."
+msgstr "Не вдалося скопіювати посилання."
+
+#: backend/templates/layout.html:53
+#, fuzzy
+msgid "Fact-Check Report"
+msgstr "Звіт про перевірку фактів"
+
+#: backend/templates/layout.html:54
+#, fuzzy
+msgid "Check out the fact-check report for this video:"
+msgstr "Перегляньте звіт про перевірку фактів для цього відео:"
+
+#: backend/templates/layout.html:55
+msgid "Select up to 5 claims to verify"
+msgstr "Оберіть до 5 тверджень для перевірки"
+
+#: backend/templates/layout.html:56
+#, fuzzy
+msgid "Fact-Check Selected"
+msgstr "Вибрана перевірка фактів"
+
+#: backend/templates/layout.html:57
+msgid "You can only select up to"
+msgstr "Ви можете обрати лише до"
+
+#: backend/templates/layout.html:58
+msgid "claims"
+msgstr "тверджень"
+
+#: backend/templates/layout.html:59
+#, fuzzy
+msgid "Already checked"
+msgstr "Вже перевірено"
+
+#: backend/templates/layout.html:60
+msgid "Could not extract any claims to check."
+msgstr "Не вдалося знайти твердження для перевірки."
+
+#: backend/templates/layout.html:61
+msgid "Sending selected claims for final analysis..."
+msgstr "Відправлення вибраних тверджень на фінальний аналіз..."
 
 #: backend/templates/report.html:3
 msgid "Fact-Check Report for:"
@@ -134,7 +241,7 @@ msgstr "Мініатюра відео"
 #~ msgstr "AI перевірка фактів"
 
 #~ msgid "Don't be fooled. Check factual accuracy."
-#~ msgstr "Не дайте себе обдурити. Перевіряйте достовірність фактів."
+#~ msgstr "Не дайте себе обдурити. Перевіряйте факти."
 
 #~ msgid "Paste a new YouTube link to check..."
 #~ msgstr "Вставте нове посилання на YouTube для перевірки..."
@@ -151,11 +258,18 @@ msgstr "Мініатюра відео"
 #~ "have access to real-time data. "
 #~ "Please verify the information independently."
 #~ msgstr ""
-#~ "Цей звіт згенеровано штучним інтелектом. "
-#~ "Він може містити помилки і не мати"
-#~ " доступу до актуальних даних. Будь "
-#~ "ласка, перевіряйте інформацію самостійно."
+#~ "Цей звіт згенеровано ШІ. Він може містити помилки й не мати доступу до актуальних даних. Будь ласка, перевіряйте інформацію самостійно."
 
 #~ msgid "Watch on YouTube"
 #~ msgstr "Дивитися на YouTube"
 
+#~ msgid "Uncover the Truth in Any Content"
+#~ msgstr "Дізнайтеся правду в будь-якому контенті"
+
+#~ msgid ""
+#~ "Our AI instantly analyzes YouTube "
+#~ "videos, articles, and text to verify "
+#~ "claims and check sources. Stop "
+#~ "misinformation before you share it."
+#~ msgstr ""
+#~ "Наш ШІ миттєво аналізує YouTube-відео, статті та тексти, щоб перевірити твердження й джерела. Зупиніть дезінформацію до її поширення."

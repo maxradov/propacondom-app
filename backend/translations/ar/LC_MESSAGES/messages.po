@@ -1,13 +1,8 @@
-# Arabic translations for PROJECT.
-# Copyright (C) 2025 ORGANIZATION
-# This file is distributed under the same license as the PROJECT project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-06-26 10:32+0000\n"
+"POT-Creation-Date: 2025-06-28 21:36+0000\n"
 "PO-Revision-Date: 2025-06-23 02:40+0300\n"
 "Last-Translator: Gemini AI Assistant\n"
 "Language: ar\n"
@@ -19,32 +14,32 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: backend/app.py:171
+#: backend/app.py:222
 msgid "Report not found"
 msgstr "لم يتم العثور على التقرير"
 
-#: backend/app.py:174
+#: backend/app.py:225
 msgid "An error occurred"
 msgstr "حدث خطأ"
 
 #: backend/templates/index.html:3
 msgid "AI Fact Checker for YouTube, Articles & Text | Verify Sources"
-msgstr ""
+msgstr "مدقق الحقائق الذكي ليوتيوب والمقالات والنصوص | تحقق من المصادر"
 
 #: backend/templates/index.html:9
-msgid "Uncover the Truth in Any Content"
-msgstr ""
+msgid "AI Fact-Checker for YouTube, News & Articles"
+msgstr "مدقق الحقائق الذكي ليوتيوب والأخبار والمقالات"
 
 #: backend/templates/index.html:10
 msgid ""
-"Our AI instantly analyzes YouTube videos, articles, and text to verify "
-"claims and check sources. Stop misinformation before you share it."
+"Instantly verify facts and detect misinformation in YouTube videos, news,"
+" articles, and any text using advanced AI fact-checking."
 msgstr ""
 
 #: backend/templates/index.html:13
 #, fuzzy
 msgid "Paste a YouTube link, article URL, or text to check..."
-msgstr "الصق رابط يوتيوب للتحقق..."
+msgstr "الصق رابط يوتيوب أو عنوان مقال أو نص للتحقق..."
 
 #: backend/templates/index.html:14
 msgid "Run Fact Check"
@@ -59,9 +54,117 @@ msgstr "آخر فحص:"
 msgid "%(credibility)s%% Credibility / %(confidence)s%% Confidence"
 msgstr "مصداقية %(credibility)s%% / ثقة %(confidence)s%%"
 
-#: backend/templates/index.html:49 backend/templates/report.html:63
+#: backend/templates/index.html:49 backend/templates/layout.html:45
+#: backend/templates/report.html:63
 msgid "Loading more..."
 msgstr "جاري تحميل المزيد..."
+
+#: backend/templates/layout.html:6
+#, fuzzy
+msgid "AI Fact Checker"
+msgstr "بدء التحقق من الحقائق"
+
+#: backend/templates/layout.html:37
+msgid "Please paste a video link."
+msgstr ""
+
+#: backend/templates/layout.html:38
+msgid "Please enter a valid YouTube video link!"
+msgstr ""
+
+#: backend/templates/layout.html:39
+msgid "Sending request for analysis..."
+msgstr ""
+
+#: backend/templates/layout.html:40
+msgid "Error starting analysis."
+msgstr ""
+
+#: backend/templates/layout.html:41
+msgid "Critical polling error:"
+msgstr ""
+
+#: backend/templates/layout.html:42
+#, fuzzy
+msgid "An error occurred during processing:"
+msgstr "حدث خطأ"
+
+#: backend/templates/layout.html:43
+#, fuzzy
+msgid "No more results"
+msgstr "مشاركة النتائج"
+
+#: backend/templates/layout.html:44
+msgid "Failed to load"
+msgstr ""
+
+#: backend/templates/layout.html:46
+msgid "Credibility"
+msgstr ""
+
+#: backend/templates/layout.html:47
+msgid "Confidence"
+msgstr ""
+
+#: backend/templates/layout.html:48
+msgid "Sources:"
+msgstr ""
+
+#: backend/templates/layout.html:49
+msgid "Show Detailed Analysis"
+msgstr ""
+
+#: backend/templates/layout.html:50
+msgid "Hide Detailed Analysis"
+msgstr ""
+
+#: backend/templates/layout.html:51
+msgid "Link Copied!"
+msgstr ""
+
+#: backend/templates/layout.html:52
+msgid "Failed to copy link."
+msgstr ""
+
+#: backend/templates/layout.html:53
+#, fuzzy
+msgid "Fact-Check Report"
+msgstr "تقرير التحقق من الحقائق لـ:"
+
+#: backend/templates/layout.html:54
+#, fuzzy
+msgid "Check out the fact-check report for this video:"
+msgstr "تقرير التحقق من الحقائق لـ:"
+
+#: backend/templates/layout.html:55
+msgid "Select up to 5 claims to verify"
+msgstr ""
+
+#: backend/templates/layout.html:56
+#, fuzzy
+msgid "Fact-Check Selected"
+msgstr "تقرير التحقق من الحقائق لـ:"
+
+#: backend/templates/layout.html:57
+msgid "You can only select up to"
+msgstr ""
+
+#: backend/templates/layout.html:58
+msgid "claims"
+msgstr ""
+
+#: backend/templates/layout.html:59
+#, fuzzy
+msgid "Already checked"
+msgstr "آخر فحص:"
+
+#: backend/templates/layout.html:60
+msgid "Could not extract any claims to check."
+msgstr ""
+
+#: backend/templates/layout.html:61
+msgid "Sending selected claims for final analysis..."
+msgstr ""
 
 #: backend/templates/report.html:3
 msgid "Fact-Check Report for:"
@@ -159,4 +262,14 @@ msgstr "الصورة المصغرة للفيديو"
 
 #~ msgid "Watch on YouTube"
 #~ msgstr "شاهد على يوتيوب"
+
+#~ msgid "Uncover the Truth in Any Content"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Our AI instantly analyzes YouTube "
+#~ "videos, articles, and text to verify "
+#~ "claims and check sources. Stop "
+#~ "misinformation before you share it."
+#~ msgstr ""
 

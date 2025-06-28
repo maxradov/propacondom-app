@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-06-26 10:32+0000\n"
+"POT-Creation-Date: 2025-06-28 21:36+0000\n"
 "PO-Revision-Date: 2025-06-22 23:18+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: de\n"
@@ -18,36 +18,36 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: backend/app.py:171
+#: backend/app.py:222
 msgid "Report not found"
 msgstr "Bericht nicht gefunden"
 
-#: backend/app.py:174
+#: backend/app.py:225
 msgid "An error occurred"
-msgstr "Ein Fehler ist aufgetreten"
+msgstr "Es ist ein Fehler aufgetreten"
 
 #: backend/templates/index.html:3
 msgid "AI Fact Checker for YouTube, Articles & Text | Verify Sources"
-msgstr ""
+msgstr "KI-Faktencheck für YouTube, Artikel & Text | Quellen prüfen"
 
 #: backend/templates/index.html:9
-msgid "Uncover the Truth in Any Content"
-msgstr ""
+msgid "AI Fact-Checker for YouTube, News & Articles"
+msgstr "KI-Faktencheck für YouTube, News & Artikel"
 
 #: backend/templates/index.html:10
 msgid ""
-"Our AI instantly analyzes YouTube videos, articles, and text to verify "
-"claims and check sources. Stop misinformation before you share it."
-msgstr ""
+"Instantly verify facts and detect misinformation in YouTube videos, news,"
+" articles, and any text using advanced AI fact-checking."
+msgstr "Prüfe Fakten und erkenne Falschinformationen in YouTube-Videos, News, Artikeln und jedem Text – sofort mit modernem KI-Faktencheck."
 
 #: backend/templates/index.html:13
 #, fuzzy
 msgid "Paste a YouTube link, article URL, or text to check..."
-msgstr "Fügen Sie einen YouTube-Link zum Überprüfen ein..."
+msgstr "Füge einen YouTube-Link, Artikel-URL oder Text zum Prüfen ein..."
 
 #: backend/templates/index.html:14
 msgid "Run Fact Check"
-msgstr "Faktenprüfung durchführen"
+msgstr "Faktencheck starten"
 
 #: backend/templates/index.html:23 backend/templates/report.html:37
 msgid "Last checked:"
@@ -56,19 +56,127 @@ msgstr "Zuletzt geprüft:"
 #: backend/templates/index.html:41 backend/templates/report.html:55
 #, python-format
 msgid "%(credibility)s%% Credibility / %(confidence)s%% Confidence"
-msgstr "%(credibility)s%% Glaubwürdigkeit / %(confidence)s%% Konfidenz"
+msgstr "%(credibility)s%% Glaubwürdigkeit / %(confidence)s%% Vertrauen"
 
-#: backend/templates/index.html:49 backend/templates/report.html:63
+#: backend/templates/index.html:49 backend/templates/layout.html:45
+#: backend/templates/report.html:63
 msgid "Loading more..."
-msgstr "Mehr laden..."
+msgstr "Mehr wird geladen..."
+
+#: backend/templates/layout.html:6
+#, fuzzy
+msgid "AI Fact Checker"
+msgstr "KI-Faktencheck"
+
+#: backend/templates/layout.html:37
+msgid "Please paste a video link."
+msgstr "Bitte füge einen Videolink ein."
+
+#: backend/templates/layout.html:38
+msgid "Please enter a valid YouTube video link!"
+msgstr "Bitte gib einen gültigen YouTube-Link ein!"
+
+#: backend/templates/layout.html:39
+msgid "Sending request for analysis..."
+msgstr "Analyse wird angefordert..."
+
+#: backend/templates/layout.html:40
+msgid "Error starting analysis."
+msgstr "Fehler beim Starten der Analyse."
+
+#: backend/templates/layout.html:41
+msgid "Critical polling error:"
+msgstr "Kritischer Abfragefehler:"
+
+#: backend/templates/layout.html:42
+#, fuzzy
+msgid "An error occurred during processing:"
+msgstr "Fehler bei der Verarbeitung:"
+
+#: backend/templates/layout.html:43
+#, fuzzy
+msgid "No more results"
+msgstr "Keine weiteren Ergebnisse"
+
+#: backend/templates/layout.html:44
+msgid "Failed to load"
+msgstr "Laden fehlgeschlagen"
+
+#: backend/templates/layout.html:46
+msgid "Credibility"
+msgstr "Glaubwürdigkeit"
+
+#: backend/templates/layout.html:47
+msgid "Confidence"
+msgstr "Vertrauen"
+
+#: backend/templates/layout.html:48
+msgid "Sources:"
+msgstr "Quellen:"
+
+#: backend/templates/layout.html:49
+msgid "Show Detailed Analysis"
+msgstr "Details anzeigen"
+
+#: backend/templates/layout.html:50
+msgid "Hide Detailed Analysis"
+msgstr "Details ausblenden"
+
+#: backend/templates/layout.html:51
+msgid "Link Copied!"
+msgstr "Link kopiert!"
+
+#: backend/templates/layout.html:52
+msgid "Failed to copy link."
+msgstr "Link konnte nicht kopiert werden."
+
+#: backend/templates/layout.html:53
+#, fuzzy
+msgid "Fact-Check Report"
+msgstr "Faktencheck-Bericht"
+
+#: backend/templates/layout.html:54
+#, fuzzy
+msgid "Check out the fact-check report for this video:"
+msgstr "Hier ist der Faktencheck-Bericht für dieses Video:"
+
+#: backend/templates/layout.html:55
+msgid "Select up to 5 claims to verify"
+msgstr "Wähle bis zu 5 Behauptungen zum Prüfen aus"
+
+#: backend/templates/layout.html:56
+#, fuzzy
+msgid "Fact-Check Selected"
+msgstr "Ausgewählte prüfen"
+
+#: backend/templates/layout.html:57
+msgid "You can only select up to"
+msgstr "Du kannst nur bis zu"
+
+#: backend/templates/layout.html:58
+msgid "claims"
+msgstr "Behauptungen"
+
+#: backend/templates/layout.html:59
+#, fuzzy
+msgid "Already checked"
+msgstr "Bereits geprüft"
+
+#: backend/templates/layout.html:60
+msgid "Could not extract any claims to check."
+msgstr "Keine prüfbaren Behauptungen gefunden."
+
+#: backend/templates/layout.html:61
+msgid "Sending selected claims for final analysis..."
+msgstr "Ausgewählte Behauptungen werden zur Analyse gesendet..."
 
 #: backend/templates/report.html:3
 msgid "Fact-Check Report for:"
-msgstr "Faktenprüfungsbericht für:"
+msgstr "Faktencheck-Bericht für:"
 
 #: backend/templates/report.html:9
 msgid "Fact-check report for:"
-msgstr "Faktenprüfungsbericht für:"
+msgstr "Faktencheck-Bericht für:"
 
 #: backend/templates/report.html:15
 msgid "Share Results"
@@ -76,25 +184,25 @@ msgstr "Ergebnisse teilen"
 
 #: backend/templates/report.html:20
 msgid "Video Thumbnail"
-msgstr "Video-Miniaturbild"
+msgstr "Video-Vorschaubild"
 
 #~ msgid "Please paste a video link."
-#~ msgstr "Bitte fügen Sie einen Videolink ein."
+#~ msgstr "Bitte füge einen Videolink ein."
 
 #~ msgid "Please enter a valid YouTube video link!"
-#~ msgstr "Bitte geben Sie einen gültigen YouTube-Link ein!"
+#~ msgstr "Bitte gib einen gültigen YouTube-Link ein!"
 
 #~ msgid "Sending request for analysis..."
-#~ msgstr "Analyse-Anfrage wird gesendet..."
+#~ msgstr "Analyse wird angefordert..."
 
 #~ msgid "Error starting analysis."
 #~ msgstr "Fehler beim Starten der Analyse."
 
 #~ msgid "Critical polling error:"
-#~ msgstr "Kritischer Fehler beim Statusabruf:"
+#~ msgstr "Kritischer Abfragefehler:"
 
 #~ msgid "An error occurred during processing:"
-#~ msgstr "Während der Verarbeitung ist ein Fehler aufgetreten:"
+#~ msgstr "Fehler bei der Verarbeitung:"
 
 #~ msgid "No more results"
 #~ msgstr "Keine weiteren Ergebnisse"
@@ -106,16 +214,16 @@ msgstr "Video-Miniaturbild"
 #~ msgstr "Glaubwürdigkeit"
 
 #~ msgid "Confidence"
-#~ msgstr "Vertrauenswürdigkeit"
+#~ msgstr "Vertrauen"
 
 #~ msgid "Sources:"
 #~ msgstr "Quellen:"
 
 #~ msgid "Show Detailed Analysis"
-#~ msgstr "Detaillierte Analyse anzeigen"
+#~ msgstr "Details anzeigen"
 
 #~ msgid "Hide Detailed Analysis"
-#~ msgstr "Detaillierte Analyse ausblenden"
+#~ msgstr "Details ausblenden"
 
 #~ msgid "Link Copied!"
 #~ msgstr "Link kopiert!"
@@ -127,24 +235,22 @@ msgstr "Video-Miniaturbild"
 #~ msgstr "Faktencheck-Bericht"
 
 #~ msgid "Check out the fact-check report for this video:"
-#~ msgstr "Schauen Sie sich den Faktencheck-Bericht zu diesem Video an:"
+#~ msgstr "Hier ist der Faktencheck-Bericht für dieses Video:"
 
 #~ msgid "AI Fact Checker"
-#~ msgstr "KI-Faktenprüfer"
+#~ msgstr "KI-Faktencheck"
 
 #~ msgid "Don't be fooled. Check factual accuracy."
-#~ msgstr ""
-#~ "Lassen Sie sich nicht täuschen. "
-#~ "Überprüfen Sie die sachliche Richtigkeit."
+#~ msgstr "Lass dich nicht täuschen. Prüfe die Fakten."
 
 #~ msgid "Paste a new YouTube link to check..."
-#~ msgstr "Fügen Sie einen neuen YouTube-Link zum Überprüfen ein..."
+#~ msgstr "Füge einen neuen YouTube-Link zum Prüfen ein..."
 
 #~ msgid "Run Another Fact Check"
-#~ msgstr "Weitere Faktenprüfung durchführen"
+#~ msgstr "Neuen Faktencheck starten"
 
 #~ msgid "Disclaimer:"
-#~ msgstr "Haftungsausschluss:"
+#~ msgstr "Hinweis:"
 
 #~ msgid ""
 #~ "This report is AI-generated. It "
@@ -152,12 +258,18 @@ msgstr "Video-Miniaturbild"
 #~ "have access to real-time data. "
 #~ "Please verify the information independently."
 #~ msgstr ""
-#~ "Dieser Bericht wird von einer KI "
-#~ "erstellt. Er kann Fehler enthalten und"
-#~ " hat möglicherweise keinen Zugriff auf "
-#~ "Echtzeitdaten. Bitte überprüfen Sie die "
-#~ "Informationen unabhängig."
+#~ "Dieser Bericht wurde von einer KI generiert. Er kann Fehler enthalten und hat möglicherweise keinen Zugriff auf Echtzeitdaten. Bitte prüfe die Infos immer selbst nach."
 
 #~ msgid "Watch on YouTube"
 #~ msgstr "Auf YouTube ansehen"
 
+#~ msgid "Uncover the Truth in Any Content"
+#~ msgstr "Finde die Wahrheit in jedem Inhalt"
+
+#~ msgid ""
+#~ "Our AI instantly analyzes YouTube "
+#~ "videos, articles, and text to verify "
+#~ "claims and check sources. Stop "
+#~ "misinformation before you share it."
+#~ msgstr ""
+#~ "Unsere KI analysiert sofort YouTube-Videos, Artikel und Texte, prüft Behauptungen und kontrolliert Quellen. Stoppe Falschinformationen, bevor du sie teilst."

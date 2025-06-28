@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-06-26 10:32+0000\n"
+"POT-Creation-Date: 2025-06-28 21:36+0000\n"
 "PO-Revision-Date: 2025-06-22 23:20+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fr\n"
@@ -18,32 +18,32 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: backend/app.py:171
+#: backend/app.py:222
 msgid "Report not found"
-msgstr "Rapport non trouvé"
+msgstr "Rapport introuvable"
 
-#: backend/app.py:174
+#: backend/app.py:225
 msgid "An error occurred"
 msgstr "Une erreur est survenue"
 
 #: backend/templates/index.html:3
 msgid "AI Fact Checker for YouTube, Articles & Text | Verify Sources"
-msgstr ""
+msgstr "Vérificateur de faits IA pour YouTube, articles et textes | Vérifier les sources"
 
 #: backend/templates/index.html:9
-msgid "Uncover the Truth in Any Content"
-msgstr ""
+msgid "AI Fact-Checker for YouTube, News & Articles"
+msgstr "Vérificateur de faits IA pour YouTube, actualités et articles"
 
 #: backend/templates/index.html:10
 msgid ""
-"Our AI instantly analyzes YouTube videos, articles, and text to verify "
-"claims and check sources. Stop misinformation before you share it."
-msgstr ""
+"Instantly verify facts and detect misinformation in YouTube videos, news,"
+" articles, and any text using advanced AI fact-checking."
+msgstr "Vérifiez instantanément les faits et détectez la désinformation dans les vidéos YouTube, les actualités, les articles et tous les textes grâce à l’IA."
 
 #: backend/templates/index.html:13
 #, fuzzy
 msgid "Paste a YouTube link, article URL, or text to check..."
-msgstr "Collez un lien YouTube à vérifier..."
+msgstr "Collez un lien YouTube, une URL d’article ou un texte à vérifier..."
 
 #: backend/templates/index.html:14
 msgid "Run Fact Check"
@@ -58,9 +58,117 @@ msgstr "Dernière vérification :"
 msgid "%(credibility)s%% Credibility / %(confidence)s%% Confidence"
 msgstr "%(credibility)s%% Crédibilité / %(confidence)s%% Confiance"
 
-#: backend/templates/index.html:49 backend/templates/report.html:63
+#: backend/templates/index.html:49 backend/templates/layout.html:45
+#: backend/templates/report.html:63
 msgid "Loading more..."
 msgstr "Chargement en cours..."
+
+#: backend/templates/layout.html:6
+#, fuzzy
+msgid "AI Fact Checker"
+msgstr "Vérificateur de faits IA"
+
+#: backend/templates/layout.html:37
+msgid "Please paste a video link."
+msgstr "Veuillez coller un lien vidéo."
+
+#: backend/templates/layout.html:38
+msgid "Please enter a valid YouTube video link!"
+msgstr "Veuillez entrer un lien YouTube valide !"
+
+#: backend/templates/layout.html:39
+msgid "Sending request for analysis..."
+msgstr "Envoi de la demande d’analyse…"
+
+#: backend/templates/layout.html:40
+msgid "Error starting analysis."
+msgstr "Erreur lors du démarrage de l’analyse."
+
+#: backend/templates/layout.html:41
+msgid "Critical polling error:"
+msgstr "Erreur critique lors du contrôle du statut :"
+
+#: backend/templates/layout.html:42
+#, fuzzy
+msgid "An error occurred during processing:"
+msgstr "Une erreur est survenue pendant le traitement :"
+
+#: backend/templates/layout.html:43
+#, fuzzy
+msgid "No more results"
+msgstr "Plus de résultats"
+
+#: backend/templates/layout.html:44
+msgid "Failed to load"
+msgstr "Échec du chargement"
+
+#: backend/templates/layout.html:46
+msgid "Credibility"
+msgstr "Crédibilité"
+
+#: backend/templates/layout.html:47
+msgid "Confidence"
+msgstr "Confiance"
+
+#: backend/templates/layout.html:48
+msgid "Sources:"
+msgstr "Sources :"
+
+#: backend/templates/layout.html:49
+msgid "Show Detailed Analysis"
+msgstr "Afficher l’analyse détaillée"
+
+#: backend/templates/layout.html:50
+msgid "Hide Detailed Analysis"
+msgstr "Masquer l’analyse détaillée"
+
+#: backend/templates/layout.html:51
+msgid "Link Copied!"
+msgstr "Lien copié !"
+
+#: backend/templates/layout.html:52
+msgid "Failed to copy link."
+msgstr "Impossible de copier le lien."
+
+#: backend/templates/layout.html:53
+#, fuzzy
+msgid "Fact-Check Report"
+msgstr "Rapport de vérification des faits"
+
+#: backend/templates/layout.html:54
+#, fuzzy
+msgid "Check out the fact-check report for this video:"
+msgstr "Consultez le rapport de vérification des faits pour cette vidéo :"
+
+#: backend/templates/layout.html:55
+msgid "Select up to 5 claims to verify"
+msgstr "Sélectionnez jusqu’à 5 affirmations à vérifier"
+
+#: backend/templates/layout.html:56
+#, fuzzy
+msgid "Fact-Check Selected"
+msgstr "Vérification sélectionnée"
+
+#: backend/templates/layout.html:57
+msgid "You can only select up to"
+msgstr "Vous ne pouvez sélectionner que jusqu’à"
+
+#: backend/templates/layout.html:58
+msgid "claims"
+msgstr "affirmations"
+
+#: backend/templates/layout.html:59
+#, fuzzy
+msgid "Already checked"
+msgstr "Déjà vérifié"
+
+#: backend/templates/layout.html:60
+msgid "Could not extract any claims to check."
+msgstr "Impossible d’extraire des affirmations à vérifier."
+
+#: backend/templates/layout.html:61
+msgid "Sending selected claims for final analysis..."
+msgstr "Envoi des affirmations sélectionnées pour analyse finale..."
 
 #: backend/templates/report.html:3
 msgid "Fact-Check Report for:"
@@ -133,7 +241,7 @@ msgstr "Miniature de la vidéo"
 #~ msgstr "Vérificateur de faits par IA"
 
 #~ msgid "Don't be fooled. Check factual accuracy."
-#~ msgstr "Ne vous laissez pas tromper. Vérifiez l'exactitude des faits."
+#~ msgstr "Ne vous laissez pas tromper. Vérifiez l’exactitude des faits."
 
 #~ msgid "Paste a new YouTube link to check..."
 #~ msgstr "Collez un nouveau lien YouTube à vérifier..."
@@ -142,7 +250,7 @@ msgstr "Miniature de la vidéo"
 #~ msgstr "Lancer une autre vérification des faits"
 
 #~ msgid "Disclaimer:"
-#~ msgstr "Avis de non-responsabilité :"
+#~ msgstr "Avertissement :"
 
 #~ msgid ""
 #~ "This report is AI-generated. It "
@@ -150,12 +258,18 @@ msgstr "Miniature de la vidéo"
 #~ "have access to real-time data. "
 #~ "Please verify the information independently."
 #~ msgstr ""
-#~ "Ce rapport est généré par une IA."
-#~ " Il peut contenir des erreurs et "
-#~ "ne pas avoir accès aux données en"
-#~ " temps réel. Veuillez vérifier les "
-#~ "informations de manière indépendante."
+#~ "Ce rapport est généré par une IA. Il peut contenir des erreurs et ne pas avoir accès aux données en temps réel. Veuillez vérifier les informations de manière indépendante."
 
 #~ msgid "Watch on YouTube"
 #~ msgstr "Regarder sur YouTube"
 
+#~ msgid "Uncover the Truth in Any Content"
+#~ msgstr "Découvrez la vérité dans n’importe quel contenu"
+
+#~ msgid ""
+#~ "Our AI instantly analyzes YouTube "
+#~ "videos, articles, and text to verify "
+#~ "claims and check sources. Stop "
+#~ "misinformation before you share it."
+#~ msgstr ""
+#~ "Notre IA analyse instantanément les vidéos YouTube, les articles et les textes pour vérifier les affirmations et contrôler les sources. Stoppez la désinformation avant de partager."

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-06-26 10:32+0000\n"
+"POT-Creation-Date: 2025-06-28 21:36+0000\n"
 "PO-Revision-Date: 2025-06-22 23:20+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: hi\n"
@@ -18,57 +18,165 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: backend/app.py:171
+#: backend/app.py:222
 msgid "Report not found"
 msgstr "रिपोर्ट नहीं मिली"
 
-#: backend/app.py:174
+#: backend/app.py:225
 msgid "An error occurred"
-msgstr "एक त्रुटि हुई"
+msgstr "कोई त्रुटि हुई"
 
 #: backend/templates/index.html:3
 msgid "AI Fact Checker for YouTube, Articles & Text | Verify Sources"
-msgstr ""
+msgstr "YouTube, आर्टिकल और टेक्स्ट के लिए एआई फैक्ट चेकर | स्रोत सत्यापित करें"
 
 #: backend/templates/index.html:9
-msgid "Uncover the Truth in Any Content"
-msgstr ""
+msgid "AI Fact-Checker for YouTube, News & Articles"
+msgstr "YouTube, न्यूज़ और आर्टिकल के लिए एआई फैक्ट चेकर"
 
 #: backend/templates/index.html:10
 msgid ""
-"Our AI instantly analyzes YouTube videos, articles, and text to verify "
-"claims and check sources. Stop misinformation before you share it."
-msgstr ""
+"Instantly verify facts and detect misinformation in YouTube videos, news,"
+" articles, and any text using advanced AI fact-checking."
+msgstr "एडवांस्ड एआई फैक्ट-चेकिंग से YouTube वीडियो, न्यूज़, आर्टिकल या किसी भी टेक्स्ट में तुरंत फैक्ट्स जांचें और गलत जानकारी पहचानें।"
 
 #: backend/templates/index.html:13
 #, fuzzy
 msgid "Paste a YouTube link, article URL, or text to check..."
-msgstr "जाँचने के लिए एक यूट्यूब लिंक पेस्ट करें..."
+msgstr "जांचने के लिए YouTube लिंक, आर्टिकल URL या टेक्स्ट पेस्ट करें..."
 
 #: backend/templates/index.html:14
 msgid "Run Fact Check"
-msgstr "तथ्य जांच चलाएँ"
+msgstr "फैक्ट चेक चलाएँ"
 
 #: backend/templates/index.html:23 backend/templates/report.html:37
 msgid "Last checked:"
-msgstr "पिछली बार जांचा गया:"
+msgstr "अंतिम जांच:"
 
 #: backend/templates/index.html:41 backend/templates/report.html:55
 #, python-format
 msgid "%(credibility)s%% Credibility / %(confidence)s%% Confidence"
-msgstr "%(credibility)s%% विश्वसनीयता / %(confidence)s%% आत्मविश्वास"
+msgstr "%(credibility)s%% विश्वसनीयता / %(confidence)s%% भरोसा"
 
-#: backend/templates/index.html:49 backend/templates/report.html:63
+#: backend/templates/index.html:49 backend/templates/layout.html:45
+#: backend/templates/report.html:63
 msgid "Loading more..."
 msgstr "और लोड हो रहा है..."
 
+#: backend/templates/layout.html:6
+#, fuzzy
+msgid "AI Fact Checker"
+msgstr "एआई फैक्ट चेकर"
+
+#: backend/templates/layout.html:37
+msgid "Please paste a video link."
+msgstr "कृपया एक वीडियो लिंक पेस्ट करें।"
+
+#: backend/templates/layout.html:38
+msgid "Please enter a valid YouTube video link!"
+msgstr "कृपया मान्य YouTube वीडियो लिंक डालें!"
+
+#: backend/templates/layout.html:39
+msgid "Sending request for analysis..."
+msgstr "विश्लेषण के लिए अनुरोध भेजा जा रहा है..."
+
+#: backend/templates/layout.html:40
+msgid "Error starting analysis."
+msgstr "विश्लेषण शुरू करने में त्रुटि।"
+
+#: backend/templates/layout.html:41
+msgid "Critical polling error:"
+msgstr "स्थिति जांच में गंभीर त्रुटि:"
+
+#: backend/templates/layout.html:42
+#, fuzzy
+msgid "An error occurred during processing:"
+msgstr "प्रोसेसिंग के दौरान त्रुटि हुई:"
+
+#: backend/templates/layout.html:43
+#, fuzzy
+msgid "No more results"
+msgstr "अब और परिणाम नहीं"
+
+#: backend/templates/layout.html:44
+msgid "Failed to load"
+msgstr "लोड करने में विफल"
+
+#: backend/templates/layout.html:46
+msgid "Credibility"
+msgstr "विश्वसनीयता"
+
+#: backend/templates/layout.html:47
+msgid "Confidence"
+msgstr "भरोसा"
+
+#: backend/templates/layout.html:48
+msgid "Sources:"
+msgstr "स्रोत:"
+
+#: backend/templates/layout.html:49
+msgid "Show Detailed Analysis"
+msgstr "विस्तृत विश्लेषण दिखाएँ"
+
+#: backend/templates/layout.html:50
+msgid "Hide Detailed Analysis"
+msgstr "विस्तृत विश्लेषण छुपाएँ"
+
+#: backend/templates/layout.html:51
+msgid "Link Copied!"
+msgstr "लिंक कॉपी हो गया!"
+
+#: backend/templates/layout.html:52
+msgid "Failed to copy link."
+msgstr "लिंक कॉपी करने में विफल।"
+
+#: backend/templates/layout.html:53
+#, fuzzy
+msgid "Fact-Check Report"
+msgstr "फैक्ट-चेक रिपोर्ट"
+
+#: backend/templates/layout.html:54
+#, fuzzy
+msgid "Check out the fact-check report for this video:"
+msgstr "इस वीडियो की फैक्ट-चेक रिपोर्ट देखें:"
+
+#: backend/templates/layout.html:55
+msgid "Select up to 5 claims to verify"
+msgstr "सत्यापन के लिए अधिकतम 5 दावे चुनें"
+
+#: backend/templates/layout.html:56
+#, fuzzy
+msgid "Fact-Check Selected"
+msgstr "चयनित फैक्ट-चेक"
+
+#: backend/templates/layout.html:57
+msgid "You can only select up to"
+msgstr "आप केवल चुन सकते हैं"
+
+#: backend/templates/layout.html:58
+msgid "claims"
+msgstr "दावे"
+
+#: backend/templates/layout.html:59
+#, fuzzy
+msgid "Already checked"
+msgstr "पहले ही जांचा गया"
+
+#: backend/templates/layout.html:60
+msgid "Could not extract any claims to check."
+msgstr "कोई दावा जांचने के लिए नहीं मिला।"
+
+#: backend/templates/layout.html:61
+msgid "Sending selected claims for final analysis..."
+msgstr "चयनित दावों को अंतिम विश्लेषण के लिए भेजा जा रहा है..."
+
 #: backend/templates/report.html:3
 msgid "Fact-Check Report for:"
-msgstr "इसके लिए तथ्य-जांच रिपोर्ट:"
+msgstr "इसके लिए फैक्ट-चेक रिपोर्ट:"
 
 #: backend/templates/report.html:9
 msgid "Fact-check report for:"
-msgstr "इसके लिए तथ्य-जांच रिपोर्ट:"
+msgstr "इसके लिए फैक्ट-चेक रिपोर्ट:"
 
 #: backend/templates/report.html:15
 msgid "Share Results"
@@ -82,7 +190,7 @@ msgstr "वीडियो थंबनेल"
 #~ msgstr "कृपया एक वीडियो लिंक पेस्ट करें।"
 
 #~ msgid "Please enter a valid YouTube video link!"
-#~ msgstr "कृपया एक मान्य YouTube वीडियो लिंक दर्ज करें!"
+#~ msgstr "कृपया मान्य YouTube वीडियो लिंक डालें!"
 
 #~ msgid "Sending request for analysis..."
 #~ msgstr "विश्लेषण के लिए अनुरोध भेजा जा रहा है..."
@@ -94,10 +202,10 @@ msgstr "वीडियो थंबनेल"
 #~ msgstr "स्थिति जांच में गंभीर त्रुटि:"
 
 #~ msgid "An error occurred during processing:"
-#~ msgstr "प्रसंस्करण के दौरान त्रुटि हुई:"
+#~ msgstr "प्रोसेसिंग के दौरान त्रुटि हुई:"
 
 #~ msgid "No more results"
-#~ msgstr "कोई और परिणाम नहीं"
+#~ msgstr "अब और परिणाम नहीं"
 
 #~ msgid "Failed to load"
 #~ msgstr "लोड करने में विफल"
@@ -106,7 +214,7 @@ msgstr "वीडियो थंबनेल"
 #~ msgstr "विश्वसनीयता"
 
 #~ msgid "Confidence"
-#~ msgstr "आत्मविश्वास"
+#~ msgstr "भरोसा"
 
 #~ msgid "Sources:"
 #~ msgstr "स्रोत:"
@@ -115,7 +223,7 @@ msgstr "वीडियो थंबनेल"
 #~ msgstr "विस्तृत विश्लेषण दिखाएँ"
 
 #~ msgid "Hide Detailed Analysis"
-#~ msgstr "विस्तृत विश्लेषण छिपाएँ"
+#~ msgstr "विस्तृत विश्लेषण छुपाएँ"
 
 #~ msgid "Link Copied!"
 #~ msgstr "लिंक कॉपी हो गया!"
@@ -124,22 +232,22 @@ msgstr "वीडियो थंबनेल"
 #~ msgstr "लिंक कॉपी करने में विफल।"
 
 #~ msgid "Fact-Check Report"
-#~ msgstr "तथ्य-जांच रिपोर्ट"
+#~ msgstr "फैक्ट-चेक रिपोर्ट"
 
 #~ msgid "Check out the fact-check report for this video:"
-#~ msgstr "इस वीडियो के लिए तथ्य-जांच रिपोर्ट देखें:"
+#~ msgstr "इस वीडियो की फैक्ट-चेक रिपोर्ट देखें:"
 
 #~ msgid "AI Fact Checker"
-#~ msgstr "एआई तथ्य परीक्षक"
+#~ msgstr "एआई फैक्ट चेकर"
 
 #~ msgid "Don't be fooled. Check factual accuracy."
-#~ msgstr "मूर्ख मत बनो। तथ्यात्मक सटीकता की जाँच करें।"
+#~ msgstr "धोखा न खाएँ। तथ्यात्मक सटीकता जांचें।"
 
 #~ msgid "Paste a new YouTube link to check..."
-#~ msgstr "जाँचने के लिए एक नया यूट्यूब लिंक पेस्ट करें..."
+#~ msgstr "जांचने के लिए नया YouTube लिंक पेस्ट करें..."
 
 #~ msgid "Run Another Fact Check"
-#~ msgstr "एक और तथ्य जांच चलाएँ"
+#~ msgstr "एक और फैक्ट चेक चलाएँ"
 
 #~ msgid "Disclaimer:"
 #~ msgstr "अस्वीकरण:"
@@ -150,12 +258,18 @@ msgstr "वीडियो थंबनेल"
 #~ "have access to real-time data. "
 #~ "Please verify the information independently."
 #~ msgstr ""
-#~ "यह रिपोर्ट एआई-जनित है। इसमें त्रुटियाँ"
-#~ " हो सकती हैं और हो सकता है "
-#~ "कि इसमें वास्तविक समय के डेटा तक"
-#~ " पहुंच न हो। कृपया जानकारी को "
-#~ "स्वतंत्र रूप से सत्यापित करें।"
+#~ "यह रिपोर्ट एआई द्वारा बनाई गई है। इसमें त्रुटियाँ हो सकती हैं और इसमें रीयल-टाइम डेटा तक पहुँच नहीं हो सकती है। कृपया जानकारी को स्वतंत्र रूप से सत्यापित करें।"
 
 #~ msgid "Watch on YouTube"
-#~ msgstr "यूट्यूब पर देखें"
+#~ msgstr "YouTube पर देखें"
 
+#~ msgid "Uncover the Truth in Any Content"
+#~ msgstr "किसी भी कंटेंट में सच्चाई जानें"
+
+#~ msgid ""
+#~ "Our AI instantly analyzes YouTube "
+#~ "videos, articles, and text to verify "
+#~ "claims and check sources. Stop "
+#~ "misinformation before you share it."
+#~ msgstr ""
+#~ "हमारी एआई तुरंत YouTube वीडियो, आर्टिकल और टेक्स्ट का विश्लेषण करती है, दावे जांचती है और स्रोत देखती है। शेयर करने से पहले गलत जानकारी रोकें।"
