@@ -45,8 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (data.task_id) {
                 pollStatus(data.task_id, 'extract_claims'); // Запускаем отслеживание задачи №1
             } else {
-                 // Если задача вернула результат сразу (например, из кеша)
-                 renderClaimSelectionUI(data);
+                 // После успешного анализа всегда редиректим на страницу репорта!
+				window.location.href = '/report/' + data.id;
             }
 
         } catch (error) {
@@ -68,8 +68,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     clearInterval(pollingInterval);
                     if (currentStage === 'extract_claims') {
                         // --- Этап 1 УСПЕХ: Утверждения извлечены ---
-                        statusSection.style.display = 'none';
-                        renderClaimSelectionUI(data.result);
+                        // После извлечения клеймов — редирект на страницу выбора клеймов/репорта:
+						if (data.result && data.result.id) {
+							window.location.href = '/report/' + data.result.id;
+						}
                     } else if (currentStage === 'fact_check_selected') {
                         // --- Этап 2 УСПЕХ: Проверка фактов завершена ---
                         const analysisId = data.result.id;
