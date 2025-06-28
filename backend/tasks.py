@@ -41,7 +41,7 @@ def get_gemini_model():
         if not GEMINI_API_KEY:
             raise ValueError("GEMINI_API_KEY is not configured.")
         genai.configure(api_key=GEMINI_API_KEY)
-        model = genai.GenerativeModel('gemini-2.5-flash')
+        model = genai.GenerativeModel('gemini-1.5-pro')
     return model
 
 def get_claim_hash(text):
