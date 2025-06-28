@@ -6,6 +6,7 @@ from datetime import datetime
 from google.cloud.firestore_v1.query import Query
 from flask_babel import Babel, _
 from datetime import datetime, timezone, timedelta
+from constants import CACHE_EXPIRATION_DAYS
 
 from celery_init import celery as celery_app
 from tasks import get_db_client
