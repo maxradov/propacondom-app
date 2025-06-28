@@ -82,6 +82,8 @@
 	</script>
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>
+    {% block extra_js %}
+	{% endblock %}
 </body>
 </html>
 
