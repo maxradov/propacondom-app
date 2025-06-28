@@ -42,23 +42,10 @@ function renderClaimSelectionUI(analysisData) {
     const sourceUrl = analysisData.source_url || "";
 
     let metaHTML = "";
-    if (videoTitle || thumbnailUrl) {
-        metaHTML += `<div class="claim-selection-meta" style="display: flex; align-items: flex-start; gap: 1.5rem; margin-bottom: 2rem;">`;
-        if (thumbnailUrl) {
-            metaHTML += `<a href="${sourceUrl}" target="_blank" rel="noopener">
-                <img src="${thumbnailUrl}" alt="Video thumbnail" class="video-thumbnail" style="width: 220px; border-radius: 8px; border: 1px solid #dee2e6;">
-            </a>`;
-        }
-        metaHTML += `<div style="flex: 1;">
-            <a href="${sourceUrl}" target="_blank" rel="noopener" style="font-weight: bold; font-size: 1.25rem; text-decoration: none; color: #007bff; word-break: break-word;">
-                ${videoTitle}
-            </a>
-        </div>`;
-        metaHTML += `</div>`;
-    }
+    
 
     if (!claims || claims.length === 0) {
-        reportContainer.innerHTML = metaHTML + `<p>${window.translations.no_claims_found || 'Could not extract any claims to check.'}</p>`;
+        reportContainer.innerHTML = `<p>${window.translations.no_claims_found || 'Could not extract any claims to check.'}</p>`;
         return;
     }
 
@@ -92,7 +79,7 @@ function renderClaimSelectionUI(analysisData) {
 
     claimsHTML += `</div><button id="run-selected-factcheck-btn" disabled>${(window.translations.fact_check_selected_button || 'Fact-Check Selected')}</button>`;
 
-    reportContainer.innerHTML = metaHTML + claimsHTML;
+    reportContainer.innerHTML = claimsHTML;
 
     const checkBoxes = reportContainer.querySelectorAll('input[name="claim-to-check"]');
     const runCheckBtn = document.getElementById('run-selected-factcheck-btn');
