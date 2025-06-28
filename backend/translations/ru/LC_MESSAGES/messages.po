@@ -1,13 +1,8 @@
-# Russian translations for PROJECT.
-# Copyright (C) 2025 ORGANIZATION
-# This file is distributed under the same license as the PROJECT project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-06-28 21:36+0000\n"
+"POT-Creation-Date: 2025-06-28 23:03+0000\n"
 "PO-Revision-Date: 2025-06-22 23:18+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ru\n"
@@ -38,14 +33,15 @@ msgstr "ИИ-проверка фактов для YouTube, новостей и �
 msgid ""
 "Instantly verify facts and detect misinformation in YouTube videos, news,"
 " articles, and any text using advanced AI fact-checking."
-msgstr "Проверяйте факты и выявляйте фейки в видео, новостях, статьях и любом тексте — быстро и с помощью ИИ."
+msgstr ""
+"Проверяйте факты и выявляйте фейки в видео, новостях, статьях и любом "
+"тексте — мгновенно с помощью ИИ."
 
 #: backend/templates/index.html:13
-#, fuzzy
 msgid "Paste a YouTube link, article URL, or text to check..."
 msgstr "Вставьте ссылку на YouTube, статью или текст для проверки..."
 
-#: backend/templates/index.html:14
+#: backend/templates/index.html:14 backend/templates/layout.html:80 backend/templates/layout.html:132
 msgid "Run Fact Check"
 msgstr "Запустить проверку фактов"
 
@@ -58,117 +54,184 @@ msgstr "Последняя проверка:"
 msgid "%(credibility)s%% Credibility / %(confidence)s%% Confidence"
 msgstr "%(credibility)s%% достоверность / %(confidence)s%% уверенность"
 
-#: backend/templates/index.html:49 backend/templates/layout.html:45
-#: backend/templates/report.html:63
+#: backend/templates/index.html:49 backend/templates/layout.html:45 backend/templates/layout.html:97 backend/templates/report.html:63
 msgid "Loading more..."
 msgstr "Загрузка..."
 
 #: backend/templates/layout.html:6
-#, fuzzy
 msgid "AI Fact Checker"
 msgstr "ИИ-проверка фактов"
 
-#: backend/templates/layout.html:37
+#: backend/templates/layout.html:37 backend/templates/layout.html:89
 msgid "Please paste a video link."
 msgstr "Пожалуйста, вставьте ссылку на видео."
 
-#: backend/templates/layout.html:38
+#: backend/templates/layout.html:38 backend/templates/layout.html:90
 msgid "Please enter a valid YouTube video link!"
 msgstr "Пожалуйста, введите корректную ссылку на YouTube!"
 
-#: backend/templates/layout.html:39
+#: backend/templates/layout.html:39 backend/templates/layout.html:91
 msgid "Sending request for analysis..."
 msgstr "Отправка запроса на анализ..."
 
-#: backend/templates/layout.html:40
+#: backend/templates/layout.html:40 backend/templates/layout.html:92
 msgid "Error starting analysis."
 msgstr "Ошибка при запуске анализа."
 
-#: backend/templates/layout.html:41
+#: backend/templates/layout.html:41 backend/templates/layout.html:93
 msgid "Critical polling error:"
 msgstr "Критическая ошибка при проверке статуса:"
 
-#: backend/templates/layout.html:42
-#, fuzzy
+#: backend/templates/layout.html:42 backend/templates/layout.html:94
 msgid "An error occurred during processing:"
 msgstr "Произошла ошибка во время обработки:"
 
-#: backend/templates/layout.html:43
-#, fuzzy
+#: backend/templates/layout.html:43 backend/templates/layout.html:95
 msgid "No more results"
 msgstr "Больше нет результатов"
 
-#: backend/templates/layout.html:44
+#: backend/templates/layout.html:44 backend/templates/layout.html:96
 msgid "Failed to load"
 msgstr "Не удалось загрузить"
 
-#: backend/templates/layout.html:46
+#: backend/templates/layout.html:46 backend/templates/layout.html:98
 msgid "Credibility"
 msgstr "Достоверность"
 
-#: backend/templates/layout.html:47
+#: backend/templates/layout.html:47 backend/templates/layout.html:99
 msgid "Confidence"
 msgstr "Уверенность"
 
-#: backend/templates/layout.html:48
+#: backend/templates/layout.html:48 backend/templates/layout.html:100
 msgid "Sources:"
 msgstr "Источники:"
 
-#: backend/templates/layout.html:49
-msgid "Show Detailed Analysis"
-msgstr "Показать подробный анализ"
-
-#: backend/templates/layout.html:50
-msgid "Hide Detailed Analysis"
-msgstr "Скрыть подробный анализ"
-
-#: backend/templates/layout.html:51
+#: backend/templates/layout.html:49 backend/templates/layout.html:101
 msgid "Link Copied!"
 msgstr "Ссылка скопирована!"
 
-#: backend/templates/layout.html:52
+#: backend/templates/layout.html:50 backend/templates/layout.html:102
 msgid "Failed to copy link."
 msgstr "Не удалось скопировать ссылку."
 
-#: backend/templates/layout.html:53
-#, fuzzy
+#: backend/templates/layout.html:51 backend/templates/layout.html:103
 msgid "Fact-Check Report"
 msgstr "Отчёт о проверке фактов"
 
-#: backend/templates/layout.html:54
-#, fuzzy
+#: backend/templates/layout.html:52 backend/templates/layout.html:104
 msgid "Check out the fact-check report for this video:"
 msgstr "Смотрите отчёт о проверке фактов для этого видео:"
 
-#: backend/templates/layout.html:55
+#: backend/templates/layout.html:53 backend/templates/layout.html:105
 msgid "Select up to 5 claims to verify"
 msgstr "Можно выбрать до 5 утверждений для проверки"
 
-#: backend/templates/layout.html:56
-#, fuzzy
+#: backend/templates/layout.html:54 backend/templates/layout.html:106
 msgid "Fact-Check Selected"
 msgstr "Выбранная проверка фактов"
 
-#: backend/templates/layout.html:57
+#: backend/templates/layout.html:55 backend/templates/layout.html:107
 msgid "You can only select up to"
 msgstr "Можно выбрать только до"
 
-#: backend/templates/layout.html:58
+#: backend/templates/layout.html:56 backend/templates/layout.html:108
 msgid "claims"
 msgstr "утверждений"
 
-#: backend/templates/layout.html:59
-#, fuzzy
+#: backend/templates/layout.html:57 backend/templates/layout.html:109
 msgid "Already checked"
 msgstr "Уже проверено"
 
-#: backend/templates/layout.html:60
+#: backend/templates/layout.html:58 backend/templates/layout.html:110
 msgid "Could not extract any claims to check."
 msgstr "Не удалось найти утверждения для проверки."
 
-#: backend/templates/layout.html:61
+#: backend/templates/layout.html:59 backend/templates/layout.html:111
 msgid "Sending selected claims for final analysis..."
 msgstr "Отправка выбранных утверждений на финальный анализ..."
+
+#: backend/templates/layout.html:60 backend/templates/layout.html:112
+msgid "Checked claims"
+msgstr "Проверенные утверждения"
+
+#: backend/templates/layout.html:61 backend/templates/layout.html:113
+msgid "Show detailed analysis"
+msgstr "Показать подробный анализ"
+
+#: backend/templates/layout.html:62 backend/templates/layout.html:114
+msgid "Hide detailed analysis"
+msgstr "Скрыть подробный анализ"
+
+#: backend/templates/layout.html:63 backend/templates/layout.html:115
+msgid "Checked Text"
+msgstr "Проверенный текст"
+
+#: backend/templates/layout.html:64 backend/templates/layout.html:116
+msgid "Disclaimer:"
+msgstr "Отказ от ответственности:"
+
+#: backend/templates/layout.html:65 backend/templates/layout.html:117
+msgid ""
+"This report is AI-generated. It may contain errors and may not have "
+"access to real-time data. Please verify the information independently."
+msgstr ""
+"Этот отчёт создан искусственным интеллектом. Он может содержать ошибки и не иметь доступа к данным в реальном времени. Пожалуйста, проверяйте информацию самостоятельно."
+
+#: backend/templates/layout.html:66 backend/templates/layout.html:118
+msgid "Confirmed"
+msgstr "Подтверждено"
+
+#: backend/templates/layout.html:67 backend/templates/layout.html:119
+msgid "Refuted"
+msgstr "Опровергнуто"
+
+#: backend/templates/layout.html:68 backend/templates/layout.html:120
+msgid "Misleading"
+msgstr "Вводит в заблуждение"
+
+#: backend/templates/layout.html:69 backend/templates/layout.html:121
+msgid "Partly True"
+msgstr "Частично правда"
+
+#: backend/templates/layout.html:70 backend/templates/layout.html:122
+msgid "Unverifiable"
+msgstr "Невозможно проверить"
+
+#: backend/templates/layout.html:71 backend/templates/layout.html:123
+msgid "Claim text missing"
+msgstr "Текст утверждения отсутствует"
+
+#: backend/templates/layout.html:72 backend/templates/layout.html:124
+msgid "No verdict"
+msgstr "Нет вердикта"
+
+#: backend/templates/layout.html:73 backend/templates/layout.html:125
+msgid "Show unchecked claims"
+msgstr "Показать непроверенные утверждения"
+
+#: backend/templates/layout.html:74 backend/templates/layout.html:126
+msgid "Hide unchecked claims"
+msgstr "Скрыть непроверенные утверждения"
+
+#: backend/templates/layout.html:75 backend/templates/layout.html:127
+msgid "Check more claims"
+msgstr "Проверить ещё утверждения"
+
+#: backend/templates/layout.html:76 backend/templates/layout.html:128
+msgid "Mostly True"
+msgstr "В основном правда"
+
+#: backend/templates/layout.html:77 backend/templates/layout.html:129
+msgid "Mostly False"
+msgstr "В основном неправда"
+
+#: backend/templates/layout.html:78 backend/templates/layout.html:130
+msgid "Mixed Veracity"
+msgstr "Смешанная достоверность"
+
+#: backend/templates/layout.html:79 backend/templates/layout.html:131
+msgid "Largely Unverifiable"
+msgstr "В основном непроверяемо"
 
 #: backend/templates/report.html:3
 msgid "Fact-Check Report for:"
@@ -185,91 +248,3 @@ msgstr "Поделиться результатами"
 #: backend/templates/report.html:20
 msgid "Video Thumbnail"
 msgstr "Превью видео"
-
-#~ msgid "Please paste a video link."
-#~ msgstr "Пожалуйста, вставьте ссылку на видео."
-
-#~ msgid "Please enter a valid YouTube video link!"
-#~ msgstr "Пожалуйста, введите корректную ссылку на YouTube!"
-
-#~ msgid "Sending request for analysis..."
-#~ msgstr "Отправка запроса на анализ..."
-
-#~ msgid "Error starting analysis."
-#~ msgstr "Ошибка при запуске анализа."
-
-#~ msgid "Critical polling error:"
-#~ msgstr "Критическая ошибка при проверке статуса:"
-
-#~ msgid "An error occurred during processing:"
-#~ msgstr "Произошла ошибка во время обработки:"
-
-#~ msgid "No more results"
-#~ msgstr "Больше нет результатов"
-
-#~ msgid "Failed to load"
-#~ msgstr "Не удалось загрузить"
-
-#~ msgid "Credibility"
-#~ msgstr "Достоверность"
-
-#~ msgid "Confidence"
-#~ msgstr "Уверенность"
-
-#~ msgid "Sources:"
-#~ msgstr "Источники:"
-
-#~ msgid "Show Detailed Analysis"
-#~ msgstr "Показать подробный анализ"
-
-#~ msgid "Hide Detailed Analysis"
-#~ msgstr "Скрыть подробный анализ"
-
-#~ msgid "Link Copied!"
-#~ msgstr "Ссылка скопирована!"
-
-#~ msgid "Failed to copy link."
-#~ msgstr "Не удалось скопировать ссылку."
-
-#~ msgid "Fact-Check Report"
-#~ msgstr "Отчёт о проверке фактов"
-
-#~ msgid "Check out the fact-check report for this video:"
-#~ msgstr "Смотрите отчёт о проверке фактов для этого видео:"
-
-#~ msgid "AI Fact Checker"
-#~ msgstr "ИИ-проверка фактов"
-
-#~ msgid "Don't be fooled. Check factual accuracy."
-#~ msgstr "Не дайте себя обмануть. Проверяйте точность фактов."
-
-#~ msgid "Paste a new YouTube link to check..."
-#~ msgstr "Вставьте новую ссылку на YouTube для проверки..."
-
-#~ msgid "Run Another Fact Check"
-#~ msgstr "Запустить ещё одну проверку"
-
-#~ msgid "Disclaimer:"
-#~ msgstr "Отказ от ответственности:"
-
-#~ msgid ""
-#~ "This report is AI-generated. It "
-#~ "may contain errors and may not "
-#~ "have access to real-time data. "
-#~ "Please verify the information independently."
-#~ msgstr ""
-#~ "Этот отчёт создан искусственным интеллектом. Он может содержать ошибки и не иметь доступа к данным в реальном времени. Пожалуйста, проверяйте информацию самостоятельно."
-
-#~ msgid "Watch on YouTube"
-#~ msgstr "Смотреть на YouTube"
-
-#~ msgid "Uncover the Truth in Any Content"
-#~ msgstr "Узнайте правду в любом контенте"
-
-#~ msgid ""
-#~ "Our AI instantly analyzes YouTube "
-#~ "videos, articles, and text to verify "
-#~ "claims and check sources. Stop "
-#~ "misinformation before you share it."
-#~ msgstr ""
-#~ "Наш ИИ мгновенно анализирует YouTube-видео, статьи и тексты, чтобы проверять утверждения и источники. Остановите дезинформацию до того, как поделитесь ею."

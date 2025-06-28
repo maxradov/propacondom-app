@@ -31,38 +31,103 @@
 
     {% block content %}{% endblock %}
 
-    <!-- ГЛОБАЛЬНЫЕ ПЕРЕВОДЫ ДЛЯ JS -->
-    <script>
-      window.translations = {{ {
-        'please_paste_video': _('Please paste a video link.'),
-        'invalid_youtube': _('Please enter a valid YouTube video link!'),
-        'sending_request': _('Sending request for analysis...'),
-        'error_starting': _('Error starting analysis.'),
-        'polling_error': _('Critical polling error:'),
-        'processing_error': _('An error occurred during processing:'),
-        'no_more_results': _('No more results'),
-        'failed_to_load': _('Failed to load'),
-        'loading_more': _('Loading more...'),
-        'credibility': _('Credibility'),
-        'confidence': _('Confidence'),
-        'sources': _('Sources:'),
-        'show_detailed': _('Show Detailed Analysis'),
-        'hide_detailed': _('Hide Detailed Analysis'),
-        'link_copied': _('Link Copied!'),
-        'failed_copy': _('Failed to copy link.'),
-        'share_report': _('Fact-Check Report'),
-        'share_text': _('Check out the fact-check report for this video:'),
-        'select_claims_title': _('Select up to 5 claims to verify'),
-        'fact_check_selected_button': _('Fact-Check Selected'),
-        'limit_selection_alert': _('You can only select up to'),
-        'claims_alert': _('claims'),
-        'already_checked': _('Already checked'),
-        'no_claims_found': _('Could not extract any claims to check.'),
-        'sending_request_for_checking': _('Sending selected claims for final analysis...')
+	<!-- ГЛОБАЛЬНЫЕ ПЕРЕВОДЫ ДЛЯ JS -->
+	<script>
+	  window.translations = {{ {
+		'please_paste_video': _('Please paste a video link.'),
+		'invalid_youtube': _('Please enter a valid YouTube video link!'),
+		'sending_request': _('Sending request for analysis...'),
+		'error_starting': _('Error starting analysis.'),
+		'polling_error': _('Critical polling error:'),
+		'processing_error': _('An error occurred during processing:'),
+		'no_more_results': _('No more results'),
+		'failed_to_load': _('Failed to load'),
+		'loading_more': _('Loading more...'),
+		'credibility': _('Credibility'),
+		'confidence': _('Confidence'),
+		'sources': _('Sources:'),
+		'link_copied': _('Link Copied!'),
+		'failed_copy': _('Failed to copy link.'),
+		'share_report': _('Fact-Check Report'),
+		'share_text': _('Check out the fact-check report for this video:'),
+		'select_claims_title': _('Select up to 5 claims to verify'),
+		'fact_check_selected_button': _('Fact-Check Selected'),
+		'limit_selection_alert': _('You can only select up to'),
+		'claims_alert': _('claims'),
+		'already_checked': _('Already checked'),
+		'no_claims_found': _('Could not extract any claims to check.'),
+		'sending_request_for_checking': _('Sending selected claims for final analysis...'),
+		'checked_claims_total': _('Checked claims'),
+		'show_detailed': _('Show detailed analysis'),
+		'hide_detailed': _('Hide detailed analysis'),
+		'original_text': _('Checked Text'),
+		'disclaimer_title': _('Disclaimer:'),
+		'disclaimer_text': _('This report is AI-generated. It may contain errors and may not have access to real-time data. Please verify the information independently.'),
+		'true_label': _('Confirmed'),
+		'false_label': _('Refuted'),
+		'misleading_label': _('Misleading'),
+		'partly_true_label': _('Partly True'),
+		'unverifiable_label': _('Unverifiable'),
+		'claim_text_missing': _('Claim text missing'),
+		'no_verdict': _('No verdict'),
+		'show_unchecked_claims': _('Show unchecked claims'),
+		'hide_unchecked_claims': _('Hide unchecked claims'),
+		'check_more_claims': _('Check more claims'),
+		'mostly_true': _('Mostly True'),
+		'mostly_false': _('Mostly False'),
+		'mixed_veracity': _('Mixed Veracity'),
+		'largely_unverifiable': _('Largely Unverifiable'),
+		'run_fact_check': _('Run Fact Check')
+	  } | tojson }};
+	</script>
 
-      } | tojson }};
-    </script>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>
+{# -- BABEL FORCE INCLUDE -- #}
+{{ _('Please paste a video link.') }}
+{{ _('Please enter a valid YouTube video link!') }}
+{{ _('Sending request for analysis...') }}
+{{ _('Error starting analysis.') }}
+{{ _('Critical polling error:') }}
+{{ _('An error occurred during processing:') }}
+{{ _('No more results') }}
+{{ _('Failed to load') }}
+{{ _('Loading more...') }}
+{{ _('Credibility') }}
+{{ _('Confidence') }}
+{{ _('Sources:') }}
+{{ _('Link Copied!') }}
+{{ _('Failed to copy link.') }}
+{{ _('Fact-Check Report') }}
+{{ _('Check out the fact-check report for this video:') }}
+{{ _('Select up to 5 claims to verify') }}
+{{ _('Fact-Check Selected') }}
+{{ _('You can only select up to') }}
+{{ _('claims') }}
+{{ _('Already checked') }}
+{{ _('Could not extract any claims to check.') }}
+{{ _('Sending selected claims for final analysis...') }}
+{{ _('Checked claims') }}
+{{ _('Show detailed analysis') }}
+{{ _('Hide detailed analysis') }}
+{{ _('Checked Text') }}
+{{ _('Disclaimer:') }}
+{{ _('This report is AI-generated. It may contain errors and may not have access to real-time data. Please verify the information independently.') }}
+{{ _('Confirmed') }}
+{{ _('Refuted') }}
+{{ _('Misleading') }}
+{{ _('Partly True') }}
+{{ _('Unverifiable') }}
+{{ _('Claim text missing') }}
+{{ _('No verdict') }}
+{{ _('Show unchecked claims') }}
+{{ _('Hide unchecked claims') }}
+{{ _('Check more claims') }}
+{{ _('Mostly True') }}
+{{ _('Mostly False') }}
+{{ _('Mixed Veracity') }}
+{{ _('Largely Unverifiable') }}
+{{ _('Run Fact Check') }}
+

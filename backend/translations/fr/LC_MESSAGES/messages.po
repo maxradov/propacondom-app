@@ -1,13 +1,8 @@
-# French translations for PROJECT.
-# Copyright (C) 2025 ORGANIZATION
-# This file is distributed under the same license as the PROJECT project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-06-28 21:36+0000\n"
+"POT-Creation-Date: 2025-06-28 23:03+0000\n"
 "PO-Revision-Date: 2025-06-22 23:20+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fr\n"
@@ -38,14 +33,14 @@ msgstr "Vérificateur de faits IA pour YouTube, actualités et articles"
 msgid ""
 "Instantly verify facts and detect misinformation in YouTube videos, news,"
 " articles, and any text using advanced AI fact-checking."
-msgstr "Vérifiez instantanément les faits et détectez la désinformation dans les vidéos YouTube, les actualités, les articles et tous les textes grâce à l’IA."
+msgstr ""
+"Vérifiez instantanément les faits et détectez la désinformation dans les vidéos YouTube, les actualités, les articles et tout texte grâce à une IA avancée."
 
 #: backend/templates/index.html:13
-#, fuzzy
 msgid "Paste a YouTube link, article URL, or text to check..."
 msgstr "Collez un lien YouTube, une URL d’article ou un texte à vérifier..."
 
-#: backend/templates/index.html:14
+#: backend/templates/index.html:14 backend/templates/layout.html:80 backend/templates/layout.html:132
 msgid "Run Fact Check"
 msgstr "Lancer la vérification des faits"
 
@@ -58,117 +53,184 @@ msgstr "Dernière vérification :"
 msgid "%(credibility)s%% Credibility / %(confidence)s%% Confidence"
 msgstr "%(credibility)s%% Crédibilité / %(confidence)s%% Confiance"
 
-#: backend/templates/index.html:49 backend/templates/layout.html:45
-#: backend/templates/report.html:63
+#: backend/templates/index.html:49 backend/templates/layout.html:45 backend/templates/layout.html:97 backend/templates/report.html:63
 msgid "Loading more..."
 msgstr "Chargement en cours..."
 
 #: backend/templates/layout.html:6
-#, fuzzy
 msgid "AI Fact Checker"
 msgstr "Vérificateur de faits IA"
 
-#: backend/templates/layout.html:37
+#: backend/templates/layout.html:37 backend/templates/layout.html:89
 msgid "Please paste a video link."
 msgstr "Veuillez coller un lien vidéo."
 
-#: backend/templates/layout.html:38
+#: backend/templates/layout.html:38 backend/templates/layout.html:90
 msgid "Please enter a valid YouTube video link!"
 msgstr "Veuillez entrer un lien YouTube valide !"
 
-#: backend/templates/layout.html:39
+#: backend/templates/layout.html:39 backend/templates/layout.html:91
 msgid "Sending request for analysis..."
 msgstr "Envoi de la demande d’analyse…"
 
-#: backend/templates/layout.html:40
+#: backend/templates/layout.html:40 backend/templates/layout.html:92
 msgid "Error starting analysis."
 msgstr "Erreur lors du démarrage de l’analyse."
 
-#: backend/templates/layout.html:41
+#: backend/templates/layout.html:41 backend/templates/layout.html:93
 msgid "Critical polling error:"
 msgstr "Erreur critique lors du contrôle du statut :"
 
-#: backend/templates/layout.html:42
-#, fuzzy
+#: backend/templates/layout.html:42 backend/templates/layout.html:94
 msgid "An error occurred during processing:"
 msgstr "Une erreur est survenue pendant le traitement :"
 
-#: backend/templates/layout.html:43
-#, fuzzy
+#: backend/templates/layout.html:43 backend/templates/layout.html:95
 msgid "No more results"
 msgstr "Plus de résultats"
 
-#: backend/templates/layout.html:44
+#: backend/templates/layout.html:44 backend/templates/layout.html:96
 msgid "Failed to load"
 msgstr "Échec du chargement"
 
-#: backend/templates/layout.html:46
+#: backend/templates/layout.html:46 backend/templates/layout.html:98
 msgid "Credibility"
 msgstr "Crédibilité"
 
-#: backend/templates/layout.html:47
+#: backend/templates/layout.html:47 backend/templates/layout.html:99
 msgid "Confidence"
 msgstr "Confiance"
 
-#: backend/templates/layout.html:48
+#: backend/templates/layout.html:48 backend/templates/layout.html:100
 msgid "Sources:"
 msgstr "Sources :"
 
-#: backend/templates/layout.html:49
-msgid "Show Detailed Analysis"
-msgstr "Afficher l’analyse détaillée"
-
-#: backend/templates/layout.html:50
-msgid "Hide Detailed Analysis"
-msgstr "Masquer l’analyse détaillée"
-
-#: backend/templates/layout.html:51
+#: backend/templates/layout.html:49 backend/templates/layout.html:101
 msgid "Link Copied!"
 msgstr "Lien copié !"
 
-#: backend/templates/layout.html:52
+#: backend/templates/layout.html:50 backend/templates/layout.html:102
 msgid "Failed to copy link."
 msgstr "Impossible de copier le lien."
 
-#: backend/templates/layout.html:53
-#, fuzzy
+#: backend/templates/layout.html:51 backend/templates/layout.html:103
 msgid "Fact-Check Report"
 msgstr "Rapport de vérification des faits"
 
-#: backend/templates/layout.html:54
-#, fuzzy
+#: backend/templates/layout.html:52 backend/templates/layout.html:104
 msgid "Check out the fact-check report for this video:"
 msgstr "Consultez le rapport de vérification des faits pour cette vidéo :"
 
-#: backend/templates/layout.html:55
+#: backend/templates/layout.html:53 backend/templates/layout.html:105
 msgid "Select up to 5 claims to verify"
 msgstr "Sélectionnez jusqu’à 5 affirmations à vérifier"
 
-#: backend/templates/layout.html:56
-#, fuzzy
+#: backend/templates/layout.html:54 backend/templates/layout.html:106
 msgid "Fact-Check Selected"
 msgstr "Vérification sélectionnée"
 
-#: backend/templates/layout.html:57
+#: backend/templates/layout.html:55 backend/templates/layout.html:107
 msgid "You can only select up to"
 msgstr "Vous ne pouvez sélectionner que jusqu’à"
 
-#: backend/templates/layout.html:58
+#: backend/templates/layout.html:56 backend/templates/layout.html:108
 msgid "claims"
 msgstr "affirmations"
 
-#: backend/templates/layout.html:59
-#, fuzzy
+#: backend/templates/layout.html:57 backend/templates/layout.html:109
 msgid "Already checked"
 msgstr "Déjà vérifié"
 
-#: backend/templates/layout.html:60
+#: backend/templates/layout.html:58 backend/templates/layout.html:110
 msgid "Could not extract any claims to check."
 msgstr "Impossible d’extraire des affirmations à vérifier."
 
-#: backend/templates/layout.html:61
+#: backend/templates/layout.html:59 backend/templates/layout.html:111
 msgid "Sending selected claims for final analysis..."
 msgstr "Envoi des affirmations sélectionnées pour analyse finale..."
+
+#: backend/templates/layout.html:60 backend/templates/layout.html:112
+msgid "Checked claims"
+msgstr "Affirmations vérifiées"
+
+#: backend/templates/layout.html:61 backend/templates/layout.html:113
+msgid "Show detailed analysis"
+msgstr "Afficher l’analyse détaillée"
+
+#: backend/templates/layout.html:62 backend/templates/layout.html:114
+msgid "Hide detailed analysis"
+msgstr "Masquer l’analyse détaillée"
+
+#: backend/templates/layout.html:63 backend/templates/layout.html:115
+msgid "Checked Text"
+msgstr "Texte vérifié"
+
+#: backend/templates/layout.html:64 backend/templates/layout.html:116
+msgid "Disclaimer:"
+msgstr "Avertissement :"
+
+#: backend/templates/layout.html:65 backend/templates/layout.html:117
+msgid ""
+"This report is AI-generated. It may contain errors and may not have "
+"access to real-time data. Please verify the information independently."
+msgstr ""
+"Ce rapport est généré par une IA. Il peut contenir des erreurs et ne pas avoir accès aux données en temps réel. Veuillez vérifier les informations de manière indépendante."
+
+#: backend/templates/layout.html:66 backend/templates/layout.html:118
+msgid "Confirmed"
+msgstr "Confirmé"
+
+#: backend/templates/layout.html:67 backend/templates/layout.html:119
+msgid "Refuted"
+msgstr "Réfuté"
+
+#: backend/templates/layout.html:68 backend/templates/layout.html:120
+msgid "Misleading"
+msgstr "Trompeur"
+
+#: backend/templates/layout.html:69 backend/templates/layout.html:121
+msgid "Partly True"
+msgstr "Partiellement vrai"
+
+#: backend/templates/layout.html:70 backend/templates/layout.html:122
+msgid "Unverifiable"
+msgstr "Non vérifiable"
+
+#: backend/templates/layout.html:71 backend/templates/layout.html:123
+msgid "Claim text missing"
+msgstr "Texte de l’affirmation manquant"
+
+#: backend/templates/layout.html:72 backend/templates/layout.html:124
+msgid "No verdict"
+msgstr "Aucun verdict"
+
+#: backend/templates/layout.html:73 backend/templates/layout.html:125
+msgid "Show unchecked claims"
+msgstr "Afficher les affirmations non vérifiées"
+
+#: backend/templates/layout.html:74 backend/templates/layout.html:126
+msgid "Hide unchecked claims"
+msgstr "Masquer les affirmations non vérifiées"
+
+#: backend/templates/layout.html:75 backend/templates/layout.html:127
+msgid "Check more claims"
+msgstr "Vérifier plus d’affirmations"
+
+#: backend/templates/layout.html:76 backend/templates/layout.html:128
+msgid "Mostly True"
+msgstr "Plutôt vrai"
+
+#: backend/templates/layout.html:77 backend/templates/layout.html:129
+msgid "Mostly False"
+msgstr "Plutôt faux"
+
+#: backend/templates/layout.html:78 backend/templates/layout.html:130
+msgid "Mixed Veracity"
+msgstr "Véracité mixte"
+
+#: backend/templates/layout.html:79 backend/templates/layout.html:131
+msgid "Largely Unverifiable"
+msgstr "Largement non vérifiable"
 
 #: backend/templates/report.html:3
 msgid "Fact-Check Report for:"
@@ -185,91 +247,3 @@ msgstr "Partager les résultats"
 #: backend/templates/report.html:20
 msgid "Video Thumbnail"
 msgstr "Miniature de la vidéo"
-
-#~ msgid "Please paste a video link."
-#~ msgstr "Veuillez coller un lien vidéo."
-
-#~ msgid "Please enter a valid YouTube video link!"
-#~ msgstr "Veuillez entrer un lien YouTube valide !"
-
-#~ msgid "Sending request for analysis..."
-#~ msgstr "Envoi de la demande d’analyse…"
-
-#~ msgid "Error starting analysis."
-#~ msgstr "Erreur lors du démarrage de l’analyse."
-
-#~ msgid "Critical polling error:"
-#~ msgstr "Erreur critique lors du contrôle du statut :"
-
-#~ msgid "An error occurred during processing:"
-#~ msgstr "Une erreur est survenue pendant le traitement :"
-
-#~ msgid "No more results"
-#~ msgstr "Plus de résultats"
-
-#~ msgid "Failed to load"
-#~ msgstr "Échec du chargement"
-
-#~ msgid "Credibility"
-#~ msgstr "Crédibilité"
-
-#~ msgid "Confidence"
-#~ msgstr "Confiance"
-
-#~ msgid "Sources:"
-#~ msgstr "Sources :"
-
-#~ msgid "Show Detailed Analysis"
-#~ msgstr "Afficher l’analyse détaillée"
-
-#~ msgid "Hide Detailed Analysis"
-#~ msgstr "Masquer l’analyse détaillée"
-
-#~ msgid "Link Copied!"
-#~ msgstr "Lien copié !"
-
-#~ msgid "Failed to copy link."
-#~ msgstr "Impossible de copier le lien."
-
-#~ msgid "Fact-Check Report"
-#~ msgstr "Rapport de vérification des faits"
-
-#~ msgid "Check out the fact-check report for this video:"
-#~ msgstr "Consultez le rapport de vérification des faits pour cette vidéo :"
-
-#~ msgid "AI Fact Checker"
-#~ msgstr "Vérificateur de faits par IA"
-
-#~ msgid "Don't be fooled. Check factual accuracy."
-#~ msgstr "Ne vous laissez pas tromper. Vérifiez l’exactitude des faits."
-
-#~ msgid "Paste a new YouTube link to check..."
-#~ msgstr "Collez un nouveau lien YouTube à vérifier..."
-
-#~ msgid "Run Another Fact Check"
-#~ msgstr "Lancer une autre vérification des faits"
-
-#~ msgid "Disclaimer:"
-#~ msgstr "Avertissement :"
-
-#~ msgid ""
-#~ "This report is AI-generated. It "
-#~ "may contain errors and may not "
-#~ "have access to real-time data. "
-#~ "Please verify the information independently."
-#~ msgstr ""
-#~ "Ce rapport est généré par une IA. Il peut contenir des erreurs et ne pas avoir accès aux données en temps réel. Veuillez vérifier les informations de manière indépendante."
-
-#~ msgid "Watch on YouTube"
-#~ msgstr "Regarder sur YouTube"
-
-#~ msgid "Uncover the Truth in Any Content"
-#~ msgstr "Découvrez la vérité dans n’importe quel contenu"
-
-#~ msgid ""
-#~ "Our AI instantly analyzes YouTube "
-#~ "videos, articles, and text to verify "
-#~ "claims and check sources. Stop "
-#~ "misinformation before you share it."
-#~ msgstr ""
-#~ "Notre IA analyse instantanément les vidéos YouTube, les articles et les textes pour vérifier les affirmations et contrôler les sources. Stoppez la désinformation avant de partager."

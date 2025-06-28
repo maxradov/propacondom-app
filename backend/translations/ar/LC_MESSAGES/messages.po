@@ -2,13 +2,12 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-06-28 21:36+0000\n"
+"POT-Creation-Date: 2025-06-28 23:03+0000\n"
 "PO-Revision-Date: 2025-06-23 02:40+0300\n"
 "Last-Translator: Gemini AI Assistant\n"
 "Language: ar\n"
 "Language-Team: ar <LL@li.org>\n"
-"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : "
-"n%100>=3 && n%100<=10 ? 3 : n%100>=0 && n%100<=2 ? 4 : 5);\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=0 && n%100<=2 ? 4 : 5);\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -35,13 +34,16 @@ msgid ""
 "Instantly verify facts and detect misinformation in YouTube videos, news,"
 " articles, and any text using advanced AI fact-checking."
 msgstr ""
+"تحقق فوراً من الحقائق واكتشف المعلومات المضللة في فيديوهات يوتيوب "
+"والأخبار والمقالات وأي نص باستخدام الذكاء الاصطناعي المتقدم."
 
 #: backend/templates/index.html:13
 #, fuzzy
 msgid "Paste a YouTube link, article URL, or text to check..."
 msgstr "الصق رابط يوتيوب أو عنوان مقال أو نص للتحقق..."
 
-#: backend/templates/index.html:14
+#: backend/templates/index.html:14 backend/templates/layout.html:80
+#: backend/templates/layout.html:132
 msgid "Run Fact Check"
 msgstr "بدء التحقق من الحقائق"
 
@@ -55,7 +57,7 @@ msgid "%(credibility)s%% Credibility / %(confidence)s%% Confidence"
 msgstr "مصداقية %(credibility)s%% / ثقة %(confidence)s%%"
 
 #: backend/templates/index.html:49 backend/templates/layout.html:45
-#: backend/templates/report.html:63
+#: backend/templates/layout.html:97 backend/templates/report.html:63
 msgid "Loading more..."
 msgstr "جاري تحميل المزيد..."
 
@@ -64,107 +66,182 @@ msgstr "جاري تحميل المزيد..."
 msgid "AI Fact Checker"
 msgstr "بدء التحقق من الحقائق"
 
-#: backend/templates/layout.html:37
+#: backend/templates/layout.html:37 backend/templates/layout.html:89
 msgid "Please paste a video link."
-msgstr ""
+msgstr "يرجى لصق رابط فيديو."
 
-#: backend/templates/layout.html:38
+#: backend/templates/layout.html:38 backend/templates/layout.html:90
 msgid "Please enter a valid YouTube video link!"
-msgstr ""
+msgstr "يرجى إدخال رابط يوتيوب صالح!"
 
-#: backend/templates/layout.html:39
+#: backend/templates/layout.html:39 backend/templates/layout.html:91
 msgid "Sending request for analysis..."
-msgstr ""
+msgstr "جاري إرسال طلب التحليل..."
 
-#: backend/templates/layout.html:40
+#: backend/templates/layout.html:40 backend/templates/layout.html:92
 msgid "Error starting analysis."
-msgstr ""
+msgstr "حدث خطأ عند بدء التحليل."
 
-#: backend/templates/layout.html:41
+#: backend/templates/layout.html:41 backend/templates/layout.html:93
 msgid "Critical polling error:"
-msgstr ""
+msgstr "خطأ خطير في جلب الحالة:"
 
-#: backend/templates/layout.html:42
+#: backend/templates/layout.html:42 backend/templates/layout.html:94
 #, fuzzy
 msgid "An error occurred during processing:"
-msgstr "حدث خطأ"
+msgstr "حدث خطأ أثناء المعالجة:"
 
-#: backend/templates/layout.html:43
+#: backend/templates/layout.html:43 backend/templates/layout.html:95
 #, fuzzy
 msgid "No more results"
-msgstr "مشاركة النتائج"
+msgstr "لا مزيد من النتائج"
 
-#: backend/templates/layout.html:44
+#: backend/templates/layout.html:44 backend/templates/layout.html:96
 msgid "Failed to load"
-msgstr ""
+msgstr "فشل التحميل"
 
-#: backend/templates/layout.html:46
+#: backend/templates/layout.html:46 backend/templates/layout.html:98
 msgid "Credibility"
-msgstr ""
+msgstr "المصداقية"
 
-#: backend/templates/layout.html:47
+#: backend/templates/layout.html:47 backend/templates/layout.html:99
 msgid "Confidence"
-msgstr ""
+msgstr "الثقة"
 
-#: backend/templates/layout.html:48
+#: backend/templates/layout.html:48 backend/templates/layout.html:100
 msgid "Sources:"
-msgstr ""
+msgstr "المصادر:"
 
-#: backend/templates/layout.html:49
-msgid "Show Detailed Analysis"
-msgstr ""
-
-#: backend/templates/layout.html:50
-msgid "Hide Detailed Analysis"
-msgstr ""
-
-#: backend/templates/layout.html:51
+#: backend/templates/layout.html:49 backend/templates/layout.html:101
 msgid "Link Copied!"
-msgstr ""
+msgstr "تم نسخ الرابط!"
 
-#: backend/templates/layout.html:52
+#: backend/templates/layout.html:50 backend/templates/layout.html:102
 msgid "Failed to copy link."
-msgstr ""
+msgstr "فشل نسخ الرابط."
 
-#: backend/templates/layout.html:53
+#: backend/templates/layout.html:51 backend/templates/layout.html:103
 #, fuzzy
 msgid "Fact-Check Report"
-msgstr "تقرير التحقق من الحقائق لـ:"
+msgstr "تقرير التحقق من الحقائق"
 
-#: backend/templates/layout.html:54
+#: backend/templates/layout.html:52 backend/templates/layout.html:104
 #, fuzzy
 msgid "Check out the fact-check report for this video:"
-msgstr "تقرير التحقق من الحقائق لـ:"
+msgstr "شاهد تقرير التحقق من الحقائق لهذا الفيديو:"
 
-#: backend/templates/layout.html:55
+#: backend/templates/layout.html:53 backend/templates/layout.html:105
 msgid "Select up to 5 claims to verify"
-msgstr ""
+msgstr "اختر حتى 5 ادعاءات للتحقق منها"
 
-#: backend/templates/layout.html:56
+#: backend/templates/layout.html:54 backend/templates/layout.html:106
 #, fuzzy
 msgid "Fact-Check Selected"
-msgstr "تقرير التحقق من الحقائق لـ:"
+msgstr "تم اختيار التحقق من الحقائق"
 
-#: backend/templates/layout.html:57
+#: backend/templates/layout.html:55 backend/templates/layout.html:107
 msgid "You can only select up to"
-msgstr ""
+msgstr "يمكنك اختيار حتى"
 
-#: backend/templates/layout.html:58
+#: backend/templates/layout.html:56 backend/templates/layout.html:108
 msgid "claims"
-msgstr ""
+msgstr "ادعاءات"
 
-#: backend/templates/layout.html:59
+#: backend/templates/layout.html:57 backend/templates/layout.html:109
 #, fuzzy
 msgid "Already checked"
-msgstr "آخر فحص:"
+msgstr "تم التحقق سابقاً"
 
-#: backend/templates/layout.html:60
+#: backend/templates/layout.html:58 backend/templates/layout.html:110
 msgid "Could not extract any claims to check."
-msgstr ""
+msgstr "تعذر استخراج أي ادعاءات للتحقق."
 
-#: backend/templates/layout.html:61
+#: backend/templates/layout.html:59 backend/templates/layout.html:111
 msgid "Sending selected claims for final analysis..."
+msgstr "يتم إرسال الادعاءات المحددة للتحليل النهائي..."
+
+#: backend/templates/layout.html:60 backend/templates/layout.html:112
+msgid "Checked claims"
+msgstr "الادعاءات التي تم التحقق منها"
+
+#: backend/templates/layout.html:61 backend/templates/layout.html:113
+msgid "Show detailed analysis"
+msgstr "عرض التحليل التفصيلي"
+
+#: backend/templates/layout.html:62 backend/templates/layout.html:114
+msgid "Hide detailed analysis"
+msgstr "إخفاء التحليل التفصيلي"
+
+#: backend/templates/layout.html:63 backend/templates/layout.html:115
+msgid "Checked Text"
+msgstr "النص الذي تم التحقق منه"
+
+#: backend/templates/layout.html:64 backend/templates/layout.html:116
+msgid "Disclaimer:"
+msgstr "إخلاء مسؤولية:"
+
+#: backend/templates/layout.html:65 backend/templates/layout.html:117
+msgid ""
+"This report is AI-generated. It may contain errors and may not have "
+"access to real-time data. Please verify the information independently."
 msgstr ""
+"هذا التقرير تم إنشاؤه بواسطة الذكاء الاصطناعي. قد يحتوي على أخطاء وقد لا يتمكن من الوصول إلى البيانات في الوقت الفعلي. يرجى التحقق من المعلومات بشكل مستقل."
+
+#: backend/templates/layout.html:66 backend/templates/layout.html:118
+msgid "Confirmed"
+msgstr "مؤكد"
+
+#: backend/templates/layout.html:67 backend/templates/layout.html:119
+msgid "Refuted"
+msgstr "مرفوض"
+
+#: backend/templates/layout.html:68 backend/templates/layout.html:120
+msgid "Misleading"
+msgstr "مضلل"
+
+#: backend/templates/layout.html:69 backend/templates/layout.html:121
+msgid "Partly True"
+msgstr "صحيح جزئياً"
+
+#: backend/templates/layout.html:70 backend/templates/layout.html:122
+msgid "Unverifiable"
+msgstr "غير قابل للتحقق"
+
+#: backend/templates/layout.html:71 backend/templates/layout.html:123
+msgid "Claim text missing"
+msgstr "نص الادعاء مفقود"
+
+#: backend/templates/layout.html:72 backend/templates/layout.html:124
+msgid "No verdict"
+msgstr "لا يوجد حكم"
+
+#: backend/templates/layout.html:73 backend/templates/layout.html:125
+msgid "Show unchecked claims"
+msgstr "عرض الادعاءات غير المفحوصة"
+
+#: backend/templates/layout.html:74 backend/templates/layout.html:126
+msgid "Hide unchecked claims"
+msgstr "إخفاء الادعاءات غير المفحوصة"
+
+#: backend/templates/layout.html:75 backend/templates/layout.html:127
+msgid "Check more claims"
+msgstr "تحقق من المزيد من الادعاءات"
+
+#: backend/templates/layout.html:76 backend/templates/layout.html:128
+msgid "Mostly True"
+msgstr "غالباً صحيح"
+
+#: backend/templates/layout.html:77 backend/templates/layout.html:129
+msgid "Mostly False"
+msgstr "غالباً خاطئ"
+
+#: backend/templates/layout.html:78 backend/templates/layout.html:130
+msgid "Mixed Veracity"
+msgstr "درجة صدق مختلطة"
+
+#: backend/templates/layout.html:79 backend/templates/layout.html:131
+msgid "Largely Unverifiable"
+msgstr "غير قابل للتحقق إلى حد كبير"
 
 #: backend/templates/report.html:3
 msgid "Fact-Check Report for:"
@@ -181,95 +258,3 @@ msgstr "مشاركة النتائج"
 #: backend/templates/report.html:20
 msgid "Video Thumbnail"
 msgstr "الصورة المصغرة للفيديو"
-
-#~ msgid "Please paste a video link."
-#~ msgstr "يرجى لصق رابط الفيديو."
-
-#~ msgid "Please enter a valid YouTube video link!"
-#~ msgstr "يرجى إدخال رابط يوتيوب صالح!"
-
-#~ msgid "Sending request for analysis..."
-#~ msgstr "يتم إرسال الطلب للتحليل..."
-
-#~ msgid "Error starting analysis."
-#~ msgstr "حدث خطأ أثناء بدء التحليل."
-
-#~ msgid "Critical polling error:"
-#~ msgstr "خطأ حرج أثناء التحقق من الحالة:"
-
-#~ msgid "An error occurred during processing:"
-#~ msgstr "حدث خطأ أثناء المعالجة:"
-
-#~ msgid "No more results"
-#~ msgstr "لا مزيد من النتائج"
-
-#~ msgid "Failed to load"
-#~ msgstr "فشل في التحميل"
-
-#~ msgid "Credibility"
-#~ msgstr "المصداقية"
-
-#~ msgid "Confidence"
-#~ msgstr "الثقة"
-
-#~ msgid "Sources:"
-#~ msgstr "المصادر:"
-
-#~ msgid "Show Detailed Analysis"
-#~ msgstr "إظهار التحليل التفصيلي"
-
-#~ msgid "Hide Detailed Analysis"
-#~ msgstr "إخفاء التحليل التفصيلي"
-
-#~ msgid "Link Copied!"
-#~ msgstr "تم نسخ الرابط!"
-
-#~ msgid "Failed to copy link."
-#~ msgstr "فشل في نسخ الرابط."
-
-#~ msgid "Fact-Check Report"
-#~ msgstr "تقرير التحقق من الحقائق"
-
-#~ msgid "Check out the fact-check report for this video:"
-#~ msgstr "اطلع على تقرير التحقق من الحقائق لهذا الفيديو:"
-
-#~ msgid "AI Fact Checker"
-#~ msgstr "مدقق الحقائق بالذكاء الاصطناعي"
-
-#~ msgid "Don't be fooled. Check factual accuracy."
-#~ msgstr "لا تنخدع. تحقق من دقة الحقائق."
-
-#~ msgid "Paste a new YouTube link to check..."
-#~ msgstr "الصق رابط يوتيوب جديد للتحقق..."
-
-#~ msgid "Run Another Fact Check"
-#~ msgstr "إجراء تحقق آخر من الحقائق"
-
-#~ msgid "Disclaimer:"
-#~ msgstr "إخلاء مسؤولية:"
-
-#~ msgid ""
-#~ "This report is AI-generated. It "
-#~ "may contain errors and may not "
-#~ "have access to real-time data. "
-#~ "Please verify the information independently."
-#~ msgstr ""
-#~ "هذا التقرير تم إنشاؤه بواسطة الذكاء "
-#~ "الاصطناعي. قد يحتوي على أخطاء وقد "
-#~ "لا يتمكن من الوصول إلى البيانات في"
-#~ " الوقت الفعلي. يرجى التحقق من "
-#~ "المعلومات بشكل مستقل."
-
-#~ msgid "Watch on YouTube"
-#~ msgstr "شاهد على يوتيوب"
-
-#~ msgid "Uncover the Truth in Any Content"
-#~ msgstr ""
-
-#~ msgid ""
-#~ "Our AI instantly analyzes YouTube "
-#~ "videos, articles, and text to verify "
-#~ "claims and check sources. Stop "
-#~ "misinformation before you share it."
-#~ msgstr ""
-

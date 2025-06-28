@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-06-28 21:36+0000\n"
+"POT-Creation-Date: 2025-06-28 23:03+0000\n"
 "PO-Revision-Date: 2025-06-23 00:00+0000\n"
 "Last-Translator: Gemini AI Translator\n"
 "Language: zh\n"
@@ -41,11 +41,10 @@ msgid ""
 msgstr "用AI技术，快速验证YouTube视频、新闻、文章和文本的真实性，及时发现谣言和误导。"
 
 #: backend/templates/index.html:13
-#, fuzzy
 msgid "Paste a YouTube link, article URL, or text to check..."
 msgstr "粘贴YouTube链接、文章网址或文本进行核查..."
 
-#: backend/templates/index.html:14
+#: backend/templates/index.html:14 backend/templates/layout.html:80 \ backend/templates/layout.html:132
 msgid "Run Fact Check"
 msgstr "开始事实核查"
 
@@ -53,122 +52,187 @@ msgstr "开始事实核查"
 msgid "Last checked:"
 msgstr "上次检查："
 
-#: backend/templates/index.html:41 backend/templates/report.html:55
-#, python-format
+#: backend/templates/index.html:41 backend/templates/report.html:55 #, python-format
 msgid "%(credibility)s%% Credibility / %(confidence)s%% Confidence"
 msgstr "%(credibility)s%% 可信度 / %(confidence)s%% 置信度"
 
-#: backend/templates/index.html:49 backend/templates/layout.html:45
-#: backend/templates/report.html:63
+#: backend/templates/index.html:49 backend/templates/layout.html:45 \ backend/templates/layout.html:97 backend/templates/report.html:63
 msgid "Loading more..."
 msgstr "加载更多..."
 
 #: backend/templates/layout.html:6
-#, fuzzy
 msgid "AI Fact Checker"
 msgstr "AI事实核查"
 
-#: backend/templates/layout.html:37
+#: backend/templates/layout.html:37 backend/templates/layout.html:89
 msgid "Please paste a video link."
 msgstr "请粘贴视频链接。"
 
-#: backend/templates/layout.html:38
+#: backend/templates/layout.html:38 backend/templates/layout.html:90
 msgid "Please enter a valid YouTube video link!"
 msgstr "请输入有效的YouTube视频链接！"
 
-#: backend/templates/layout.html:39
+#: backend/templates/layout.html:39 backend/templates/layout.html:91
 msgid "Sending request for analysis..."
 msgstr "正在发送分析请求..."
 
-#: backend/templates/layout.html:40
+#: backend/templates/layout.html:40 backend/templates/layout.html:92
 msgid "Error starting analysis."
 msgstr "启动分析时出错。"
 
-#: backend/templates/layout.html:41
+#: backend/templates/layout.html:41 backend/templates/layout.html:93
 msgid "Critical polling error:"
 msgstr "状态检测发生严重错误："
 
-#: backend/templates/layout.html:42
-#, fuzzy
+#: backend/templates/layout.html:42 backend/templates/layout.html:94
 msgid "An error occurred during processing:"
 msgstr "处理过程中发生错误："
 
-#: backend/templates/layout.html:43
-#, fuzzy
+#: backend/templates/layout.html:43 backend/templates/layout.html:95
 msgid "No more results"
 msgstr "没有更多结果"
 
-#: backend/templates/layout.html:44
+#: backend/templates/layout.html:44 backend/templates/layout.html:96
 msgid "Failed to load"
 msgstr "加载失败"
 
-#: backend/templates/layout.html:46
+#: backend/templates/layout.html:46 backend/templates/layout.html:98
 msgid "Credibility"
 msgstr "可信度"
 
-#: backend/templates/layout.html:47
+#: backend/templates/layout.html:47 backend/templates/layout.html:99
 msgid "Confidence"
 msgstr "置信度"
 
-#: backend/templates/layout.html:48
+#: backend/templates/layout.html:48 backend/templates/layout.html:100
 msgid "Sources:"
 msgstr "来源："
 
-#: backend/templates/layout.html:49
-msgid "Show Detailed Analysis"
-msgstr "显示详细分析"
-
-#: backend/templates/layout.html:50
-msgid "Hide Detailed Analysis"
-msgstr "隐藏详细分析"
-
-#: backend/templates/layout.html:51
+#: backend/templates/layout.html:49 backend/templates/layout.html:101
 msgid "Link Copied!"
 msgstr "链接已复制！"
 
-#: backend/templates/layout.html:52
+#: backend/templates/layout.html:50 backend/templates/layout.html:102
 msgid "Failed to copy link."
 msgstr "复制链接失败。"
 
-#: backend/templates/layout.html:53
-#, fuzzy
+#: backend/templates/layout.html:51 backend/templates/layout.html:103
 msgid "Fact-Check Report"
 msgstr "事实核查报告"
 
-#: backend/templates/layout.html:54
-#, fuzzy
+#: backend/templates/layout.html:52 backend/templates/layout.html:104
 msgid "Check out the fact-check report for this video:"
 msgstr "查看该视频的事实核查报告："
 
-#: backend/templates/layout.html:55
+#: backend/templates/layout.html:53 backend/templates/layout.html:105
 msgid "Select up to 5 claims to verify"
 msgstr "最多可选择5条信息进行核查"
 
-#: backend/templates/layout.html:56
-#, fuzzy
+#: backend/templates/layout.html:54 backend/templates/layout.html:106
 msgid "Fact-Check Selected"
 msgstr "已选择事实核查"
 
-#: backend/templates/layout.html:57
+#: backend/templates/layout.html:55 backend/templates/layout.html:107
 msgid "You can only select up to"
 msgstr "最多只能选择"
 
-#: backend/templates/layout.html:58
+#: backend/templates/layout.html:56 backend/templates/layout.html:108
 msgid "claims"
 msgstr "条信息"
 
-#: backend/templates/layout.html:59
-#, fuzzy
+#: backend/templates/layout.html:57 backend/templates/layout.html:109
 msgid "Already checked"
 msgstr "已核查"
 
-#: backend/templates/layout.html:60
+#: backend/templates/layout.html:58 backend/templates/layout.html:110
 msgid "Could not extract any claims to check."
 msgstr "未检测到可核查的信息。"
 
-#: backend/templates/layout.html:61
+#: backend/templates/layout.html:59 backend/templates/layout.html:111
 msgid "Sending selected claims for final analysis..."
 msgstr "正在分析所选内容..."
+
+#: backend/templates/layout.html:60 backend/templates/layout.html:112
+msgid "Checked claims"
+msgstr "已核查的信息"
+
+#: backend/templates/layout.html:61 backend/templates/layout.html:113
+msgid "Show detailed analysis"
+msgstr "显示详细分析"
+
+#: backend/templates/layout.html:62 backend/templates/layout.html:114
+msgid "Hide detailed analysis"
+msgstr "隐藏详细分析"
+
+#: backend/templates/layout.html:63 backend/templates/layout.html:115
+msgid "Checked Text"
+msgstr "已核查文本"
+
+#: backend/templates/layout.html:64 backend/templates/layout.html:116
+msgid "Disclaimer:"
+msgstr "免责声明："
+
+#: backend/templates/layout.html:65 backend/templates/layout.html:117
+msgid ""
+"This report is AI-generated. It may contain errors and may not have "
+"access to real-time data. Please verify the information independently."
+msgstr "本报告由AI自动生成，可能存在错误，也可能无法访问实时数据。请自行核实信息。"
+
+#: backend/templates/layout.html:66 backend/templates/layout.html:118
+msgid "Confirmed"
+msgstr "已确认"
+
+#: backend/templates/layout.html:67 backend/templates/layout.html:119
+msgid "Refuted"
+msgstr "已驳斥"
+
+#: backend/templates/layout.html:68 backend/templates/layout.html:120
+msgid "Misleading"
+msgstr "误导"
+
+#: backend/templates/layout.html:69 backend/templates/layout.html:121
+msgid "Partly True"
+msgstr "部分属实"
+
+#: backend/templates/layout.html:70 backend/templates/layout.html:122
+msgid "Unverifiable"
+msgstr "无法核实"
+
+#: backend/templates/layout.html:71 backend/templates/layout.html:123
+msgid "Claim text missing"
+msgstr "声明文本缺失"
+
+#: backend/templates/layout.html:72 backend/templates/layout.html:124
+msgid "No verdict"
+msgstr "无结论"
+
+#: backend/templates/layout.html:73 backend/templates/layout.html:125
+msgid "Show unchecked claims"
+msgstr "显示未核查信息"
+
+#: backend/templates/layout.html:74 backend/templates/layout.html:126
+msgid "Hide unchecked claims"
+msgstr "隐藏未核查信息"
+
+#: backend/templates/layout.html:75 backend/templates/layout.html:127
+msgid "Check more claims"
+msgstr "核查更多信息"
+
+#: backend/templates/layout.html:76 backend/templates/layout.html:128
+msgid "Mostly True"
+msgstr "大部分属实"
+
+#: backend/templates/layout.html:77 backend/templates/layout.html:129
+msgid "Mostly False"
+msgstr "大部分不实"
+
+#: backend/templates/layout.html:78 backend/templates/layout.html:130
+msgid "Mixed Veracity"
+msgstr "真伪混杂"
+
+#: backend/templates/layout.html:79 backend/templates/layout.html:131
+msgid "Largely Unverifiable"
+msgstr "基本无法核实"
 
 #: backend/templates/report.html:3
 msgid "Fact-Check Report for:"
@@ -185,89 +249,3 @@ msgstr "分享结果"
 #: backend/templates/report.html:20
 msgid "Video Thumbnail"
 msgstr "视频缩略图"
-
-#~ msgid "Please paste a video link."
-#~ msgstr "请粘贴视频链接。"
-
-#~ msgid "Please enter a valid YouTube video link!"
-#~ msgstr "请输入有效的 YouTube 视频链接！"
-
-#~ msgid "Sending request for analysis..."
-#~ msgstr "正在发送分析请求……"
-
-#~ msgid "Error starting analysis."
-#~ msgstr "启动分析时出错。"
-
-#~ msgid "Critical polling error:"
-#~ msgstr "状态检查时发生严重错误："
-
-#~ msgid "An error occurred during processing:"
-#~ msgstr "处理过程中发生错误："
-
-#~ msgid "No more results"
-#~ msgstr "没有更多结果"
-
-#~ msgid "Failed to load"
-#~ msgstr "加载失败"
-
-#~ msgid "Credibility"
-#~ msgstr "可信度"
-
-#~ msgid "Confidence"
-#~ msgstr "置信度"
-
-#~ msgid "Sources:"
-#~ msgstr "来源："
-
-#~ msgid "Show Detailed Analysis"
-#~ msgstr "显示详细分析"
-
-#~ msgid "Hide Detailed Analysis"
-#~ msgstr "隐藏详细分析"
-
-#~ msgid "Link Copied!"
-#~ msgstr "链接已复制！"
-
-#~ msgid "Failed to copy link."
-#~ msgstr "复制链接失败。"
-
-#~ msgid "Fact-Check Report"
-#~ msgstr "事实核查报告"
-
-#~ msgid "Check out the fact-check report for this video:"
-#~ msgstr "查看该视频的事实核查报告："
-
-#~ msgid "AI Fact Checker"
-#~ msgstr "AI事实核查"
-
-#~ msgid "Don't be fooled. Check factual accuracy."
-#~ msgstr "别被忽悠了，检查事实真伪。"
-
-#~ msgid "Paste a new YouTube link to check..."
-#~ msgstr "粘贴新的YouTube链接进行核查..."
-
-#~ msgid "Run Another Fact Check"
-#~ msgstr "再次运行事实核查"
-
-#~ msgid "Disclaimer:"
-#~ msgstr "免责声明："
-
-#~ msgid ""
-#~ "This report is AI-generated. It "
-#~ "may contain errors and may not "
-#~ "have access to real-time data. "
-#~ "Please verify the information independently."
-#~ msgstr "本报告由AI自动生成，可能存在错误，也可能无法访问实时数据。请自行核实信息。"
-
-#~ msgid "Watch on YouTube"
-#~ msgstr "在YouTube上观看"
-
-#~ msgid "Uncover the Truth in Any Content"
-#~ msgstr "发现每条内容背后的真相"
-
-#~ msgid ""
-#~ "Our AI instantly analyzes YouTube "
-#~ "videos, articles, and text to verify "
-#~ "claims and check sources. Stop "
-#~ "misinformation before you share it."
-#~ msgstr "我们的AI可即时分析YouTube视频、文章和文本，核实内容、查找来源，帮你杜绝转发谣言。"

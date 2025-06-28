@@ -1,13 +1,8 @@
-# Hindi translations for PROJECT.
-# Copyright (C) 2025 ORGANIZATION
-# This file is distributed under the same license as the PROJECT project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-06-28 21:36+0000\n"
+"POT-Creation-Date: 2025-06-28 23:03+0000\n"
 "PO-Revision-Date: 2025-06-22 23:20+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: hi\n"
@@ -38,14 +33,14 @@ msgstr "YouTube, न्यूज़ और आर्टिकल के लि�
 msgid ""
 "Instantly verify facts and detect misinformation in YouTube videos, news,"
 " articles, and any text using advanced AI fact-checking."
-msgstr "एडवांस्ड एआई फैक्ट-चेकिंग से YouTube वीडियो, न्यूज़, आर्टिकल या किसी भी टेक्स्ट में तुरंत फैक्ट्स जांचें और गलत जानकारी पहचानें।"
+msgstr ""
+"एडवांस्ड एआई फैक्ट-चेकिंग से YouTube वीडियो, न्यूज़, आर्टिकल या किसी भी टेक्स्ट में तुरंत तथ्य जांचें और गलत जानकारी पहचानें।"
 
 #: backend/templates/index.html:13
-#, fuzzy
 msgid "Paste a YouTube link, article URL, or text to check..."
 msgstr "जांचने के लिए YouTube लिंक, आर्टिकल URL या टेक्स्ट पेस्ट करें..."
 
-#: backend/templates/index.html:14
+#: backend/templates/index.html:14 backend/templates/layout.html:80 backend/templates/layout.html:132
 msgid "Run Fact Check"
 msgstr "फैक्ट चेक चलाएँ"
 
@@ -58,117 +53,184 @@ msgstr "अंतिम जांच:"
 msgid "%(credibility)s%% Credibility / %(confidence)s%% Confidence"
 msgstr "%(credibility)s%% विश्वसनीयता / %(confidence)s%% भरोसा"
 
-#: backend/templates/index.html:49 backend/templates/layout.html:45
-#: backend/templates/report.html:63
+#: backend/templates/index.html:49 backend/templates/layout.html:45 backend/templates/layout.html:97 backend/templates/report.html:63
 msgid "Loading more..."
 msgstr "और लोड हो रहा है..."
 
 #: backend/templates/layout.html:6
-#, fuzzy
 msgid "AI Fact Checker"
 msgstr "एआई फैक्ट चेकर"
 
-#: backend/templates/layout.html:37
+#: backend/templates/layout.html:37 backend/templates/layout.html:89
 msgid "Please paste a video link."
 msgstr "कृपया एक वीडियो लिंक पेस्ट करें।"
 
-#: backend/templates/layout.html:38
+#: backend/templates/layout.html:38 backend/templates/layout.html:90
 msgid "Please enter a valid YouTube video link!"
 msgstr "कृपया मान्य YouTube वीडियो लिंक डालें!"
 
-#: backend/templates/layout.html:39
+#: backend/templates/layout.html:39 backend/templates/layout.html:91
 msgid "Sending request for analysis..."
 msgstr "विश्लेषण के लिए अनुरोध भेजा जा रहा है..."
 
-#: backend/templates/layout.html:40
+#: backend/templates/layout.html:40 backend/templates/layout.html:92
 msgid "Error starting analysis."
 msgstr "विश्लेषण शुरू करने में त्रुटि।"
 
-#: backend/templates/layout.html:41
+#: backend/templates/layout.html:41 backend/templates/layout.html:93
 msgid "Critical polling error:"
 msgstr "स्थिति जांच में गंभीर त्रुटि:"
 
-#: backend/templates/layout.html:42
-#, fuzzy
+#: backend/templates/layout.html:42 backend/templates/layout.html:94
 msgid "An error occurred during processing:"
 msgstr "प्रोसेसिंग के दौरान त्रुटि हुई:"
 
-#: backend/templates/layout.html:43
-#, fuzzy
+#: backend/templates/layout.html:43 backend/templates/layout.html:95
 msgid "No more results"
 msgstr "अब और परिणाम नहीं"
 
-#: backend/templates/layout.html:44
+#: backend/templates/layout.html:44 backend/templates/layout.html:96
 msgid "Failed to load"
 msgstr "लोड करने में विफल"
 
-#: backend/templates/layout.html:46
+#: backend/templates/layout.html:46 backend/templates/layout.html:98
 msgid "Credibility"
 msgstr "विश्वसनीयता"
 
-#: backend/templates/layout.html:47
+#: backend/templates/layout.html:47 backend/templates/layout.html:99
 msgid "Confidence"
 msgstr "भरोसा"
 
-#: backend/templates/layout.html:48
+#: backend/templates/layout.html:48 backend/templates/layout.html:100
 msgid "Sources:"
 msgstr "स्रोत:"
 
-#: backend/templates/layout.html:49
-msgid "Show Detailed Analysis"
-msgstr "विस्तृत विश्लेषण दिखाएँ"
-
-#: backend/templates/layout.html:50
-msgid "Hide Detailed Analysis"
-msgstr "विस्तृत विश्लेषण छुपाएँ"
-
-#: backend/templates/layout.html:51
+#: backend/templates/layout.html:49 backend/templates/layout.html:101
 msgid "Link Copied!"
 msgstr "लिंक कॉपी हो गया!"
 
-#: backend/templates/layout.html:52
+#: backend/templates/layout.html:50 backend/templates/layout.html:102
 msgid "Failed to copy link."
 msgstr "लिंक कॉपी करने में विफल।"
 
-#: backend/templates/layout.html:53
-#, fuzzy
+#: backend/templates/layout.html:51 backend/templates/layout.html:103
 msgid "Fact-Check Report"
 msgstr "फैक्ट-चेक रिपोर्ट"
 
-#: backend/templates/layout.html:54
-#, fuzzy
+#: backend/templates/layout.html:52 backend/templates/layout.html:104
 msgid "Check out the fact-check report for this video:"
 msgstr "इस वीडियो की फैक्ट-चेक रिपोर्ट देखें:"
 
-#: backend/templates/layout.html:55
+#: backend/templates/layout.html:53 backend/templates/layout.html:105
 msgid "Select up to 5 claims to verify"
 msgstr "सत्यापन के लिए अधिकतम 5 दावे चुनें"
 
-#: backend/templates/layout.html:56
-#, fuzzy
+#: backend/templates/layout.html:54 backend/templates/layout.html:106
 msgid "Fact-Check Selected"
 msgstr "चयनित फैक्ट-चेक"
 
-#: backend/templates/layout.html:57
+#: backend/templates/layout.html:55 backend/templates/layout.html:107
 msgid "You can only select up to"
 msgstr "आप केवल चुन सकते हैं"
 
-#: backend/templates/layout.html:58
+#: backend/templates/layout.html:56 backend/templates/layout.html:108
 msgid "claims"
 msgstr "दावे"
 
-#: backend/templates/layout.html:59
-#, fuzzy
+#: backend/templates/layout.html:57 backend/templates/layout.html:109
 msgid "Already checked"
 msgstr "पहले ही जांचा गया"
 
-#: backend/templates/layout.html:60
+#: backend/templates/layout.html:58 backend/templates/layout.html:110
 msgid "Could not extract any claims to check."
 msgstr "कोई दावा जांचने के लिए नहीं मिला।"
 
-#: backend/templates/layout.html:61
+#: backend/templates/layout.html:59 backend/templates/layout.html:111
 msgid "Sending selected claims for final analysis..."
 msgstr "चयनित दावों को अंतिम विश्लेषण के लिए भेजा जा रहा है..."
+
+#: backend/templates/layout.html:60 backend/templates/layout.html:112
+msgid "Checked claims"
+msgstr "जाँचे गए दावे"
+
+#: backend/templates/layout.html:61 backend/templates/layout.html:113
+msgid "Show detailed analysis"
+msgstr "विस्तृत विश्लेषण दिखाएँ"
+
+#: backend/templates/layout.html:62 backend/templates/layout.html:114
+msgid "Hide detailed analysis"
+msgstr "विस्तृत विश्लेषण छुपाएँ"
+
+#: backend/templates/layout.html:63 backend/templates/layout.html:115
+msgid "Checked Text"
+msgstr "जाँचा गया टेक्स्ट"
+
+#: backend/templates/layout.html:64 backend/templates/layout.html:116
+msgid "Disclaimer:"
+msgstr "अस्वीकरण:"
+
+#: backend/templates/layout.html:65 backend/templates/layout.html:117
+msgid ""
+"This report is AI-generated. It may contain errors and may not have "
+"access to real-time data. Please verify the information independently."
+msgstr ""
+"यह रिपोर्ट एआई द्वारा बनाई गई है। इसमें त्रुटियाँ हो सकती हैं और इसमें रीयल-टाइम डेटा तक पहुँच नहीं हो सकती है। कृपया जानकारी को स्वतंत्र रूप से सत्यापित करें।"
+
+#: backend/templates/layout.html:66 backend/templates/layout.html:118
+msgid "Confirmed"
+msgstr "पुष्टि की गई"
+
+#: backend/templates/layout.html:67 backend/templates/layout.html:119
+msgid "Refuted"
+msgstr "अस्वीकृत"
+
+#: backend/templates/layout.html:68 backend/templates/layout.html:120
+msgid "Misleading"
+msgstr "भ्रामक"
+
+#: backend/templates/layout.html:69 backend/templates/layout.html:121
+msgid "Partly True"
+msgstr "आंशिक सत्य"
+
+#: backend/templates/layout.html:70 backend/templates/layout.html:122
+msgid "Unverifiable"
+msgstr "सत्यापित नहीं"
+
+#: backend/templates/layout.html:71 backend/templates/layout.html:123
+msgid "Claim text missing"
+msgstr "दावे का टेक्स्ट नहीं मिला"
+
+#: backend/templates/layout.html:72 backend/templates/layout.html:124
+msgid "No verdict"
+msgstr "कोई निर्णय नहीं"
+
+#: backend/templates/layout.html:73 backend/templates/layout.html:125
+msgid "Show unchecked claims"
+msgstr "अजाँचे दावे दिखाएँ"
+
+#: backend/templates/layout.html:74 backend/templates/layout.html:126
+msgid "Hide unchecked claims"
+msgstr "अजाँचे दावे छुपाएँ"
+
+#: backend/templates/layout.html:75 backend/templates/layout.html:127
+msgid "Check more claims"
+msgstr "और दावे जाँचें"
+
+#: backend/templates/layout.html:76 backend/templates/layout.html:128
+msgid "Mostly True"
+msgstr "अधिकतर सत्य"
+
+#: backend/templates/layout.html:77 backend/templates/layout.html:129
+msgid "Mostly False"
+msgstr "अधिकतर असत्य"
+
+#: backend/templates/layout.html:78 backend/templates/layout.html:130
+msgid "Mixed Veracity"
+msgstr "मिश्रित सत्यता"
+
+#: backend/templates/layout.html:79 backend/templates/layout.html:131
+msgid "Largely Unverifiable"
+msgstr "अधिकांशतः सत्यापित नहीं"
 
 #: backend/templates/report.html:3
 msgid "Fact-Check Report for:"
@@ -185,91 +247,3 @@ msgstr "परिणाम साझा करें"
 #: backend/templates/report.html:20
 msgid "Video Thumbnail"
 msgstr "वीडियो थंबनेल"
-
-#~ msgid "Please paste a video link."
-#~ msgstr "कृपया एक वीडियो लिंक पेस्ट करें।"
-
-#~ msgid "Please enter a valid YouTube video link!"
-#~ msgstr "कृपया मान्य YouTube वीडियो लिंक डालें!"
-
-#~ msgid "Sending request for analysis..."
-#~ msgstr "विश्लेषण के लिए अनुरोध भेजा जा रहा है..."
-
-#~ msgid "Error starting analysis."
-#~ msgstr "विश्लेषण शुरू करने में त्रुटि।"
-
-#~ msgid "Critical polling error:"
-#~ msgstr "स्थिति जांच में गंभीर त्रुटि:"
-
-#~ msgid "An error occurred during processing:"
-#~ msgstr "प्रोसेसिंग के दौरान त्रुटि हुई:"
-
-#~ msgid "No more results"
-#~ msgstr "अब और परिणाम नहीं"
-
-#~ msgid "Failed to load"
-#~ msgstr "लोड करने में विफल"
-
-#~ msgid "Credibility"
-#~ msgstr "विश्वसनीयता"
-
-#~ msgid "Confidence"
-#~ msgstr "भरोसा"
-
-#~ msgid "Sources:"
-#~ msgstr "स्रोत:"
-
-#~ msgid "Show Detailed Analysis"
-#~ msgstr "विस्तृत विश्लेषण दिखाएँ"
-
-#~ msgid "Hide Detailed Analysis"
-#~ msgstr "विस्तृत विश्लेषण छुपाएँ"
-
-#~ msgid "Link Copied!"
-#~ msgstr "लिंक कॉपी हो गया!"
-
-#~ msgid "Failed to copy link."
-#~ msgstr "लिंक कॉपी करने में विफल।"
-
-#~ msgid "Fact-Check Report"
-#~ msgstr "फैक्ट-चेक रिपोर्ट"
-
-#~ msgid "Check out the fact-check report for this video:"
-#~ msgstr "इस वीडियो की फैक्ट-चेक रिपोर्ट देखें:"
-
-#~ msgid "AI Fact Checker"
-#~ msgstr "एआई फैक्ट चेकर"
-
-#~ msgid "Don't be fooled. Check factual accuracy."
-#~ msgstr "धोखा न खाएँ। तथ्यात्मक सटीकता जांचें।"
-
-#~ msgid "Paste a new YouTube link to check..."
-#~ msgstr "जांचने के लिए नया YouTube लिंक पेस्ट करें..."
-
-#~ msgid "Run Another Fact Check"
-#~ msgstr "एक और फैक्ट चेक चलाएँ"
-
-#~ msgid "Disclaimer:"
-#~ msgstr "अस्वीकरण:"
-
-#~ msgid ""
-#~ "This report is AI-generated. It "
-#~ "may contain errors and may not "
-#~ "have access to real-time data. "
-#~ "Please verify the information independently."
-#~ msgstr ""
-#~ "यह रिपोर्ट एआई द्वारा बनाई गई है। इसमें त्रुटियाँ हो सकती हैं और इसमें रीयल-टाइम डेटा तक पहुँच नहीं हो सकती है। कृपया जानकारी को स्वतंत्र रूप से सत्यापित करें।"
-
-#~ msgid "Watch on YouTube"
-#~ msgstr "YouTube पर देखें"
-
-#~ msgid "Uncover the Truth in Any Content"
-#~ msgstr "किसी भी कंटेंट में सच्चाई जानें"
-
-#~ msgid ""
-#~ "Our AI instantly analyzes YouTube "
-#~ "videos, articles, and text to verify "
-#~ "claims and check sources. Stop "
-#~ "misinformation before you share it."
-#~ msgstr ""
-#~ "हमारी एआई तुरंत YouTube वीडियो, आर्टिकल और टेक्स्ट का विश्लेषण करती है, दावे जांचती है और स्रोत देखती है। शेयर करने से पहले गलत जानकारी रोकें।"
