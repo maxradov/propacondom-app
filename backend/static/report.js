@@ -235,8 +235,19 @@ function displayResults(data) {
 
 function renderUncheckedClaimsSection(data, container) {
     const extracted = data.extracted_claims || [];
-    const checkedHashes = new Set((data.detailed_results || []).map(item => item.hash || item.claim_hash));
-    const uncheckedClaims = extracted.filter(claim => !checkedHashes.has(claim.hash));
+    // Собираем ВСЕ хэши проверенных claims (ищем и .hash, и .claim_hash, и fallback по claim-тексту)
+    const checkedHashes = new Set(
+        (data.detailed_results || []).map(item => item.hash || item.claim_hash)
+    );
+    // Для надёжности, если detailed_results не содержит hash, делаем fallback по claim-тексту:
+    const checkedTexts = new Set(
+        (data.detailed_results || []).map(item => (item.claim || "").trim())
+    );
+    // Фильтруем только те, которых нет среди проверенных по хэшу И тексту
+    const uncheckedClaims = extracted.filter(claim =>
+        (!checkedHashes.has(claim.hash)) &&
+        (!checkedTexts.has((claim.text || "").trim()))
+    );
     if (!uncheckedClaims.length) {
         container.innerHTML = `<div style="color: #6c757d;">All claims have been checked.</div>`;
         return;
@@ -277,6 +288,7 @@ function renderUncheckedClaimsSection(data, container) {
         startSelectedFactCheck(data.id, selectedClaimsData);
     });
 }
+
 
 
 function startSelectedFactCheck(analysisId, claimsData) {
