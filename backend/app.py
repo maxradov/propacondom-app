@@ -73,7 +73,17 @@ def get_report_or_selection(analysis_id):
     data = doc.to_dict()
     status = data.get('status', 'UNKNOWN')
     if status == 'COMPLETED':
-        # Возвращаем полный отчёт
+        data['id'] = analysis_id
+        # Явно добавляем extracted_claims в выдачу (если вдруг отсутствует)
+        if 'extracted_claims' not in data:
+            # Подгрузи claims из анализа (обычно он там всегда есть)
+            db = get_db_client()
+            doc = db.collection('analyses').document(analysis_id).get()
+            if doc.exists:
+                doc_data = doc.to_dict()
+                data['extracted_claims'] = doc_data.get('extracted_claims', [])
+            else:
+                data['extracted_claims'] = []
         return jsonify(data)
     elif status == 'PENDING_SELECTION':
         # Только клеймы и метаданные — для показа выбора на странице репорта
