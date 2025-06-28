@@ -221,6 +221,29 @@ main.container > header {
 #factcheck-btn:hover, #factcheck-btn-report:hover {
     background-color: #0056b3;
 }
+#check-more-claims-btn {
+    width: 100%;
+    max-width: 300px;
+    padding: 1rem;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #fff;
+    background-color: var(--primary-color);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin: 0 auto;
+    display: block;
+    transition: background-color 0.2s ease;
+}
+#check-more-claims-btn:hover:not(:disabled) {
+    background-color: #0056b3;
+}
+#check-more-claims-btn:disabled {
+    background-color: var(--secondary-color);
+    opacity: 0.6;
+    cursor: not-allowed;
+}
 
 
 /* --- СТИЛИ ДЛЯ ОБЕРТКИ ОТЧЕТА --- */

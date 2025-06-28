@@ -262,7 +262,7 @@ function renderUncheckedClaimsSection(data, container) {
         `;
     });
     html += `</div>
-        <button id="check-more-claims-btn" type="submit" disabled style="margin-top:1rem;">Check more claims</button>
+        <button id="check-more-claims-btn" type="submit" disabled>Check more claims</button>
     </form>`;
     container.innerHTML = html;
 
