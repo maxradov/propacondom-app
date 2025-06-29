@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{{ _('AI Fact Checker') }}{% endblock %}</title>
+
+    {# Hreflang tags #}
+    {% if request.endpoint and request.endpoint not in ['static', 'set_language'] %} {# Avoid for non-content views #}
+        {% for lang_code_loop in LANGUAGES.keys() %}
+            <link rel="alternate" hreflang="{{ lang_code_loop }}" href="{{ url_for(request.endpoint, lang_code=lang_code_loop, **(request.view_args or {})) }}">
+        {% endfor %}
+        <link rel="alternate" hreflang="x-default" href="{{ url_for(request.endpoint, lang_code='en', **(request.view_args or {})) }}">
+    {% endif %}
+
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
 </head>
@@ -20,7 +29,8 @@
             </div>
             <div class="lang-dropdown">
                 {% for lang_code, lang_info in LANGUAGES.items() %}
-                    <a href="{{ url_for('set_language', lang=lang_code) }}" class="lang-option {% if lang_code == CURRENT_LANG %}active{% endif %}">
+                    {# The route expects 'target_lang_code' as the parameter name #}
+                    <a href="{{ url_for('set_language', target_lang_code=lang_code) }}" class="lang-option {% if lang_code == CURRENT_LANG %}active{% endif %}">
                         <span>{{ lang_info['flag'] }}</span>
                         <span>{{ lang_info['name'] }}</span>
                     </a>

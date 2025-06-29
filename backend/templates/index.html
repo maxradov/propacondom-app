@@ -25,7 +25,7 @@
         {% for analysis in recent_analyses %}
             {% if analysis.video_title != 'Title Not Found' %}
             <div class="feed-item" data-timestamp="{{ analysis.created_at }}">
-                <a href="/report/{{ analysis.id }}" class="feed-item-link">
+                <a href="{{ url_for('serve_report', lang_code=CURRENT_LANG, analysis_id=analysis.id) }}" class="feed-item-link">
                     {% if analysis.input_type == 'text' %}
                         <img src="{{ url_for('static', filename='text-placeholder.png') }}" alt="Text Analysis" class="feed-thumbnail">
                     {% elif analysis.input_type == 'url' %}

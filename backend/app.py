@@ -47,21 +47,34 @@ LANGUAGES = {
 app.config['BABEL_DEFAULT_LOCALE'] = 'en'
 
 def get_locale():
-    lang_code = request.cookies.get('lang')
-    if lang_code in LANGUAGES:
-        return lang_code
-    best = request.accept_languages.best_match(list(LANGUAGES.keys()))
-    if best:
-        return best
+    # Priority 1: lang_code from URL view arguments. This is the definitive source for a request's language.
+    if request.view_args and 'lang_code' in request.view_args:
+        url_lang_code = request.view_args.get('lang_code')
+        if url_lang_code in LANGUAGES:
+            return url_lang_code
+
+    # Fallback for contexts where URL lang_code isn't available (e.g. initial '/' redirect logic)
+    cookie_lang_code = request.cookies.get('lang')
+    if cookie_lang_code in LANGUAGES:
+        return cookie_lang_code
+
+    best_match = request.accept_languages.best_match(list(LANGUAGES.keys()))
+    if best_match:
+        return best_match
+
     return app.config['BABEL_DEFAULT_LOCALE']
 
 babel = Babel(app, locale_selector=get_locale)
 
 @app.context_processor
 def inject_conf_var():
+    # get_locale() now correctly prioritizes lang_code from URL view_args if present.
+    # So, CURRENT_LANG for templates will reflect the language determined by the URL on prefixed routes.
+    current_lang_in_context = get_locale()
+
     return dict(
         LANGUAGES=LANGUAGES,
-        CURRENT_LANG=get_locale()
+        CURRENT_LANG=current_lang_in_context
     )
 
 @app.route('/api/report/<analysis_id>')
@@ -131,7 +144,7 @@ def fact_check_selected():
     # ИСПРАВЛЕНО: Проверяем и используем ключ 'selected_claims_data'
     if not data or 'analysis_id' not in data or 'selected_claims_data' not in data:
         return jsonify({"error": "analysis_id and a list of selected_claims_data are required"}), 400
-    
+
     analysis_id = data['analysis_id']
     selected_claims = data['selected_claims_data'] # ИСПРАВЛЕНО
 
@@ -139,13 +152,60 @@ def fact_check_selected():
     task = celery_app.send_task('tasks.fact_check_selected', args=[analysis_id, selected_claims])
     return jsonify({"task_id": task.id}), 202
 
-@app.route('/set_language/<lang>')
-def set_language(lang):
-    if lang not in LANGUAGES:
-        lang = app.config['BABEL_DEFAULT_LOCALE']
-    response = make_response(redirect(request.referrer or url_for('serve_index')))
-    response.set_cookie('lang', lang, max_age=60*60*24*365*2)
+@app.route('/set_language/<target_lang_code>')
+def set_language(target_lang_code):
+    if target_lang_code not in LANGUAGES:
+        target_lang_code = app.config['BABEL_DEFAULT_LOCALE']
+
+    redirect_url = url_for('serve_index', lang_code=target_lang_code) # Default redirect
+
+    if request.referrer:
+        referrer_path = request.referrer.split(request.host_url, 1)[-1] # Get path part of referrer
+
+        # Try to match referrer path to known patterns and replace lang_code
+        # This is a simplified approach. A more robust solution would use Flask's routing
+        # to parse the referrer and rebuild the URL, or pass redirect info via query params.
+        path_parts = referrer_path.strip('/').split('/')
+
+        if len(path_parts) > 0 and path_parts[0] in LANGUAGES:
+            # Referrer seems to be a prefixed URL, e.g., /de/report/xyz or /es/
+            old_lang_code = path_parts[0]
+
+            # Reconstruct the endpoint and args if possible (this part is tricky without more context)
+            # For example, if it's /<old_lang_code>/report/<id>
+            if len(path_parts) > 2 and path_parts[1] == 'report':
+                analysis_id = path_parts[2]
+                try:
+                    redirect_url = url_for('serve_report', lang_code=target_lang_code, analysis_id=analysis_id)
+                except Exception: # Werkzeug BuildError if endpoint not found or args mismatch
+                    pass # Stick to default homepage redirect
+            elif len(path_parts) == 1: # Homepage like /de/
+                 redirect_url = url_for('serve_index', lang_code=target_lang_code)
+            # Add more rules here if other prefixed URL patterns exist
+
+    response = make_response(redirect(redirect_url))
+    response.set_cookie('lang', target_lang_code, max_age=60*60*24*365*2)
     return response
+
+# Keep API routes and other specific routes like /set_language defined before generic content routes.
+
+@app.route('/', methods=['GET'])
+def root_redirect():
+    # Determine preferred language: 1. Cookie, 2. Browser, 3. Default ('en')
+    determined_lang_code = app.config['BABEL_DEFAULT_LOCALE'] # Default to 'en'
+
+    cookie_lang = request.cookies.get('lang')
+    if cookie_lang and cookie_lang in LANGUAGES:
+        determined_lang_code = cookie_lang
+    else:
+        browser_lang = request.accept_languages.best_match(list(LANGUAGES.keys()))
+        if browser_lang:
+            determined_lang_code = browser_lang
+
+    return redirect(url_for('serve_index', lang_code=determined_lang_code))
+
+# API routes should be defined before the generic <lang_code> routes
+# Ensure all API routes are above the content routes that will include <lang_code>
 
 @app.route('/api/analyze', methods=['POST'])
 def analyze():
@@ -153,6 +213,9 @@ def analyze():
     if not data or 'url' not in data:
         return jsonify({"error": "Input is required"}), 400
     user_input = data['url']
+    # For API calls, language context for 'tasks.extract_claims' might need to be handled differently
+    # or passed explicitly in the API request if it influences backend processing.
+    # For now, using get_locale which will check cookie/browser if not a view_args context.
     target_lang = data.get('lang', get_locale())
     if target_lang not in LANGUAGES:
         target_lang = app.config['BABEL_DEFAULT_LOCALE']
@@ -206,18 +269,44 @@ def api_get_recent_analyses():
         print(f"Error in /api/get_recent_analyses: {e}")
         return jsonify({"error": "Failed to fetch more analyses"}), 500
 
-@app.route('/', methods=['GET'])
-def serve_index():
+# Content Routes with Language Prefix
+@app.route('/<lang_code>/', methods=['GET'])
+def serve_index(lang_code):
+    if lang_code not in LANGUAGES:
+        # Optionally, redirect to a default language version or show 404
+        # For now, get_locale will handle falling back for Babel, but URL is still invalid.
+        # Redirecting to 'en' version of homepage:
+        return redirect(url_for('serve_index', lang_code=app.config['BABEL_DEFAULT_LOCALE']))
     try:
         recent_analyses = get_analyses()
         url_param = request.args.get('url', '')
         return render_template("index.html", recent_analyses=recent_analyses, initial_url=url_param)
     except Exception as e:
-        print(f"Error fetching initial analyses: {e}")
+        print(f"Error fetching initial analyses for lang {lang_code}: {e}")
+        # Render with default lang if error, or handle error more gracefully
         return render_template("index.html", recent_analyses=[], initial_url='')
 
+# Redirect for old non-prefixed report URLs
 @app.route('/report/<analysis_id>', methods=['GET'])
-def serve_report(analysis_id):
+def redirect_old_report(analysis_id):
+    # Determine a language for the redirect, e.g., 'en' or from cookie/browser
+    # For simplicity, redirecting to 'en' version. Could be enhanced.
+    default_lang_for_redirect = app.config['BABEL_DEFAULT_LOCALE']
+    cookie_lang = request.cookies.get('lang')
+    if cookie_lang and cookie_lang in LANGUAGES:
+        default_lang_for_redirect = cookie_lang
+    else:
+        browser_lang = request.accept_languages.best_match(list(LANGUAGES.keys()))
+        if browser_lang:
+            default_lang_for_redirect = browser_lang
+
+    return redirect(url_for('serve_report', lang_code=default_lang_for_redirect, analysis_id=analysis_id), code=301)
+
+@app.route('/<lang_code>/report/<analysis_id>', methods=['GET'])
+def serve_report(lang_code, analysis_id):
+    if lang_code not in LANGUAGES:
+        # Redirecting to 'en' version of this report:
+        return redirect(url_for('serve_report', lang_code=app.config['BABEL_DEFAULT_LOCALE'], analysis_id=analysis_id))
     try:
         db = get_db_client()
         doc_ref = db.collection('analyses').document(analysis_id)
@@ -227,7 +316,7 @@ def serve_report(analysis_id):
             if 'created_at' in report_data and hasattr(report_data['created_at'], 'isoformat'):
                 report_data['created_at'] = report_data['created_at'].isoformat()
             recent_analyses = get_analyses()
-            return render_template('report.html', report=report_data, recent_analyses=recent_analyses)    
+            return render_template('report.html', report=report_data, recent_analyses=recent_analyses)
         else:
             return _("Report not found"), 404
     except Exception as e:
