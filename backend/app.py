@@ -15,11 +15,20 @@ from tasks import get_db_client
 app = Flask(__name__)
 CORS(app)
 
-# Configure logger early
-if not app.debug:
-    app.logger.setLevel(logging.INFO)
-else:
-    app.logger.setLevel(logging.DEBUG) # Enable debug logging if Flask debug mode is on
+# Configure logger early based on environment variable
+LOG_LEVEL_STR = os.environ.get('FLASK_LOG_LEVEL', 'INFO').upper()
+numeric_log_level = getattr(logging, LOG_LEVEL_STR, logging.INFO)
+app.logger.setLevel(numeric_log_level)
+# You might want to add a handler if running in an environment where Flask/Gunicorn doesn't add one by default
+# For example, to ensure logs go to stdout/stderr:
+if not app.logger.handlers:
+    stream_handler = logging.StreamHandler()
+    stream_handler.setFormatter(logging.Formatter(
+        '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'
+    ))
+    app.logger.addHandler(stream_handler)
+app.logger.info(f"Flask logger initialized. Level set to: {LOG_LEVEL_STR} ({numeric_log_level})")
+
 
 @app.before_request
 def redirect_to_new_domain():
@@ -52,12 +61,12 @@ LANGUAGES = {
     'de': {'name': 'Deutsch', 'flag': '🇩🇪'}
 }
 app.config['BABEL_DEFAULT_LOCALE'] = 'en'
-app.config['BABEL_TRANSLATION_DIRECTORIES'] = 'translations' # Default, but good to be explicit
+app.config['BABEL_TRANSLATION_DIRECTORIES'] = 'translations'
 
-babel = Babel(app) # Initialize Babel
+babel = Babel(app)
 
 @babel.localeselector
-def get_locale_for_babel(): # Renamed and registered with decorator
+def get_locale_for_babel():
     app.logger.debug(f"get_locale_for_babel CALLED. request.endpoint: {request.endpoint}, request.view_args: {request.view_args}")
     lang_to_return = None
     if request.view_args and 'lang_code' in request.view_args:
@@ -110,7 +119,7 @@ def inject_conf_var():
             current_template_lang = lc
 
     if not current_template_lang:
-        current_template_lang = get_locale_for_babel() # Use the decorated function
+        current_template_lang = get_locale_for_babel()
 
     app.logger.debug(f"inject_conf_var: CURRENT_LANG for template: {current_template_lang}")
     return dict(
@@ -118,7 +127,7 @@ def inject_conf_var():
         CURRENT_LANG=current_template_lang
     )
 
-# --- Rest of the app.py code from previous correct state ---
+# --- Rest of the app.py code ---
 @app.route('/api/report/<analysis_id>')
 def get_report_or_selection(analysis_id):
     db = get_db_client()
@@ -130,7 +139,7 @@ def get_report_or_selection(analysis_id):
     if status == 'COMPLETED':
         data['id'] = analysis_id
         if 'extracted_claims' not in data:
-            db = get_db_client() # Ensure db client is fresh if needed
+            db = get_db_client()
             doc = db.collection('analyses').document(analysis_id).get()
             if doc.exists:
                 doc_data = doc.to_dict()
@@ -200,7 +209,7 @@ def set_language(target_lang_code):
                     except Exception as e:
                         app.logger.warning(f"Error building URL for {matched_endpoint} with {view_args}: {e}")
                 else:
-                    app.logger.info(f"Referrer path '{referrer_path}' did not match known patterns, redirecting to target lang homepage.")
+                    app.logger.info(f"Referrer path '{referrer_path}' did not match known prefixed patterns, redirecting to target lang homepage.")
             else:
                 app.logger.info(f"Referrer path '{referrer_path}' does not start with a known lang code, redirecting to target lang homepage.")
         except Exception as e:
@@ -228,7 +237,6 @@ def analyze():
     if not data or 'url' not in data:
         return jsonify({"error": "Input is required"}), 400
     user_input = data['url']
-    # For API, get_locale_for_babel will check cookie/browser as no view_args['lang_code']
     target_lang = data.get('lang', get_locale_for_babel())
     if target_lang not in LANGUAGES:
         target_lang = app.config['BABEL_DEFAULT_LOCALE']
@@ -290,9 +298,9 @@ def serve_index(lang_code):
         return render_template("index.html", recent_analyses=recent_analyses, initial_url=url_param)
     except Exception as e:
         app.logger.error(f"Error in serve_index for lang {lang_code}: {e}", exc_info=True)
-        return render_template("index.html", recent_analyses=[], initial_url='') # Fallback
+        return render_template("index.html", recent_analyses=[], initial_url='')
 
-@app.route('/report/<analysis_id>', methods=['GET']) # Old URL structure
+@app.route('/report/<analysis_id>', methods=['GET'])
 def redirect_old_report(analysis_id):
     default_lang_for_redirect = app.config['BABEL_DEFAULT_LOCALE']
     cookie_lang = request.cookies.get('lang')
@@ -321,11 +329,9 @@ def serve_report(lang_code, analysis_id):
             recent_analyses = get_analyses()
             return render_template('report.html', report=report_data, recent_analyses=recent_analyses)
         else:
-            # This _() should be localized by Babel if _ is working.
             return _("Report not found"), 404
     except Exception as e:
         app.logger.error(f"Error in serve_report for lang {lang_code}, report {analysis_id}: {e}", exc_info=True)
-        # This _() should be localized by Babel if _ is working.
         return f"{_('An error occurred')}: {e}", 500
 
 if __name__ == '__main__':
