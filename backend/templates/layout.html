@@ -3,7 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{{ _('AI Fact Checker') }}{% endblock %}</title>
+    <title>{% block title %}{{ gettext('AI Fact Checker') }}{% endblock %}</title> {# Using gettext here #}
+
+    {# Hreflang tags - This logic should be correct now #}
+    {% if request.endpoint and request.endpoint not in ['static', 'set_language', 'root_redirect'] %}
+        {% for lang_code_loop in LANGUAGES.keys() %}
+            {% set view_args_copy = (request.view_args or {}).copy() %}
+            {% set टेंपलेट_अंडरस्कोर_वेरियेबल = view_args_copy.update({'lang_code': lang_code_loop}) %} {# Changed placeholder variable name #}
+            <link rel="alternate" hreflang="{{ lang_code_loop }}" href="{{ url_for(request.endpoint, **view_args_copy) }}">
+        {% endfor %}
+        {% set view_args_copy_default = (request.view_args or {}).copy() %}
+        {% set डिफॉल्ट_अंडरस्कोर_वेरियेबल = view_args_copy_default.update({'lang_code': 'en'}) %} {# Changed placeholder variable name #}
+        <link rel="alternate" hreflang="x-default" href="{{ url_for(request.endpoint, **view_args_copy_default) }}">
+    {% endif %}
+
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
 </head>
@@ -11,7 +24,9 @@
     <div class="top-bar">
         <a href="/" class="logo-link">
             <img src="{{ url_for('static', filename='favicon.png') }}" alt="Logo" class="logo-image">
-            <span>{{ _('Advanced AI Fact Checking') }}</span>
+            {# Debugging _ right before usage #}
+            <p style="color:red; background-color:yellow; font-size:10px; padding:2px; border:1px solid black;">LAYOUT_DEBUG -- Type of _: {{ type(_) }} -- Is callable(_): {{ callable(_) }} -- Value of _: {{ _ }}</p>
+            <span>{{ _('Advanced AI Fact Checking') }}</span> {# This is line ~28 now #}
         </a>
 
         <div class="lang-switcher">
@@ -20,7 +35,7 @@
             </div>
             <div class="lang-dropdown">
                 {% for lang_code, lang_info in LANGUAGES.items() %}
-                    <a href="{{ url_for('set_language', lang=lang_code) }}" class="lang-option {% if lang_code == CURRENT_LANG %}active{% endif %}">
+                    <a href="{{ url_for('set_language', target_lang_code=lang_code) }}" class="lang-option {% if lang_code == CURRENT_LANG %}active{% endif %}">
                         <span>{{ lang_info['flag'] }}</span>
                         <span>{{ lang_info['name'] }}</span>
                     </a>
@@ -34,50 +49,50 @@
 	<!-- ГЛОБАЛЬНЫЕ ПЕРЕВОДЫ ДЛЯ JS -->
 	<script>
 	  window.translations = {{ {
-		'please_paste_video': _('Please paste a video link.'),
-		'invalid_youtube': _('Please enter a valid YouTube video link!'),
-		'sending_request': _('Sending request for analysis...'),
-		'error_starting': _('Error starting analysis.'),
-		'polling_error': _('Critical polling error:'),
-		'processing_error': _('An error occurred during processing:'),
-		'no_more_results': _('No more results'),
-		'failed_to_load': _('Failed to load'),
-		'loading_more': _('Loading more...'),
-		'credibility': _('Credibility'),
-		'confidence': _('Confidence'),
-		'sources': _('Sources:'),
-		'link_copied': _('Link Copied!'),
-		'failed_copy': _('Failed to copy link.'),
-		'share_report': _('Fact-Check Report'),
-		'share_text': _('Check out the fact-check report for this video:'),
-		'select_claims_title': _('Select up to 5 claims to verify'),
-		'fact_check_selected_button': _('Fact-Check Selected'),
-		'limit_selection_alert': _('You can only select up to'),
-		'claims_alert': _('claims'),
-		'already_checked': _('Already checked'),
-		'no_claims_found': _('Could not extract any claims to check.'),
-		'sending_request_for_checking': _('Sending selected claims for final analysis...'),
-		'checked_claims_total': _('Checked claims'),
-		'show_detailed': _('Show detailed analysis'),
-		'hide_detailed': _('Hide detailed analysis'),
-		'original_text': _('Checked Text'),
-		'disclaimer_title': _('Disclaimer:'),
-		'disclaimer_text': _('This report is AI-generated. It may contain errors and may not have access to real-time data. Please verify the information independently.'),
-		'true_label': _('Confirmed'),
-		'false_label': _('Refuted'),
-		'misleading_label': _('Misleading'),
-		'partly_true_label': _('Partly True'),
-		'unverifiable_label': _('Unverifiable'),
-		'claim_text_missing': _('Claim text missing'),
-		'no_verdict': _('No verdict'),
-		'show_unchecked_claims': _('Show unchecked claims'),
-		'hide_unchecked_claims': _('Hide unchecked claims'),
-		'check_more_claims': _('Check more claims'),
-		'mostly_true': _('Mostly True'),
-		'mostly_false': _('Mostly False'),
-		'mixed_veracity': _('Mixed Veracity'),
-		'largely_unverifiable': _('Largely Unverifiable'),
-		'run_fact_check': _('Run Fact Check')
+		'please_paste_video': gettext('Please paste a video link.'),
+		'invalid_youtube': gettext('Please enter a valid YouTube video link!'),
+		'sending_request': gettext('Sending request for analysis...'),
+		'error_starting': gettext('Error starting analysis.'),
+		'polling_error': gettext('Critical polling error:'),
+		'processing_error': gettext('An error occurred during processing:'),
+		'no_more_results': gettext('No more results'),
+		'failed_to_load': gettext('Failed to load'),
+		'loading_more': gettext('Loading more...'),
+		'credibility': gettext('Credibility'),
+		'confidence': gettext('Confidence'),
+		'sources': gettext('Sources:'),
+		'link_copied': gettext('Link Copied!'),
+		'failed_copy': gettext('Failed to copy link.'),
+		'share_report': gettext('Fact-Check Report'),
+		'share_text': gettext('Check out the fact-check report for this video:'),
+		'select_claims_title': gettext('Select up to 5 claims to verify'),
+		'fact_check_selected_button': gettext('Fact-Check Selected'),
+		'limit_selection_alert': gettext('You can only select up to'),
+		'claims_alert': gettext('claims'),
+		'already_checked': gettext('Already checked'),
+		'no_claims_found': gettext('Could not extract any claims to check.'),
+		'sending_request_for_checking': gettext('Sending selected claims for final analysis...'),
+		'checked_claims_total': gettext('Checked claims'),
+		'show_detailed': gettext('Show detailed analysis'),
+		'hide_detailed': gettext('Hide detailed analysis'),
+		'original_text': gettext('Checked Text'),
+		'disclaimer_title': gettext('Disclaimer:'),
+		'disclaimer_text': gettext('This report is AI-generated. It may contain errors and may not have access to real-time data. Please verify the information independently.'),
+		'true_label': gettext('Confirmed'),
+		'false_label': gettext('Refuted'),
+		'misleading_label': gettext('Misleading'),
+		'partly_true_label': gettext('Partly True'),
+		'unverifiable_label': gettext('Unverifiable'),
+		'claim_text_missing': gettext('Claim text missing'),
+		'no_verdict': gettext('No verdict'),
+		'show_unchecked_claims': gettext('Show unchecked claims'),
+		'hide_unchecked_claims': gettext('Hide unchecked claims'),
+		'check_more_claims': gettext('Check more claims'),
+		'mostly_true': gettext('Mostly True'),
+		'mostly_false': gettext('Mostly False'),
+		'mixed_veracity': gettext('Mixed Veracity'),
+		'largely_unverifiable': gettext('Largely Unverifiable'),
+		'run_fact_check': gettext('Run Fact Check')
 	  } | tojson }};
 	</script>
 
@@ -86,5 +101,3 @@
 	{% endblock %}
 </body>
 </html>
-
-
