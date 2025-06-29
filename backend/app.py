@@ -1,11 +1,11 @@
 import os
-import logging # Ensure logging is imported at the top
+import logging
 from flask import Flask, request, jsonify, render_template, make_response, redirect, url_for
 from flask_cors import CORS
 from celery.result import AsyncResult
 from datetime import datetime
 from google.cloud.firestore_v1.query import Query
-from flask_babel import Babel, _ # _ is imported here but Jinja uses the one Babel puts in env
+from flask_babel import Babel, _
 from datetime import datetime, timezone, timedelta
 from constants import CACHE_EXPIRATION_DAYS
 
@@ -15,12 +15,9 @@ from tasks import get_db_client
 app = Flask(__name__)
 CORS(app)
 
-# Configure logger early based on environment variable
 LOG_LEVEL_STR = os.environ.get('FLASK_LOG_LEVEL', 'INFO').upper()
 numeric_log_level = getattr(logging, LOG_LEVEL_STR, logging.INFO)
 app.logger.setLevel(numeric_log_level)
-# You might want to add a handler if running in an environment where Flask/Gunicorn doesn't add one by default
-# For example, to ensure logs go to stdout/stderr:
 if not app.logger.handlers:
     stream_handler = logging.StreamHandler()
     stream_handler.setFormatter(logging.Formatter(
@@ -28,7 +25,6 @@ if not app.logger.handlers:
     ))
     app.logger.addHandler(stream_handler)
 app.logger.info(f"Flask logger initialized. Level set to: {LOG_LEVEL_STR} ({numeric_log_level})")
-
 
 @app.before_request
 def redirect_to_new_domain():
@@ -63,9 +59,7 @@ LANGUAGES = {
 app.config['BABEL_DEFAULT_LOCALE'] = 'en'
 app.config['BABEL_TRANSLATION_DIRECTORIES'] = 'translations'
 
-babel = Babel(app)
-
-@babel.localeselector
+# Renamed function that contains all logging logic
 def get_locale_for_babel():
     app.logger.debug(f"get_locale_for_babel CALLED. request.endpoint: {request.endpoint}, request.view_args: {request.view_args}")
     lang_to_return = None
@@ -109,6 +103,9 @@ def get_locale_for_babel():
         return 'en'
     app.logger.info(f"get_locale_for_babel: FINAL determined locale: {lang_to_return}")
     return lang_to_return
+
+# Initialize Babel and pass the locale_selector in the constructor
+babel = Babel(app, locale_selector=get_locale_for_babel)
 
 @app.context_processor
 def inject_conf_var():
