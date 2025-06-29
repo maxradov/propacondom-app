@@ -125,18 +125,25 @@ function displayResults(data) {
     let totalClaimsHTML = `<div class="checked-claims-total" style="font-size:1.05rem;color:#6c757d;margin-bottom:0.35em;">
         ${window.translations.checked_claims_total || 'Checked claims'}: <strong>${totalClaims}</strong>
     </div>`;
+
+    // Expanded verdictOrder to include all types and their translation keys
     const verdictOrder = [
-        { key: 'True', icon: '✅', label: window.translations.true_label || 'Confirmed' },
-        { key: 'False', icon: '❌', label: window.translations.false_label || 'Refuted' },
-        { key: 'Misleading', icon: '⚠️', label: window.translations.misleading_label || 'Misleading' },
-        { key: 'Partly True', icon: '🟡', label: window.translations.partly_true_label || 'Partly True' },
-        { key: 'Unverifiable', icon: '❓', label: window.translations.unverifiable_label || 'Unverifiable' }
+        { key: 'True', icon: '✅', translation_key: 'true_label', default_label: 'Confirmed' },
+        { key: 'Mostly True', icon: '✔️', translation_key: 'mostly_true', default_label: 'Mostly True' },
+        { key: 'Partly True', icon: '🟡', translation_key: 'partly_true_label', default_label: 'Partly True' },
+        { key: 'Mixed Veracity', icon: '🔄', translation_key: 'mixed_veracity', default_label: 'Mixed Veracity' },
+        { key: 'Misleading', icon: '⚠️', translation_key: 'misleading_label', default_label: 'Misleading' },
+        { key: 'False', icon: '❌', translation_key: 'false_label', default_label: 'Refuted' },
+        { key: 'Mostly False', icon: '✖️', translation_key: 'mostly_false', default_label: 'Mostly False' },
+        { key: 'Unverifiable', icon: '❓', translation_key: 'unverifiable_label', default_label: 'Unverifiable' },
+        { key: 'Largely Unverifiable', icon: '❔', translation_key: 'largely_unverifiable', default_label: 'Largely Unverifiable' }
     ];
 
     let iconsSummary = '';
     verdictOrder.forEach(v => {
         if (verdict_counts[v.key] && verdict_counts[v.key] > 0) {
-            iconsSummary += `<span class="verdict-icon verdict-${v.key.replace(/\s/g, '-')}">${v.icon} ${verdict_counts[v.key]} ${v.label}</span> `;
+            const label = window.translations[v.translation_key] || v.default_label;
+            iconsSummary += `<span class="verdict-icon verdict-${v.key.replace(/\s/g, '-')}">${v.icon} ${verdict_counts[v.key]} ${label}</span> `;
         }
     });
 
@@ -176,10 +183,16 @@ function displayResults(data) {
 
     detailed_results.forEach(claim => {
         const verdictClass = (claim.verdict || 'No-data').replace(/[\s/]+/g, '-');
+        // Find the verdict details from our expanded verdictOrder
+        const verdictDetails = verdictOrder.find(v => v.key === claim.verdict);
+        const displayVerdict = verdictDetails
+            ? (window.translations[verdictDetails.translation_key] || verdictDetails.default_label)
+            : (claim.verdict || (window.translations.no_verdict || 'No verdict'));
+
         reportHTML += `
             <div class="claim-item verdict-${verdictClass}">
                 <p class="claim-text">${claim.claim || (window.translations.claim_text_missing || 'Claim text missing')}
-                    <span class="claim-verdict">${claim.verdict || (window.translations.no_verdict || 'No verdict')}</span>
+                    <span class="claim-verdict">${displayVerdict}</span>
                 </p>
                 <div class="claim-explanation"><p>${claim.explanation || ''}</p></div>
         `;
