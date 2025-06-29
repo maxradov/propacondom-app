@@ -147,6 +147,15 @@ function displayResults(data) {
         }
     });
 
+    // Translate the overall_verdict from summary_data
+    let translatedOverallVerdict = summary_data.overall_verdict || '';
+    if (summary_data.overall_verdict) {
+        const overallVerdictDetails = verdictOrder.find(v => v.key === summary_data.overall_verdict);
+        if (overallVerdictDetails) {
+            translatedOverallVerdict = window.translations[overallVerdictDetails.translation_key] || overallVerdictDetails.default_label;
+        }
+    }
+
     let showText = '';
     if (data.input_type === 'text' && data.user_text) {
         const text = data.user_text;
@@ -162,7 +171,7 @@ function displayResults(data) {
         <div id="report-summary">
             <div class="verdict-summary-icons">${iconsSummary}</div>
             ${totalClaimsHTML}
-            <h2>${summary_data.overall_verdict || ''}</h2>
+            <h2>${translatedOverallVerdict}</h2>
 
             <div class="disclaimer-box">
                 <p><strong>${window.translations.disclaimer_title || 'Disclaimer:'}</strong> ${window.translations.disclaimer_text || 'This report is AI-generated. It may contain errors and may not have access to real-time data. Please verify the information independently.'}</p>
