@@ -6,11 +6,15 @@
     <title>{% block title %}{{ _('AI Fact Checker') }}{% endblock %}</title>
 
     {# Hreflang tags #}
-    {% if request.endpoint and request.endpoint not in ['static', 'set_language'] %} {# Avoid for non-content views #}
+    {% if request.endpoint and request.endpoint not in ['static', 'set_language', 'root_redirect'] %} {# Avoid for non-content views and root redirect #}
         {% for lang_code_loop in LANGUAGES.keys() %}
-            <link rel="alternate" hreflang="{{ lang_code_loop }}" href="{{ url_for(request.endpoint, lang_code=lang_code_loop, **(request.view_args or {})) }}">
+            {% set view_args_copy = (request.view_args or {}).copy() %}
+            {% set _ = view_args_copy.update({'lang_code': lang_code_loop}) %}
+            <link rel="alternate" hreflang="{{ lang_code_loop }}" href="{{ url_for(request.endpoint, **view_args_copy) }}">
         {% endfor %}
-        <link rel="alternate" hreflang="x-default" href="{{ url_for(request.endpoint, lang_code='en', **(request.view_args or {})) }}">
+        {% set view_args_copy_default = (request.view_args or {}).copy() %}
+        {% set _ = view_args_copy_default.update({'lang_code': 'en'}) %}
+        <link rel="alternate" hreflang="x-default" href="{{ url_for(request.endpoint, **view_args_copy_default) }}">
     {% endif %}
 
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
