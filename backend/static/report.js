@@ -175,7 +175,7 @@ function displayResults(data) {
             </ul>
         </div>
         <button id="details-toggle" class="details-toggle">${window.translations.show_detailed}</button>
-		<a href="#" id="toggle-unchecked-claims" class="details-toggle" style="margin-left: 1rem;">Show unchecked claims</a>
+		<a href="#" id="toggle-unchecked-claims" class="details-toggle" style="margin-left: 1rem;">${window.translations.show_unchecked_claims || 'Show unchecked claims'}</a>
 		<div id="unchecked-claims-container" style="display: none; margin-top: 1.3rem;"></div>
 		<div id="claim-list-container" style="display: none;">
         <div class="claim-list">
@@ -226,10 +226,10 @@ function displayResults(data) {
 			if (uncheckedClaimsContainer.style.display === 'none') {
 				renderUncheckedClaimsSection(data, uncheckedClaimsContainer);
 				uncheckedClaimsContainer.style.display = 'block';
-				toggleUncheckedLink.textContent = 'Hide unchecked claims';
+				toggleUncheckedLink.textContent = window.translations.hide_unchecked_claims || 'Hide unchecked claims';
 			} else {
 				uncheckedClaimsContainer.style.display = 'none';
-				toggleUncheckedLink.textContent = 'Show unchecked claims';
+				toggleUncheckedLink.textContent = window.translations.show_unchecked_claims || 'Show unchecked claims';
 			}
 		});
 	}
