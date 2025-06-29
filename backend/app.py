@@ -5,7 +5,7 @@ from flask_cors import CORS
 from celery.result import AsyncResult
 from datetime import datetime
 from google.cloud.firestore_v1.query import Query
-from flask_babel import Babel, _
+from flask_babel import Babel, gettext, ngettext # Explicitly import gettext, ngettext
 from datetime import datetime, timezone, timedelta
 from constants import CACHE_EXPIRATION_DAYS
 
@@ -59,7 +59,6 @@ LANGUAGES = {
 app.config['BABEL_DEFAULT_LOCALE'] = 'en'
 app.config['BABEL_TRANSLATION_DIRECTORIES'] = 'translations'
 
-# Renamed function that contains all logging logic
 def get_locale_for_babel():
     app.logger.debug(f"get_locale_for_babel CALLED. request.endpoint: {request.endpoint}, request.view_args: {request.view_args}")
     lang_to_return = None
@@ -104,8 +103,13 @@ def get_locale_for_babel():
     app.logger.info(f"get_locale_for_babel: FINAL determined locale: {lang_to_return}")
     return lang_to_return
 
-# Initialize Babel and pass the locale_selector in the constructor
 babel = Babel(app, locale_selector=get_locale_for_babel)
+
+# Diagnostic check immediately after Babel initialization
+if hasattr(app, 'jinja_env') and app.jinja_env.globals.get('_'):
+    app.logger.info("app.py (after Babel init): '_' function IS in Jinja globals. Type: %s", type(app.jinja_env.globals.get('_')))
+else:
+    app.logger.error("app.py (after Babel init): '_' function IS NOT in Jinja globals or is None!")
 
 @app.context_processor
 def inject_conf_var():
@@ -124,13 +128,12 @@ def inject_conf_var():
         CURRENT_LANG=current_template_lang
     )
 
-# --- Rest of the app.py code ---
 @app.route('/api/report/<analysis_id>')
 def get_report_or_selection(analysis_id):
     db = get_db_client()
     doc = db.collection('analyses').document(analysis_id).get()
     if not doc.exists:
-        return jsonify({'error': 'Not found'}), 404
+        return jsonify({'error': gettext('Not found')}), 404
     data = doc.to_dict()
     status = data.get('status', 'UNKNOWN')
     if status == 'COMPLETED':
@@ -171,13 +174,13 @@ def get_report_or_selection(analysis_id):
             "id": analysis_id, "input_type": data.get("input_type", "youtube")
         })
     else:
-        return jsonify({'error': 'Analysis not complete.'}), 400
+        return jsonify({'error': gettext('Analysis not complete.')}), 400
 
 @app.route('/api/fact_check_selected', methods=['POST'])
 def fact_check_selected():
     data = request.get_json()
     if not data or 'analysis_id' not in data or 'selected_claims_data' not in data:
-        return jsonify({"error": "analysis_id and a list of selected_claims_data are required"}), 400
+        return jsonify({"error": gettext("analysis_id and a list of selected_claims_data are required")}), 400
     analysis_id = data['analysis_id']
     selected_claims = data['selected_claims_data']
     task = celery_app.send_task('tasks.fact_check_selected', args=[analysis_id, selected_claims])
@@ -232,9 +235,16 @@ def root_redirect():
 def analyze():
     data = request.get_json()
     if not data or 'url' not in data:
-        return jsonify({"error": "Input is required"}), 400
+        return jsonify({"error": gettext("Input is required")}), 400
     user_input = data['url']
-    target_lang = data.get('lang', get_locale_for_babel())
+    target_lang_for_task = app.config['BABEL_DEFAULT_LOCALE']
+    # Determine language for the task based on current request context if possible
+    # This uses get_locale_for_babel which now robustly checks URL, cookie, browser
+    task_context_lang = get_locale_for_babel()
+    if task_context_lang in LANGUAGES:
+        target_lang_for_task = task_context_lang
+
+    target_lang = data.get('lang', target_lang_for_task)
     if target_lang not in LANGUAGES:
         target_lang = app.config['BABEL_DEFAULT_LOCALE']
     task = celery_app.send_task('tasks.extract_claims', args=[user_input, target_lang])
@@ -252,7 +262,7 @@ def get_status(task_id):
         return jsonify(response_data)
     except Exception as e:
         app.logger.error(f"Error getting task status for {task_id}: {e}")
-        return jsonify({'status': 'FAILURE', 'result': 'Could not retrieve task status from backend.'}), 500
+        return jsonify({'status': 'FAILURE', 'result': gettext('Could not retrieve task status from backend.')}), 500
 
 def get_analyses(last_timestamp_str=None):
     db = get_db_client()
@@ -282,13 +292,21 @@ def api_get_recent_analyses():
         return jsonify(analyses)
     except Exception as e:
         app.logger.error(f"Error in /api/get_recent_analyses: {e}")
-        return jsonify({"error": "Failed to fetch more analyses"}), 500
+        return jsonify({"error": gettext("Failed to fetch more analyses")}), 500
 
 @app.route('/<lang_code>/', methods=['GET'])
 def serve_index(lang_code):
     if lang_code not in LANGUAGES:
         app.logger.warning(f"serve_index: Invalid lang_code '{lang_code}', redirecting to default.")
         return redirect(url_for('serve_index', lang_code=app.config['BABEL_DEFAULT_LOCALE']))
+
+    # --- DEBUGGING Jinja Globals ---
+    if hasattr(app, 'jinja_env') and app.jinja_env.globals.get('_'):
+        app.logger.info(f"serve_index (lang: {lang_code}): _ function in Jinja globals is: {type(app.jinja_env.globals.get('_'))}")
+    else:
+        app.logger.error(f"serve_index (lang: {lang_code}): _ function NOT FOUND or None in Jinja globals!")
+    # --- END DEBUGGING ---
+
     try:
         recent_analyses = get_analyses()
         url_param = request.args.get('url', '')
@@ -326,10 +344,10 @@ def serve_report(lang_code, analysis_id):
             recent_analyses = get_analyses()
             return render_template('report.html', report=report_data, recent_analyses=recent_analyses)
         else:
-            return _("Report not found"), 404
+            return gettext("Report not found"), 404
     except Exception as e:
         app.logger.error(f"Error in serve_report for lang {lang_code}, report {analysis_id}: {e}", exc_info=True)
-        return f"{_('An error occurred')}: {e}", 500
+        return f"{gettext('An error occurred')}: {e}", 500
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 8080))
