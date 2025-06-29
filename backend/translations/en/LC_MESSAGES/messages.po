@@ -1,10 +1,9 @@
-
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-06-29 18:04+0000\n"
-"PO-Revision-Date: 2025-06-22 23:24+0000\n"
+"PO-Revision-Date: 2025-06-29 21:35+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
 "Language-Team: en <LL@li.org>\n"
@@ -16,425 +15,233 @@ msgstr ""
 
 #: backend/app.py:232
 msgid "Report not found"
-msgstr ""
+msgstr "Report not found"
 
 #: backend/app.py:235
 msgid "An error occurred"
-msgstr ""
+msgstr "An error occurred"
 
 #: backend/templates/index.html:3
 msgid "AI Fact Checker for YouTube, Articles & Text | Verify Sources"
-msgstr ""
+msgstr "AI Fact Checker for YouTube, Articles & Text | Verify Sources"
 
 #: backend/templates/index.html:9
 msgid "AI Fact-Checker for YouTube, News & Articles"
-msgstr ""
+msgstr "AI Fact-Checker for YouTube, News & Articles"
 
 #: backend/templates/index.html:10
-msgid ""
-"Instantly verify facts and detect misinformation in YouTube videos, news,"
-" articles, and any text using advanced AI fact-checking."
-msgstr ""
+msgid "Instantly verify facts and detect misinformation in YouTube videos, news, articles, and any text using advanced AI fact-checking."
+msgstr "Instantly verify facts and detect misinformation in YouTube videos, news, articles, and any text using advanced AI fact-checking."
 
 #: backend/templates/index.html:13
 msgid "Paste a YouTube link, article URL, or text to check..."
-msgstr ""
+msgstr "Paste a YouTube link, article URL, or text to check..."
 
 #: backend/templates/index.html:14 backend/templates/layout.html:80
 msgid "Run Fact Check"
-msgstr ""
+msgstr "Run Fact Check"
 
 #: backend/templates/index.html:23 backend/templates/report.html:37
 msgid "Last checked:"
-msgstr ""
+msgstr "Last checked:"
 
 #: backend/templates/index.html:41 backend/templates/report.html:55
 #, python-format
 msgid "%(credibility)s%% Credibility / %(confidence)s%% Confidence"
-msgstr ""
+msgstr "%(credibility)s%% Credibility / %(confidence)s%% Confidence"
 
-#: backend/templates/index.html:49 backend/templates/layout.html:45
-#: backend/templates/report.html:63
+#: backend/templates/index.html:49 backend/templates/layout.html:45 backend/templates/report.html:63
 msgid "Loading more..."
-msgstr ""
+msgstr "Loading more..."
 
 #: backend/templates/layout.html:6
 msgid "AI Fact Checker"
-msgstr ""
+msgstr "AI Fact Checker"
 
 #: backend/templates/layout.html:14
 msgid "Advanced AI Fact Checking"
-msgstr ""
+msgstr "Advanced AI Fact Checking"
 
 #: backend/templates/layout.html:37
 msgid "Please paste a video link."
-msgstr ""
+msgstr "Please paste a video link."
 
 #: backend/templates/layout.html:38
 msgid "Please enter a valid YouTube video link!"
-msgstr ""
+msgstr "Please enter a valid YouTube video link!"
 
 #: backend/templates/layout.html:39
 msgid "Sending request for analysis..."
-msgstr ""
+msgstr "Sending request for analysis..."
 
 #: backend/templates/layout.html:40
 msgid "Error starting analysis."
-msgstr ""
+msgstr "Error starting analysis."
 
 #: backend/templates/layout.html:41
 msgid "Critical polling error:"
-msgstr ""
+msgstr "Critical polling error:"
 
 #: backend/templates/layout.html:42
 msgid "An error occurred during processing:"
-msgstr ""
+msgstr "An error occurred during processing:"
 
 #: backend/templates/layout.html:43
 msgid "No more results"
-msgstr ""
+msgstr "No more results"
 
 #: backend/templates/layout.html:44
 msgid "Failed to load"
-msgstr ""
+msgstr "Failed to load"
 
 #: backend/templates/layout.html:46
 msgid "Credibility"
-msgstr ""
+msgstr "Credibility"
 
 #: backend/templates/layout.html:47
 msgid "Confidence"
-msgstr ""
+msgstr "Confidence"
 
 #: backend/templates/layout.html:48
 msgid "Sources:"
-msgstr ""
+msgstr "Sources:"
 
 #: backend/templates/layout.html:49
 msgid "Link Copied!"
-msgstr ""
+msgstr "Link Copied!"
 
 #: backend/templates/layout.html:50
 msgid "Failed to copy link."
-msgstr ""
+msgstr "Failed to copy link."
 
 #: backend/templates/layout.html:51
 msgid "Fact-Check Report"
-msgstr ""
+msgstr "Fact-Check Report"
 
 #: backend/templates/layout.html:52
 msgid "Check out the fact-check report for this video:"
-msgstr ""
+msgstr "Check out the fact-check report for this video:"
 
 #: backend/templates/layout.html:53
 msgid "Select up to 5 claims to verify"
-msgstr ""
+msgstr "Select up to 5 claims to verify"
 
 #: backend/templates/layout.html:54
 msgid "Fact-Check Selected"
-msgstr ""
+msgstr "Fact-Check Selected"
 
 #: backend/templates/layout.html:55
 msgid "You can only select up to"
-msgstr ""
+msgstr "You can only select up to"
 
 #: backend/templates/layout.html:56
 msgid "claims"
-msgstr ""
+msgstr "claims"
 
 #: backend/templates/layout.html:57
 msgid "Already checked"
-msgstr ""
+msgstr "Already checked"
 
 #: backend/templates/layout.html:58
 msgid "Could not extract any claims to check."
-msgstr ""
+msgstr "Could not extract any claims to check."
 
 #: backend/templates/layout.html:59
 msgid "Sending selected claims for final analysis..."
-msgstr ""
+msgstr "Sending selected claims for final analysis..."
 
 #: backend/templates/layout.html:60
 msgid "Checked claims"
-msgstr ""
+msgstr "Checked claims"
 
 #: backend/templates/layout.html:61
 msgid "Show detailed analysis"
-msgstr ""
+msgstr "Show detailed analysis"
 
 #: backend/templates/layout.html:62
 msgid "Hide detailed analysis"
-msgstr ""
+msgstr "Hide detailed analysis"
 
 #: backend/templates/layout.html:63
 msgid "Checked Text"
-msgstr ""
+msgstr "Checked Text"
 
 #: backend/templates/layout.html:64
 msgid "Disclaimer:"
-msgstr ""
+msgstr "Disclaimer:"
 
 #: backend/templates/layout.html:65
-msgid ""
-"This report is AI-generated. It may contain errors and may not have "
-"access to real-time data. Please verify the information independently."
-msgstr ""
+msgid "This report is AI-generated. It may contain errors and may not have access to real-time data. Please verify the information independently."
+msgstr "This report is AI-generated. It may contain errors and may not have access to real-time data. Please verify the information independently."
 
 #: backend/templates/layout.html:66
 msgid "Confirmed"
-msgstr ""
+msgstr "Confirmed"
 
 #: backend/templates/layout.html:67
 msgid "Refuted"
-msgstr ""
+msgstr "Refuted"
 
 #: backend/templates/layout.html:68
 msgid "Misleading"
-msgstr ""
+msgstr "Misleading"
 
 #: backend/templates/layout.html:69
 msgid "Partly True"
-msgstr ""
+msgstr "Partly True"
 
 #: backend/templates/layout.html:70
 msgid "Unverifiable"
-msgstr ""
+msgstr "Unverifiable"
 
 #: backend/templates/layout.html:71
 msgid "Claim text missing"
-msgstr ""
+msgstr "Claim text missing"
 
 #: backend/templates/layout.html:72
 msgid "No verdict"
-msgstr ""
+msgstr "No verdict"
 
 #: backend/templates/layout.html:73
 msgid "Show unchecked claims"
-msgstr ""
+msgstr "Show unchecked claims"
 
 #: backend/templates/layout.html:74
 msgid "Hide unchecked claims"
-msgstr ""
+msgstr "Hide unchecked claims"
 
 #: backend/templates/layout.html:75
 msgid "Check more claims"
-msgstr ""
+msgstr "Check more claims"
 
 #: backend/templates/layout.html:76
 msgid "Mostly True"
-msgstr ""
+msgstr "Mostly True"
 
 #: backend/templates/layout.html:77
 msgid "Mostly False"
-msgstr ""
+msgstr "Mostly False"
 
 #: backend/templates/layout.html:78
 msgid "Mixed Veracity"
-msgstr ""
+msgstr "Mixed Veracity"
 
 #: backend/templates/layout.html:79
 msgid "Largely Unverifiable"
-msgstr ""
+msgstr "Largely Unverifiable"
 
 #: backend/templates/report.html:3
 msgid "Fact-Check Report for:"
-msgstr ""
+msgstr "Fact-Check Report for:"
 
 #: backend/templates/report.html:9
 msgid "Fact-check report for:"
-msgstr ""
+msgstr "Fact-check report for:"
 
 #: backend/templates/report.html:15
 msgid "Share Results"
-msgstr ""
+msgstr "Share Results"
 
 #: backend/templates/report.html:20
 msgid "Video Thumbnail"
-msgstr ""
-
-#~ msgid "Report not found"
-#~ msgstr "Report not found"
-
-#~ msgid "An error occurred"
-#~ msgstr "An error occurred"
-
-#~ msgid "AI Fact Checker for YouTube, Articles & Text | Verify Sources"
-#~ msgstr "AI Fact Checker for YouTube, Articles & Text | Verify Sources"
-
-#~ msgid "AI Fact-Checker for YouTube, News & Articles"
-#~ msgstr "AI Fact-Checker for YouTube, News & Articles"
-
-#~ msgid ""
-#~ "Instantly verify facts and detect "
-#~ "misinformation in YouTube videos, news, "
-#~ "articles, and any text using advanced"
-#~ " AI fact-checking."
-#~ msgstr ""
-#~ "Instantly verify facts and detect "
-#~ "misinformation in YouTube videos, news, "
-#~ "articles, and any text using advanced"
-#~ " AI fact-checking."
-
-#~ msgid "Paste a YouTube link, article URL, or text to check..."
-#~ msgstr "Paste a YouTube link, article URL, or text to check..."
-
-#~ msgid "Run Fact Check"
-#~ msgstr "Run Fact Check"
-
-#~ msgid "Last checked:"
-#~ msgstr "Last checked:"
-
-#~ msgid "%(credibility)s%% Credibility / %(confidence)s%% Confidence"
-#~ msgstr "%(credibility)s%% Credibility / %(confidence)s%% Confidence"
-
-#~ msgid "Loading more..."
-#~ msgstr "Loading more..."
-
-#~ msgid "AI Fact Checker"
-#~ msgstr "AI Fact Checker"
-
-#~ msgid "Please paste a video link."
-#~ msgstr "Please paste a video link."
-
-#~ msgid "Please enter a valid YouTube video link!"
-#~ msgstr "Please enter a valid YouTube video link!"
-
-#~ msgid "Sending request for analysis..."
-#~ msgstr "Sending request for analysis..."
-
-#~ msgid "Error starting analysis."
-#~ msgstr "Error starting analysis."
-
-#~ msgid "Critical polling error:"
-#~ msgstr "Critical polling error:"
-
-#~ msgid "An error occurred during processing:"
-#~ msgstr "An error occurred during processing:"
-
-#~ msgid "No more results"
-#~ msgstr "No more results"
-
-#~ msgid "Failed to load"
-#~ msgstr "Failed to load"
-
-#~ msgid "Credibility"
-#~ msgstr "Credibility"
-
-#~ msgid "Confidence"
-#~ msgstr "Confidence"
-
-#~ msgid "Sources:"
-#~ msgstr "Sources:"
-
-#~ msgid "Link Copied!"
-#~ msgstr "Link Copied!"
-
-#~ msgid "Failed to copy link."
-#~ msgstr "Failed to copy link."
-
-#~ msgid "Fact-Check Report"
-#~ msgstr "Fact-Check Report"
-
-#~ msgid "Check out the fact-check report for this video:"
-#~ msgstr "Check out the fact-check report for this video:"
-
-#~ msgid "Select up to 5 claims to verify"
-#~ msgstr "Select up to 5 claims to verify"
-
-#~ msgid "Fact-Check Selected"
-#~ msgstr "Fact-Check Selected"
-
-#~ msgid "You can only select up to"
-#~ msgstr "You can only select up to"
-
-#~ msgid "claims"
-#~ msgstr "claims"
-
-#~ msgid "Already checked"
-#~ msgstr "Already checked"
-
-#~ msgid "Could not extract any claims to check."
-#~ msgstr "Could not extract any claims to check."
-
-#~ msgid "Sending selected claims for final analysis..."
-#~ msgstr "Sending selected claims for final analysis..."
-
-#~ msgid "Checked claims"
-#~ msgstr "Checked claims"
-
-#~ msgid "Show detailed analysis"
-#~ msgstr "Show Detailed Analysis"
-
-#~ msgid "Hide detailed analysis"
-#~ msgstr "Hide Detailed Analysis"
-
-#~ msgid "Checked Text"
-#~ msgstr "Checked Text"
-
-#~ msgid "Disclaimer:"
-#~ msgstr "Disclaimer:"
-
-#~ msgid ""
-#~ "This report is AI-generated. It "
-#~ "may contain errors and may not "
-#~ "have access to real-time data. "
-#~ "Please verify the information independently."
-#~ msgstr ""
-#~ "This report is AI-generated. It "
-#~ "may contain errors and may not "
-#~ "have access to real-time data. "
-#~ "Please verify the information independently."
-
-#~ msgid "Confirmed"
-#~ msgstr "Confirmed"
-
-#~ msgid "Refuted"
-#~ msgstr "Refuted"
-
-#~ msgid "Misleading"
-#~ msgstr "Misleading"
-
-#~ msgid "Partly True"
-#~ msgstr "Partly True"
-
-#~ msgid "Unverifiable"
-#~ msgstr "Unverifiable"
-
-#~ msgid "Claim text missing"
-#~ msgstr "Claim text missing"
-
-#~ msgid "No verdict"
-#~ msgstr "No verdict"
-
-#~ msgid "Show unchecked claims"
-#~ msgstr "Show unchecked claims"
-
-#~ msgid "Hide unchecked claims"
-#~ msgstr "Hide unchecked claims"
-
-#~ msgid "Check more claims"
-#~ msgstr "Check more claims"
-
-#~ msgid "Mostly True"
-#~ msgstr "Mostly True"
-
-#~ msgid "Mostly False"
-#~ msgstr "Mostly False"
-
-#~ msgid "Mixed Veracity"
-#~ msgstr "Mixed Veracity"
-
-#~ msgid "Largely Unverifiable"
-#~ msgstr "Largely Unverifiable"
-
-#~ msgid "Fact-Check Report for:"
-#~ msgstr "Fact-Check Report for:"
-
-#~ msgid "Fact-check report for:"
-#~ msgstr "Fact-check report for:"
-
-#~ msgid "Share Results"
-#~ msgstr "Share Results"
-
-#~ msgid "Video Thumbnail"
-#~ msgstr "Video Thumbnail"
+msgstr "Video Thumbnail"

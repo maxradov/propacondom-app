@@ -1,10 +1,9 @@
-
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-06-29 18:04+0000\n"
-"PO-Revision-Date: 2025-06-22 23:20+0000\n"
+"PO-Revision-Date: 2025-06-29 21:15+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: bn\n"
 "Language-Team: bn <LL@li.org>\n"
@@ -16,425 +15,233 @@ msgstr ""
 
 #: backend/app.py:232
 msgid "Report not found"
-msgstr ""
+msgstr "রিপোর্ট পাওয়া যায়নি"
 
 #: backend/app.py:235
 msgid "An error occurred"
-msgstr ""
+msgstr "একটি ত্রুটি ঘটেছে"
 
 #: backend/templates/index.html:3
 msgid "AI Fact Checker for YouTube, Articles & Text | Verify Sources"
-msgstr ""
+msgstr "ইউটিউব, আর্টিকেল ও টেক্সটের জন্য এআই ফ্যাক্ট চেকার | সোর্স যাচাই করুন"
 
 #: backend/templates/index.html:9
 msgid "AI Fact-Checker for YouTube, News & Articles"
-msgstr ""
+msgstr "ইউটিউব, নিউজ ও আর্টিকেলের জন্য এআই ফ্যাক্ট চেকার"
 
 #: backend/templates/index.html:10
-msgid ""
-"Instantly verify facts and detect misinformation in YouTube videos, news,"
-" articles, and any text using advanced AI fact-checking."
-msgstr ""
+msgid "Instantly verify facts and detect misinformation in YouTube videos, news, articles, and any text using advanced AI fact-checking."
+msgstr "উন্নত এআই ফ্যাক্ট-চেকিং দিয়ে ইউটিউব ভিডিও, নিউজ, আর্টিকেল আর যেকোনো টেক্সটে মুহূর্তেই তথ্য যাচাই করুন ও ভুল তথ্য চিহ্নিত করুন।"
 
 #: backend/templates/index.html:13
 msgid "Paste a YouTube link, article URL, or text to check..."
-msgstr ""
+msgstr "চেক করতে ইউটিউব লিঙ্ক, আর্টিকেল ইউআরএল বা টেক্সট পেস্ট করুন..."
 
 #: backend/templates/index.html:14 backend/templates/layout.html:80
 msgid "Run Fact Check"
-msgstr ""
+msgstr "ফ্যাক্ট চেক চালান"
 
 #: backend/templates/index.html:23 backend/templates/report.html:37
 msgid "Last checked:"
-msgstr ""
+msgstr "সর্বশেষ যাচাই:"
 
 #: backend/templates/index.html:41 backend/templates/report.html:55
 #, python-format
 msgid "%(credibility)s%% Credibility / %(confidence)s%% Confidence"
-msgstr ""
+msgstr "%(credibility)s%% বিশ্বাসযোগ্যতা / %(confidence)s%% আস্থা"
 
-#: backend/templates/index.html:49 backend/templates/layout.html:45
-#: backend/templates/report.html:63
+#: backend/templates/index.html:49 backend/templates/layout.html:45 backend/templates/report.html:63
 msgid "Loading more..."
-msgstr ""
+msgstr "আরও লোড হচ্ছে..."
 
 #: backend/templates/layout.html:6
 msgid "AI Fact Checker"
-msgstr ""
+msgstr "ফ্যাক্ট চেক চালান"
 
 #: backend/templates/layout.html:14
 msgid "Advanced AI Fact Checking"
-msgstr ""
+msgstr "উন্নত এআই ফ্যাক্ট যাচাই"
 
 #: backend/templates/layout.html:37
 msgid "Please paste a video link."
-msgstr ""
+msgstr "অনুগ্রহ করে একটি ভিডিও লিঙ্ক পেস্ট করুন।"
 
 #: backend/templates/layout.html:38
 msgid "Please enter a valid YouTube video link!"
-msgstr ""
+msgstr "অনুগ্রহ করে একটি বৈধ YouTube ভিডিও লিঙ্ক দিন!"
 
 #: backend/templates/layout.html:39
 msgid "Sending request for analysis..."
-msgstr ""
+msgstr "বিশ্লেষণের জন্য অনুরোধ পাঠানো হচ্ছে..."
 
 #: backend/templates/layout.html:40
 msgid "Error starting analysis."
-msgstr ""
+msgstr "বিশ্লেষণ শুরু করতে সমস্যা হয়েছে।"
 
 #: backend/templates/layout.html:41
 msgid "Critical polling error:"
-msgstr ""
+msgstr "স্থিতি যাচাইয়ের সময় গুরুতর ত্রুটি:"
 
 #: backend/templates/layout.html:42
 msgid "An error occurred during processing:"
-msgstr ""
+msgstr "প্রক্রিয়াকরণের সময় একটি ত্রুটি ঘটেছে:"
 
 #: backend/templates/layout.html:43
 msgid "No more results"
-msgstr ""
+msgstr "আর কোনো ফলাফল নেই"
 
 #: backend/templates/layout.html:44
 msgid "Failed to load"
-msgstr ""
+msgstr "লোড করতে ব্যর্থ হয়েছে"
 
 #: backend/templates/layout.html:46
 msgid "Credibility"
-msgstr ""
+msgstr "বিশ্বাসযোগ্যতা"
 
 #: backend/templates/layout.html:47
 msgid "Confidence"
-msgstr ""
+msgstr "আস্থা"
 
 #: backend/templates/layout.html:48
 msgid "Sources:"
-msgstr ""
+msgstr "উৎস:"
 
 #: backend/templates/layout.html:49
 msgid "Link Copied!"
-msgstr ""
+msgstr "লিঙ্ক কপি হয়েছে!"
 
 #: backend/templates/layout.html:50
 msgid "Failed to copy link."
-msgstr ""
+msgstr "লিঙ্ক কপি করতে ব্যর্থ হয়েছে।"
 
 #: backend/templates/layout.html:51
 msgid "Fact-Check Report"
-msgstr ""
+msgstr "তথ্য যাচাইকরণ প্রতিবেদন"
 
 #: backend/templates/layout.html:52
 msgid "Check out the fact-check report for this video:"
-msgstr ""
+msgstr "এই ভিডিওর তথ্য যাচাইকরণ প্রতিবেদন দেখুন:"
 
 #: backend/templates/layout.html:53
 msgid "Select up to 5 claims to verify"
-msgstr ""
+msgstr "যাচাইয়ের জন্য সর্বাধিক ৫টি দাবি নির্বাচন করুন"
 
 #: backend/templates/layout.html:54
 msgid "Fact-Check Selected"
-msgstr ""
+msgstr "নির্বাচিত তথ্য যাচাই করুন"
 
 #: backend/templates/layout.html:55
 msgid "You can only select up to"
-msgstr ""
+msgstr "আপনি সর্বাধিক নির্বাচন করতে পারেন"
 
 #: backend/templates/layout.html:56
 msgid "claims"
-msgstr ""
+msgstr "দাবি"
 
 #: backend/templates/layout.html:57
 msgid "Already checked"
-msgstr ""
+msgstr "ইতিমধ্যে যাচাই করা হয়েছে"
 
 #: backend/templates/layout.html:58
 msgid "Could not extract any claims to check."
-msgstr ""
+msgstr "যাচাইয়ের জন্য কোনো দাবি পাওয়া যায়নি।"
 
 #: backend/templates/layout.html:59
 msgid "Sending selected claims for final analysis..."
-msgstr ""
+msgstr "নির্বাচিত দাবি চূড়ান্ত বিশ্লেষণের জন্য পাঠানো হচ্ছে..."
 
 #: backend/templates/layout.html:60
 msgid "Checked claims"
-msgstr ""
+msgstr "যাচাইকৃত দাবি"
 
 #: backend/templates/layout.html:61
 msgid "Show detailed analysis"
-msgstr ""
+msgstr "বিস্তারিত বিশ্লেষণ দেখান"
 
 #: backend/templates/layout.html:62
 msgid "Hide detailed analysis"
-msgstr ""
+msgstr "বিস্তারিত বিশ্লেষণ লুকান"
 
 #: backend/templates/layout.html:63
 msgid "Checked Text"
-msgstr ""
+msgstr "যাচাইকৃত টেক্সট"
 
 #: backend/templates/layout.html:64
 msgid "Disclaimer:"
-msgstr ""
+msgstr "দায়িত্বত্যাগ:"
 
 #: backend/templates/layout.html:65
-msgid ""
-"This report is AI-generated. It may contain errors and may not have "
-"access to real-time data. Please verify the information independently."
-msgstr ""
+msgid "This report is AI-generated. It may contain errors and may not have access to real-time data. Please verify the information independently."
+msgstr "এই প্রতিবেদনটি এআই দ্বারা তৈরি। এতে ভুল থাকতে পারে এবং এটি রিয়েল-টাইম তথ্য পেতে নাও পারে। অনুগ্রহ করে নিজে যাচাই করুন।"
 
 #: backend/templates/layout.html:66
 msgid "Confirmed"
-msgstr ""
+msgstr "নিশ্চিত"
 
 #: backend/templates/layout.html:67
 msgid "Refuted"
-msgstr ""
+msgstr "অস্বীকৃত"
 
 #: backend/templates/layout.html:68
 msgid "Misleading"
-msgstr ""
+msgstr "ভুল পথে পরিচালিত"
 
 #: backend/templates/layout.html:69
 msgid "Partly True"
-msgstr ""
+msgstr "আংশিক সত্য"
 
 #: backend/templates/layout.html:70
 msgid "Unverifiable"
-msgstr ""
+msgstr "যাচাইযোগ্য নয়"
 
 #: backend/templates/layout.html:71
 msgid "Claim text missing"
-msgstr ""
+msgstr "দাবির টেক্সট নেই"
 
 #: backend/templates/layout.html:72
 msgid "No verdict"
-msgstr ""
+msgstr "কোনো সিদ্ধান্ত নেই"
 
 #: backend/templates/layout.html:73
 msgid "Show unchecked claims"
-msgstr ""
+msgstr "যে দাবি যাচাই করা হয়নি, দেখান"
 
 #: backend/templates/layout.html:74
 msgid "Hide unchecked claims"
-msgstr ""
+msgstr "যে দাবি যাচাই করা হয়নি, লুকান"
 
 #: backend/templates/layout.html:75
 msgid "Check more claims"
-msgstr ""
+msgstr "আরও দাবি যাচাই করুন"
 
 #: backend/templates/layout.html:76
 msgid "Mostly True"
-msgstr ""
+msgstr "প্রধানত সত্য"
 
 #: backend/templates/layout.html:77
 msgid "Mostly False"
-msgstr ""
+msgstr "প্রধানত মিথ্যা"
 
 #: backend/templates/layout.html:78
 msgid "Mixed Veracity"
-msgstr ""
+msgstr "মিশ্র সত্যতা"
 
 #: backend/templates/layout.html:79
 msgid "Largely Unverifiable"
-msgstr ""
+msgstr "প্রধানত যাচাইযোগ্য নয়"
 
 #: backend/templates/report.html:3
 msgid "Fact-Check Report for:"
-msgstr ""
+msgstr "তথ্য যাচাইকরণ প্রতিবেদন এর জন্য:"
 
 #: backend/templates/report.html:9
 msgid "Fact-check report for:"
-msgstr ""
+msgstr "তথ্য যাচাইকরণ প্রতিবেদন এর জন্য:"
 
 #: backend/templates/report.html:15
 msgid "Share Results"
-msgstr ""
+msgstr "ফলাফল শেয়ার করুন"
 
 #: backend/templates/report.html:20
 msgid "Video Thumbnail"
-msgstr ""
-
-#~ msgid "Report not found"
-#~ msgstr "রিপোর্ট পাওয়া যায়নি"
-
-#~ msgid "An error occurred"
-#~ msgstr "একটি ত্রুটি ঘটেছে"
-
-#~ msgid "AI Fact Checker for YouTube, Articles & Text | Verify Sources"
-#~ msgstr "ইউটিউব, আর্টিকেল ও টেক্সটের জন্য এআই ফ্যাক্ট চেকার | সোর্স যাচাই করুন"
-
-#~ msgid "AI Fact-Checker for YouTube, News & Articles"
-#~ msgstr "ইউটিউব, নিউজ ও আর্টিকেলের জন্য এআই ফ্যাক্ট চেকার"
-
-#~ msgid ""
-#~ "Instantly verify facts and detect "
-#~ "misinformation in YouTube videos, news, "
-#~ "articles, and any text using advanced"
-#~ " AI fact-checking."
-#~ msgstr ""
-#~ "উন্নত এআই ফ্যাক্ট-চেকিং দিয়ে ইউটিউব "
-#~ "ভিডিও, নিউজ, আর্টিকেল আর যেকোনো টেক্সটে"
-#~ " মুহূর্তেই তথ্য যাচাই করুন ও ভুল "
-#~ "তথ্য চিহ্নিত করুন।"
-
-#~ msgid "Paste a YouTube link, article URL, or text to check..."
-#~ msgstr "চেক করতে ইউটিউব লিঙ্ক, আর্টিকেল ইউআরএল বা টেক্সট পেস্ট করুন..."
-
-#~ msgid "Run Fact Check"
-#~ msgstr "ফ্যাক্ট চেক চালান"
-
-#~ msgid "Last checked:"
-#~ msgstr "সর্বশেষ যাচাই:"
-
-#~ msgid "%(credibility)s%% Credibility / %(confidence)s%% Confidence"
-#~ msgstr "%(credibility)s%% বিশ্বাসযোগ্যতা / %(confidence)s%% আস্থা"
-
-#~ msgid "Loading more..."
-#~ msgstr "আরও লোড হচ্ছে..."
-
-#~ msgid "AI Fact Checker"
-#~ msgstr "ফ্যাক্ট চেক চালান"
-
-#~ msgid "Please paste a video link."
-#~ msgstr "অনুগ্রহ করে একটি ভিডিও লিঙ্ক পেস্ট করুন।"
-
-#~ msgid "Please enter a valid YouTube video link!"
-#~ msgstr "অনুগ্রহ করে একটি বৈধ YouTube ভিডিও লিঙ্ক দিন!"
-
-#~ msgid "Sending request for analysis..."
-#~ msgstr "বিশ্লেষণের জন্য অনুরোধ পাঠানো হচ্ছে..."
-
-#~ msgid "Error starting analysis."
-#~ msgstr "বিশ্লেষণ শুরু করতে সমস্যা হয়েছে।"
-
-#~ msgid "Critical polling error:"
-#~ msgstr "স্থিতি যাচাইয়ের সময় গুরুতর ত্রুটি:"
-
-#~ msgid "An error occurred during processing:"
-#~ msgstr "প্রক্রিয়াকরণের সময় একটি ত্রুটি ঘটেছে:"
-
-#~ msgid "No more results"
-#~ msgstr "আর কোনো ফলাফল নেই"
-
-#~ msgid "Failed to load"
-#~ msgstr "লোড করতে ব্যর্থ হয়েছে"
-
-#~ msgid "Credibility"
-#~ msgstr "বিশ্বাসযোগ্যতা"
-
-#~ msgid "Confidence"
-#~ msgstr "আস্থা"
-
-#~ msgid "Sources:"
-#~ msgstr "উৎস:"
-
-#~ msgid "Link Copied!"
-#~ msgstr "লিঙ্ক কপি হয়েছে!"
-
-#~ msgid "Failed to copy link."
-#~ msgstr "লিঙ্ক কপি করতে ব্যর্থ হয়েছে।"
-
-#~ msgid "Fact-Check Report"
-#~ msgstr "তথ্য যাচাইকরণ প্রতিবেদন"
-
-#~ msgid "Check out the fact-check report for this video:"
-#~ msgstr "এই ভিডিওর তথ্য যাচাইকরণ প্রতিবেদন দেখুন:"
-
-#~ msgid "Select up to 5 claims to verify"
-#~ msgstr "যাচাইয়ের জন্য সর্বাধিক ৫টি দাবি নির্বাচন করুন"
-
-#~ msgid "Fact-Check Selected"
-#~ msgstr "নির্বাচিত তথ্য যাচাই করুন"
-
-#~ msgid "You can only select up to"
-#~ msgstr "আপনি সর্বাধিক নির্বাচন করতে পারেন"
-
-#~ msgid "claims"
-#~ msgstr "দাবি"
-
-#~ msgid "Already checked"
-#~ msgstr "ইতিমধ্যে যাচাই করা হয়েছে"
-
-#~ msgid "Could not extract any claims to check."
-#~ msgstr "যাচাইয়ের জন্য কোনো দাবি পাওয়া যায়নি।"
-
-#~ msgid "Sending selected claims for final analysis..."
-#~ msgstr "নির্বাচিত দাবি চূড়ান্ত বিশ্লেষণের জন্য পাঠানো হচ্ছে..."
-
-#~ msgid "Checked claims"
-#~ msgstr "যাচাইকৃত দাবি"
-
-#~ msgid "Show detailed analysis"
-#~ msgstr "বিস্তারিত বিশ্লেষণ দেখান"
-
-#~ msgid "Hide detailed analysis"
-#~ msgstr "বিস্তারিত বিশ্লেষণ লুকান"
-
-#~ msgid "Checked Text"
-#~ msgstr "যাচাইকৃত টেক্সট"
-
-#~ msgid "Disclaimer:"
-#~ msgstr "দায়িত্বত্যাগ:"
-
-#~ msgid ""
-#~ "This report is AI-generated. It "
-#~ "may contain errors and may not "
-#~ "have access to real-time data. "
-#~ "Please verify the information independently."
-#~ msgstr ""
-#~ "এই প্রতিবেদনটি এআই দ্বারা তৈরি। এতে "
-#~ "ভুল থাকতে পারে এবং এটি রিয়েল-টাইম "
-#~ "তথ্য পেতে নাও পারে। অনুগ্রহ করে "
-#~ "নিজে যাচাই করুন।"
-
-#~ msgid "Confirmed"
-#~ msgstr "নিশ্চিত"
-
-#~ msgid "Refuted"
-#~ msgstr "অস্বীকৃত"
-
-#~ msgid "Misleading"
-#~ msgstr "ভুল পথে পরিচালিত"
-
-#~ msgid "Partly True"
-#~ msgstr "আংশিক সত্য"
-
-#~ msgid "Unverifiable"
-#~ msgstr "যাচাইযোগ্য নয়"
-
-#~ msgid "Claim text missing"
-#~ msgstr "দাবির টেক্সট নেই"
-
-#~ msgid "No verdict"
-#~ msgstr "কোনো সিদ্ধান্ত নেই"
-
-#~ msgid "Show unchecked claims"
-#~ msgstr "যে দাবি যাচাই করা হয়নি, দেখান"
-
-#~ msgid "Hide unchecked claims"
-#~ msgstr "যে দাবি যাচাই করা হয়নি, লুকান"
-
-#~ msgid "Check more claims"
-#~ msgstr "আরও দাবি যাচাই করুন"
-
-#~ msgid "Mostly True"
-#~ msgstr "প্রধানত সত্য"
-
-#~ msgid "Mostly False"
-#~ msgstr "প্রধানত মিথ্যা"
-
-#~ msgid "Mixed Veracity"
-#~ msgstr "মিশ্র সত্যতা"
-
-#~ msgid "Largely Unverifiable"
-#~ msgstr "প্রধানত যাচাইযোগ্য নয়"
-
-#~ msgid "Fact-Check Report for:"
-#~ msgstr "তথ্য যাচাইকরণ প্রতিবেদন এর জন্য:"
-
-#~ msgid "Fact-check report for:"
-#~ msgstr "তথ্য যাচাইকরণ প্রতিবেদন এর জন্য:"
-
-#~ msgid "Share Results"
-#~ msgstr "ফলাফল শেয়ার করুন"
-
-#~ msgid "Video Thumbnail"
-#~ msgstr "ভিডিও থাম্বনেইল"
+msgstr "ভিডিও থাম্বনেইল"
