@@ -6,10 +6,19 @@
     <title>{% block title %}{{ _('AI Fact Checker') }}{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
+    {# Add hreflang tags for SEO #}
+    {% if request.endpoint and request.endpoint not in ['static', 'set_language'] and 'lang' in request.view_args %}
+        {% for lang_code_iter in SUPPORTED_LANGS_FOR_HREFLANG %}
+            <link rel="alternate" hreflang="{{ lang_code_iter }}" href="{{ url_for(request.endpoint, **request.view_args, lang=lang_code_iter) }}">
+        {% endfor %}
+        {# Add x-default hreflang for the default language (e.g., English) #}
+        <link rel="alternate" hreflang="x-default" href="{{ url_for(request.endpoint, **request.view_args, lang='en') }}">
+    {% endif %}
 </head>
 <body>
     <div class="top-bar">
-        <a href="/" class="logo-link">
+        {# Ensure CURRENT_LANG is available from context_processor for the homepage link #}
+        <a href="{{ url_for('serve_index', lang=CURRENT_LANG) }}" class="logo-link">
             <img src="{{ url_for('static', filename='favicon.png') }}" alt="Logo" class="logo-image">
             <span>{{ _('Advanced AI Fact Checking') }}</span>
         </a>
@@ -19,8 +28,10 @@
                 <span>{{ LANGUAGES.get(CURRENT_LANG, LANGUAGES['en'])['flag'] }}</span>
             </div>
             <div class="lang-dropdown">
-                {% for lang_code, lang_info in LANGUAGES.items() %}
-                    <a href="{{ url_for('set_language', lang=lang_code) }}" class="lang-option {% if lang_code == CURRENT_LANG %}active{% endif %}">
+                {% for lang_code_iter, lang_info in LANGUAGES.items() %}
+                    {# The route for set_language is /set_language/<target_lang>, so 'target_lang' is the parameter name #}
+                    {# It's not /<lang>/set_language/... #}
+                    <a href="{{ url_for('set_language', target_lang=lang_code_iter) }}" class="lang-option {% if lang_code_iter == CURRENT_LANG %}active{% endif %}">
                         <span>{{ lang_info['flag'] }}</span>
                         <span>{{ lang_info['name'] }}</span>
                     </a>
