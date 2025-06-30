@@ -112,7 +112,8 @@ def global_before_request_handler():
         if new_url.endswith('?'): # Avoid trailing '?' if no query string
             new_url = new_url[:-1]
         return redirect(new_url, code=301) # Permanent redirect for domain change
-
+    if request.path in ['/robots.txt', '/sitemap.xml']:
+        return None
     # 2. Language prefix redirection for non-API, non-static routes
     # This section handles requests that either:
     #   a) Don't have a language prefix (e.g., `/` or `/report/xyz`)
