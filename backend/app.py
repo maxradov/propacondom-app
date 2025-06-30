@@ -102,35 +102,20 @@ def global_before_request_handler():
     #   a) Don't have a language prefix (e.g., `/` or `/report/xyz`)
     #   b) Matched a route *without* a `<lang>` parameter (e.g. old @app.route('/'), @app.route('/report/...'))
     # It relies on g.current_lang NOT being set by pull_lang_from_url (which means no valid lang prefix was in the URL that matched a <lang> rule).
-
+    first_segment = request.path.lstrip('/').split('/', 1)[0]
+    if first_segment in SUPPORTED_LANGUAGES_IN_URL:
+        # Уже есть lang-префикс, ничего не делаем!
+        return None
     if not g.current_lang and request.endpoint and not request.path.startswith('/api/') and request.endpoint != 'static':
-        # If no valid 'lang' was extracted from the URL by pull_lang_from_url (g.current_lang is None or was reset)
-        # And it's a user-facing page (not API, not static)
-        # Then we need to redirect to a language-prefixed URL.
-
-        # Determine the preferred language for redirection (uses cookie, Accept-Language, then default)
-        preferred_lang_for_redirect = get_locale() # This will not use g.current_lang as it's not valid/set
-                                                 # but will use cookie/header/default.
-
-        # Construct the new path with the determined language prefix.
-        # request.path already includes the leading slash.
-        # For /report/xyz, request.path is /report/xyz. We want /<lang>/report/xyz
-        # For /, request.path is /. We want /<lang>/
-
+        preferred_lang_for_redirect = get_locale()
         current_path = request.path
         if current_path == '/':
-            new_path = f"/{preferred_lang_for_redirect}/" # Ensure trailing slash to match serve_index route
+            new_path = f"/{preferred_lang_for_redirect}/"
         else:
-            # For other paths, ensure consistency.
-            # If the target route (e.g. serve_report) is defined without a trailing slash, this is fine.
-            # If it's defined WITH a trailing slash, this might need adjustment or rely on Flask's strict_slashes.
-            # Current serve_report: /<string:lang>/report/<analysis_id> (no trailing slash), so this is okay.
             new_path = f"/{preferred_lang_for_redirect}{current_path}"
-
         if request.query_string:
             new_path += f"?{request.query_string.decode('utf-8')}"
-
-        return redirect(new_path, code=302) # Temporary redirect
+        return redirect(new_path, code=302)
 
 class FlaskTask(celery_app.Task):
     def __call__(self, *args, **kwargs):
