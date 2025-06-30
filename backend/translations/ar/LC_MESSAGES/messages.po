@@ -1,4 +1,3 @@
-
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
@@ -35,7 +34,8 @@ msgid ""
 "credibility with our free tool. Supports multiple languages."
 msgstr ""
 "تحقق فوراً من الحقائق واكتشف المعلومات المضللة في فيديوهات يوتيوب "
-"والأخبار والمقالات وأي نص باستخدام الذكاء الاصطناعي المتقدم."
+"والمقالات الإخبارية وأي نص باستخدام الذكاء الاصطناعي المتقدم. تحقق من "
+"المصادر وقم بتقييم المصداقية باستخدام أداتنا المجانية. تدعم عدة لغات."
 
 #: templates/index.html:15
 msgid "AI Fact-Checker for YouTube, News & Articles"
@@ -76,12 +76,12 @@ msgstr "مدقق الحقائق الذكي"
 
 #: templates/layout.html:10
 msgid "Verify information with our AI Fact Checker."
-msgstr ""
+msgstr "تحقق من المعلومات باستخدام مدقق الحقائق بالذكاء الاصطناعي لدينا."
 
 #: templates/layout.html:17
 #, fuzzy
 msgid "FactChecking.pro"
-msgstr "تقرير التحقق من الحقائق"
+msgstr "FactChecking.pro"
 
 #: templates/layout.html:41
 msgid "Advanced AI Fact Checking"
@@ -263,15 +263,15 @@ msgstr "غير قابل للتحقق إلى حد كبير"
 #: templates/report.html:3
 #, fuzzy, python-format
 msgid "Fact-Check Report for: %(title)s"
-msgstr "تقرير التحقق من الحقائق لـ:"
+msgstr "تقرير التحقق من الحقائق لـ %(title)s"
 
 #: templates/report.html:3
 msgid "Untitled Report"
-msgstr ""
+msgstr "تقرير بدون عنوان"
 
 #: templates/report.html:6
 msgid "this content"
-msgstr ""
+msgstr "هذا المحتوى"
 
 #: templates/report.html:7
 #, python-format
@@ -280,6 +280,9 @@ msgid ""
 "credibility, details verified claims, and lists sources. Processed by "
 "FactChecking.pro."
 msgstr ""
+"اطّلع على تقرير التحقق من الحقائق المُنشأ بالذكاء الاصطناعي لـ "
+"\"%(title)s\". يقيم المصداقية ويعرض تفاصيل الادعاءات التي تم التحقق منها "
+"ويُدرج المصادر. تمت المعالجة بواسطة ‎FactChecking.pro‎."
 
 #: templates/report.html:20
 msgid "Fact-check report for:"

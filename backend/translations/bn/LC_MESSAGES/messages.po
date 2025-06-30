@@ -1,4 +1,3 @@
-
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
@@ -34,7 +33,7 @@ msgid ""
 "credibility with our free tool. Supports multiple languages."
 msgstr ""
 "উন্নত এআই ফ্যাক্ট-চেকিং দিয়ে ইউটিউব ভিডিও, নিউজ, আর্টিকেল আর যেকোনো "
-"টেক্সটে মুহূর্তেই তথ্য যাচাই করুন ও ভুল তথ্য চিহ্নিত করুন।"
+"টেক্সটে মুহূর্তেই তথ্য যাচাই করুন ও ভুল তথ্য চিহ্নিত করুন। আমাদের ফ্রি টুল দিয়ে সোর্স যাচাই করুন এবং বিশ্বাসযোগ্যতা মূল্যায়ন করুন। এটি একাধিক ভাষা সমর্থন করে।"
 
 #: templates/index.html:15
 msgid "AI Fact-Checker for YouTube, News & Articles"
@@ -75,12 +74,12 @@ msgstr "ফ্যাক্ট চেক চালান"
 
 #: templates/layout.html:10
 msgid "Verify information with our AI Fact Checker."
-msgstr ""
+msgstr "আমাদের এআই ফ্যাক্ট চেকার দিয়ে তথ্য যাচাই করুন।"
 
 #: templates/layout.html:17
 #, fuzzy
 msgid "FactChecking.pro"
-msgstr "তথ্য যাচাইকরণ প্রতিবেদন"
+msgstr "FactChecking.pro"
 
 #: templates/layout.html:41
 msgid "Advanced AI Fact Checking"
@@ -258,18 +257,22 @@ msgstr "মিশ্র সত্যতা"
 msgid "Largely Unverifiable"
 msgstr "প্রধানত যাচাইযোগ্য নয়"
 
+#: templates/layout.html:109
+msgid "Run Fact Check"
+msgstr "ফ্যাক্ট চেক চালান"
+
 #: templates/report.html:3
 #, fuzzy, python-format
 msgid "Fact-Check Report for: %(title)s"
-msgstr "তথ্য যাচাইকরণ প্রতিবেদন এর জন্য:"
+msgstr "তথ্য যাচাইকরণ প্রতিবেদন: %(title)s"
 
 #: templates/report.html:3
 msgid "Untitled Report"
-msgstr ""
+msgstr "শিরোনামহীন প্রতিবেদন"
 
 #: templates/report.html:6
 msgid "this content"
-msgstr ""
+msgstr "এই বিষয়বস্তু"
 
 #: templates/report.html:7
 #, python-format
@@ -278,6 +281,9 @@ msgid ""
 "credibility, details verified claims, and lists sources. Processed by "
 "FactChecking.pro."
 msgstr ""
+"\"%(title)s\" এর জন্য এআই দ্বারা তৈরি ফ্যাক্ট-চেক প্রতিবেদন দেখুন। এটি "
+"বিশ্বাসযোগ্যতা মূল্যায়ন করে, যাচাইকৃত দাবির বিস্তারিত দেখায় এবং উৎসের "
+"তালিকা দেয়। তৈরি করেছে FactChecking.pro।"
 
 #: templates/report.html:20
 msgid "Fact-check report for:"

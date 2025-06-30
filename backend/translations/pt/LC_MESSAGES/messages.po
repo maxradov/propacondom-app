@@ -1,4 +1,3 @@
-
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
@@ -77,12 +76,11 @@ msgstr "Verificador de Fatos com IA"
 
 #: templates/layout.html:10
 msgid "Verify information with our AI Fact Checker."
-msgstr ""
+msgstr "Verifique informações com o nosso Verificador de Fatos com IA."
 
 #: templates/layout.html:17
-#, fuzzy
 msgid "FactChecking.pro"
-msgstr "Relatório de verificação de fatos"
+msgstr "FactChecking.pro"
 
 #: templates/layout.html:41
 msgid "Advanced AI Fact Checking"
@@ -262,17 +260,17 @@ msgid "Largely Unverifiable"
 msgstr "Em grande parte não verificável"
 
 #: templates/report.html:3
-#, fuzzy, python-format
+#, python-format
 msgid "Fact-Check Report for: %(title)s"
-msgstr "Relatório de verificação de fatos para:"
+msgstr "Relatório de Verificação de Fatos para: %(title)s"
 
 #: templates/report.html:3
 msgid "Untitled Report"
-msgstr ""
+msgstr "Relatório sem título"
 
 #: templates/report.html:6
 msgid "this content"
-msgstr ""
+msgstr "este conteúdo"
 
 #: templates/report.html:7
 #, python-format
@@ -281,6 +279,9 @@ msgid ""
 "credibility, details verified claims, and lists sources. Processed by "
 "FactChecking.pro."
 msgstr ""
+"Veja o relatório de verificação de fatos gerado por IA para \"%(title)s"
+"\". Avalia a credibilidade, detalha as alegações verificadas e lista as "
+"fontes. Processado por FactChecking.pro."
 
 #: templates/report.html:20
 msgid "Fact-check report for:"

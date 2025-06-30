@@ -1,4 +1,3 @@
-
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
@@ -24,9 +23,7 @@ msgstr "Ocurrió un error"
 
 #: templates/index.html:3
 msgid "AI Fact Checker for YouTube, Articles & Text | Verify Sources"
-msgstr ""
-"Verificador de hechos con IA para YouTube, artículos y texto | Verifica "
-"fuentes"
+msgstr "Verificador de hechos con IA para YouTube, artículos y texto | Verifica fuentes"
 
 #: templates/index.html:6
 #, fuzzy
@@ -35,8 +32,7 @@ msgid ""
 "articles, and text using advanced AI. Check sources and assess "
 "credibility with our free tool. Supports multiple languages."
 msgstr ""
-"Verifica hechos al instante y detecta desinformación en videos de "
-"YouTube, noticias, artículos y cualquier texto con IA avanzada."
+"Verifica hechos al instante y detecta desinformación en videos de YouTube, noticias, artículos y cualquier texto con IA avanzada. Revisa fuentes y evalúa la credibilidad con nuestra herramienta gratuita. Compatible con varios idiomas."
 
 #: templates/index.html:15
 msgid "AI Fact-Checker for YouTube, News & Articles"
@@ -46,9 +42,7 @@ msgstr "Verificador de hechos con IA para YouTube, noticias y artículos"
 msgid ""
 "Instantly verify facts and detect misinformation in YouTube videos, news,"
 " articles, and any text using advanced AI fact-checking."
-msgstr ""
-"Verifica hechos al instante y detecta desinformación en videos de "
-"YouTube, noticias, artículos y cualquier texto con IA avanzada."
+msgstr "Verifica hechos al instante y detecta desinformación en videos de YouTube, noticias, artículos y cualquier texto con IA avanzada."
 
 #: templates/index.html:19
 msgid "Paste a YouTube link, article URL, or text to check..."
@@ -77,12 +71,12 @@ msgstr "Verificador de hechos con IA"
 
 #: templates/layout.html:10
 msgid "Verify information with our AI Fact Checker."
-msgstr ""
+msgstr "Verifica la información con nuestro verificador de hechos con IA."
 
 #: templates/layout.html:17
 #, fuzzy
 msgid "FactChecking.pro"
-msgstr "Informe de verificación de hechos"
+msgstr "FactChecking.pro"
 
 #: templates/layout.html:41
 msgid "Advanced AI Fact Checking"
@@ -200,10 +194,7 @@ msgstr "Aviso legal:"
 msgid ""
 "This report is AI-generated. It may contain errors and may not have "
 "access to real-time data. Please verify the information independently."
-msgstr ""
-"Este informe ha sido generado por IA. Puede contener errores y es posible"
-" que no tenga acceso a datos en tiempo real. Por favor, verifica la "
-"información de forma independiente."
+msgstr "Este informe ha sido generado por IA. Puede contener errores y es posible que no tenga acceso a datos en tiempo real. Por favor, verifica la información de forma independiente."
 
 #: templates/layout.html:95
 msgid "Confirmed"
@@ -264,15 +255,15 @@ msgstr "En gran parte no verificable"
 #: templates/report.html:3
 #, fuzzy, python-format
 msgid "Fact-Check Report for: %(title)s"
-msgstr "Informe de verificación de hechos para:"
+msgstr "Informe de verificación de hechos para: %(title)s"
 
 #: templates/report.html:3
 msgid "Untitled Report"
-msgstr ""
+msgstr "Informe sin título"
 
 #: templates/report.html:6
 msgid "this content"
-msgstr ""
+msgstr "este contenido"
 
 #: templates/report.html:7
 #, python-format
@@ -281,6 +272,7 @@ msgid ""
 "credibility, details verified claims, and lists sources. Processed by "
 "FactChecking.pro."
 msgstr ""
+"Consulta el informe de verificación generado por IA para \"%(title)s\". Evalúa la credibilidad, detalla las afirmaciones verificadas y enumera las fuentes. Procesado por FactChecking.pro."
 
 #: templates/report.html:20
 msgid "Fact-check report for:"
