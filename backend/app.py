@@ -322,6 +322,11 @@ def serve_report_legacy(analysis_id):
     preferred_lang = get_locale()
     return redirect(url_for('serve_report', lang=preferred_lang, analysis_id=analysis_id), code=302)
 
+@app.route('/', methods=['GET'])
+def root_redirect():
+    # Определи язык пользователя (через get_locale или куку/Accept-Language)
+    preferred_lang = get_locale()
+    return redirect(url_for('serve_index', lang=preferred_lang))
 
 
 if __name__ == '__main__':
