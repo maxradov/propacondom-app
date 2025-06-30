@@ -14,7 +14,7 @@
     <meta property="og:description" content="{% block og_description %}{{ self.meta_description() }}{% endblock %}">
     <meta property="og:url" content="{{ url_for(request.endpoint, _external=True, **request.view_args) if request.endpoint else request.base_url }}">
     <meta property="og:locale" content="{{ OG_LOCALE_MAPPING.get(CURRENT_LANG, OG_LOCALE_MAPPING['en']) }}">
-    <meta property="og:site_name" content="{{ _('FactChecking.pro') }}"> {# Translatable site name #}
+    <meta property="og:site_name" content="{{ _('FactChecking.pro') }}">
 
     {# Page-specific OG type - to be overridden in child templates e.g. website, article #}
     <meta property="og:type" content="{% block og_type %}website{% endblock %}">
@@ -28,7 +28,6 @@
         {% for lang_code_iter in SUPPORTED_LANGS_FOR_HREFLANG %}
             <link rel="alternate" hreflang="{{ lang_code_iter }}" href="{{ hreflang_url(request.endpoint, request.view_args, lang_code_iter) }}">
         {% endfor %}
-        {# Add x-default hreflang for the default language (e.g., English) #}
         <link rel="alternate" hreflang="x-default" href="{{ hreflang_url(request.endpoint, request.view_args, 'en') }}">
     {% endif %}
 
@@ -51,8 +50,7 @@
             </div>
             <div class="lang-dropdown">
                 {% for lang_code_iter, lang_info in LANGUAGES.items() %}
-                    {# The route for set_language is /set_language/<target_lang>, so 'target_lang' is the parameter name #}
-                    {# It's not /<lang>/set_language/... #}
+                    {# The route for set_language is /set_language/<lang_code_to_set>, NOT /<lang>/set_language/... #}
                     <a href="{{ url_for('set_language', lang_code_to_set=lang_code_iter) }}" class="lang-option {% if lang_code_iter == CURRENT_LANG %}active{% endif %}">
                         <span>{{ lang_info['flag'] }}</span>
                         <span>{{ lang_info['name'] }}</span>
@@ -64,60 +62,58 @@
 
     {% block content %}{% endblock %}
 
-	<!-- ГЛОБАЛЬНЫЕ ПЕРЕВОДЫ ДЛЯ JS -->
-	<script>
-	  window.translations = {{ {
-		'please_paste_video': _('Please paste a video link.'),
-		'invalid_youtube': _('Please enter a valid YouTube video link!'),
-		'sending_request': _('Sending request for analysis...'),
-		'error_starting': _('Error starting analysis.'),
-		'polling_error': _('Critical polling error:'),
-		'processing_error': _('An error occurred during processing:'),
-		'no_more_results': _('No more results'),
-		'failed_to_load': _('Failed to load'),
-		'loading_more': _('Loading more...'),
-		'credibility': _('Credibility'),
-		'confidence': _('Confidence'),
-		'sources': _('Sources:'),
-		'link_copied': _('Link Copied!'),
-		'failed_copy': _('Failed to copy link.'),
-		'share_report': _('Fact-Check Report'),
-		'share_text': _('Check out the fact-check report for this video:'),
-		'select_claims_title': _('Select up to 5 claims to verify'),
-		'fact_check_selected_button': _('Fact-Check Selected'),
-		'limit_selection_alert': _('You can only select up to'),
-		'claims_alert': _('claims'),
-		'already_checked': _('Already checked'),
-		'no_claims_found': _('Could not extract any claims to check.'),
-		'sending_request_for_checking': _('Sending selected claims for final analysis...'),
-		'checked_claims_total': _('Checked claims'),
-		'show_detailed': _('Show detailed analysis'),
-		'hide_detailed': _('Hide detailed analysis'),
-		'original_text': _('Checked Text'),
-		'disclaimer_title': _('Disclaimer:'),
-		'disclaimer_text': _('This report is AI-generated. It may contain errors and may not have access to real-time data. Please verify the information independently.'),
-		'true_label': _('Confirmed'),
-		'false_label': _('Refuted'),
-		'misleading_label': _('Misleading'),
-		'partly_true_label': _('Partly True'),
-		'unverifiable_label': _('Unverifiable'),
-		'claim_text_missing': _('Claim text missing'),
-		'no_verdict': _('No verdict'),
-		'show_unchecked_claims': _('Show unchecked claims'),
-		'hide_unchecked_claims': _('Hide unchecked claims'),
-		'check_more_claims': _('Check more claims'),
-		'mostly_true': _('Mostly True'),
-		'mostly_false': _('Mostly False'),
-		'mixed_veracity': _('Mixed Veracity'),
-		'largely_unverifiable': _('Largely Unverifiable'),
-		'run_fact_check': _('Run Fact Check')
-	  } | tojson }};
-	</script>
+    <!-- ГЛОБАЛЬНЫЕ ПЕРЕВОДЫ ДЛЯ JS -->
+    <script>
+      window.translations = {{ {
+        'please_paste_video': _('Please paste a video link.'),
+        'invalid_youtube': _('Please enter a valid YouTube video link!'),
+        'sending_request': _('Sending request for analysis...'),
+        'error_starting': _('Error starting analysis.'),
+        'polling_error': _('Critical polling error:'),
+        'processing_error': _('An error occurred during processing:'),
+        'no_more_results': _('No more results'),
+        'failed_to_load': _('Failed to load'),
+        'loading_more': _('Loading more...'),
+        'credibility': _('Credibility'),
+        'confidence': _('Confidence'),
+        'sources': _('Sources:'),
+        'link_copied': _('Link Copied!'),
+        'failed_copy': _('Failed to copy link.'),
+        'share_report': _('Fact-Check Report'),
+        'share_text': _('Check out the fact-check report for this video:'),
+        'select_claims_title': _('Select up to 5 claims to verify'),
+        'fact_check_selected_button': _('Fact-Check Selected'),
+        'limit_selection_alert': _('You can only select up to'),
+        'claims_alert': _('claims'),
+        'already_checked': _('Already checked'),
+        'no_claims_found': _('Could not extract any claims to check.'),
+        'sending_request_for_checking': _('Sending selected claims for final analysis...'),
+        'checked_claims_total': _('Checked claims'),
+        'show_detailed': _('Show detailed analysis'),
+        'hide_detailed': _('Hide detailed analysis'),
+        'original_text': _('Checked Text'),
+        'disclaimer_title': _('Disclaimer:'),
+        'disclaimer_text': _('This report is AI-generated. It may contain errors and may not have access to real-time data. Please verify the information independently.'),
+        'true_label': _('Confirmed'),
+        'false_label': _('Refuted'),
+        'misleading_label': _('Misleading'),
+        'partly_true_label': _('Partly True'),
+        'unverifiable_label': _('Unverifiable'),
+        'claim_text_missing': _('Claim text missing'),
+        'no_verdict': _('No verdict'),
+        'show_unchecked_claims': _('Show unchecked claims'),
+        'hide_unchecked_claims': _('Hide unchecked claims'),
+        'check_more_claims': _('Check more claims'),
+        'mostly_true': _('Mostly True'),
+        'mostly_false': _('Mostly False'),
+        'mixed_veracity': _('Mixed Veracity'),
+        'largely_unverifiable': _('Largely Unverifiable'),
+        'run_fact_check': _('Run Fact Check')
+      } | tojson }};
+    </script>
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>
     {% block extra_js %}
-	{% endblock %}
+    {% endblock %}
 </body>
 </html>
-
-

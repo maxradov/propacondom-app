@@ -25,6 +25,30 @@ document.addEventListener('DOMContentLoaded', () => {
     if (shareBtn) {
         shareBtn.addEventListener('click', shareResults);
     }
+	// --- Логика языкового переключателя для страницы отчёта ---
+    const langSwitcher = document.querySelector('.lang-switcher');
+    if (langSwitcher) {
+        const currentLang = langSwitcher.querySelector('.lang-switcher-current');
+        if (currentLang) {
+            currentLang.addEventListener('click', (event) => {
+                event.stopPropagation();
+                langSwitcher.classList.toggle('open');
+            });
+            window.addEventListener('click', () => {
+                if (langSwitcher.classList.contains('open')) {
+                    langSwitcher.classList.remove('open');
+                }
+            });
+        }
+        const langDropdown = document.querySelector('.lang-dropdown');
+        if (langDropdown) {
+            langDropdown.addEventListener('click', (e) => {
+                if (e.target.closest('.lang-option')) {
+                    langSwitcher.classList.remove('open');
+                }
+            });
+        }
+    }
 });
 
 // ----- Отображение выбора клеймов прямо в report.html -----

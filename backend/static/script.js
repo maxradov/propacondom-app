@@ -317,4 +317,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if(feedContainer.children.length > 0){
         setTimeout(fillScreen, 100);
     }
+	const langDropdown = document.querySelector('.lang-dropdown');
+    if (langDropdown && langSwitcher) {
+      langDropdown.addEventListener('click', (e) => {
+        if (e.target.closest('.lang-option')) {
+          langSwitcher.classList.remove('open');
+        }
+      });
+    }
 });
