@@ -33,6 +33,22 @@ LANGUAGES = {
     'pt': {'name': 'Português', 'flag': '🇵🇹'},
     'de': {'name': 'Deutsch', 'flag': '🇩🇪'}
 }
+
+# Mapping for og:locale meta tag
+OG_LOCALE_MAPPING = {
+    'en': 'en_US',
+    'es': 'es_ES',
+    'zh': 'zh_CN',
+    'hi': 'hi_IN',
+    'fr': 'fr_FR',
+    'ar': 'ar_AE', # Using AE as a common one, adjust if specific dialect is preferred
+    'bn': 'bn_BD',
+    'ru': 'ru_RU',
+    'uk': 'uk_UA',
+    'pt': 'pt_PT', # Or pt_BR if Brazilian Portuguese is the primary target
+    'de': 'de_DE'
+}
+
 app.config['BABEL_DEFAULT_LOCALE'] = 'en'
 SUPPORTED_LANGUAGES_IN_URL = list(LANGUAGES.keys())
 
@@ -138,12 +154,14 @@ def inject_conf_var():
     def hreflang_url(endpoint, view_args, lang):
         args = dict(view_args) if view_args else {}
         args['lang'] = lang
-        return url_for(endpoint, **args)
+        # Ensure absolute URLs for hreflang tags
+        return url_for(endpoint, _external=True, **args)
     return dict(
         LANGUAGES=LANGUAGES,
         CURRENT_LANG=template_current_lang,
         SUPPORTED_LANGS_FOR_HREFLANG=SUPPORTED_LANGUAGES_IN_URL,
-        hreflang_url=hreflang_url
+        hreflang_url=hreflang_url,
+        OG_LOCALE_MAPPING=OG_LOCALE_MAPPING
     )
 
 @app.route('/api/report/<analysis_id>')
@@ -202,27 +220,74 @@ def fact_check_selected():
     task = celery_app.send_task('tasks.fact_check_selected', args=[analysis_id, selected_claims])
     return jsonify({"task_id": task.id}), 202
 
+from urllib.parse import urlparse, urljoin # For intelligent language switching
+
 # This route will be updated later to handle redirection to new lang-prefixed URLs
 @app.route('/set_language/<lang_code_to_set>')
 def set_language(lang_code_to_set):
     if lang_code_to_set not in SUPPORTED_LANGUAGES_IN_URL:
         lang_code_to_set = current_app.config['BABEL_DEFAULT_LOCALE']
 
-    # Determine the page to redirect to.
-    # Try to redirect to the same page in the new language.
-    # For simplicity now, redirect to the new language's home page.
-    # This will be improved in a later step.
-    # TODO: Make this redirect smarter, to the same page if possible.
-    # One way: pass current endpoint and args, or parse request.referrer.
+    redirect_url = None
 
-    # A more robust solution is needed here. For now, redirecting to home.
-    # The plan includes updating this route properly.
-    # We need to use url_for with the new language.
-    # If request.referrer is from the same site, we can try to adapt it.
+    # Try to redirect to the same page in the new language using request.referrer
+    if request.referrer:
+        referrer_url = urlparse(request.referrer)
+        # Ensure the referrer is from the same site (same netloc)
+        # Use request.host for current site's host, which includes port if non-standard
+        if referrer_url.netloc == request.host:
+            try:
+                # Match the referrer's path to an endpoint and its arguments
+                # We need to strip the language prefix from the referrer path if it exists
+                # before trying to match, as our routes don't have the lang prefix in the rule itself.
+                # However, our current routes like /<lang>/ are defined with <lang>.
+                # Let's test matching with the full path first.
+                # The url_map matching expects the path part of the URL.
 
-    # Simple redirect to new language's homepage for now
-    # This will be replaced by a more intelligent redirect that keeps the user on the same page.
-    redirect_url = url_for('serve_index', lang=lang_code_to_set) # Assumes serve_index will take 'lang'
+                # The adapter needs the environment; use request.environ
+                url_adapter = current_app.url_map.bind_to_environ(request.environ)
+                # The path in referrer_url.path might include a language prefix
+                # For example, /en/some/page or /some/page if it was an old URL
+                # The matching should handle this.
+
+                # Let's adjust the referrer path slightly to ensure it's clean
+                # and matches how Flask might expect it for matching.
+                path_to_match = referrer_url.path
+
+                # If current app uses an APPLICATION_ROOT, referrer path might need adjustment.
+                # Assuming no complex APPLICATION_ROOT for now.
+
+                matched_endpoint, view_args = url_adapter.match(path_to_match)
+
+                if matched_endpoint and matched_endpoint not in ['static', 'set_language']:
+                    # Successfully matched the referrer to an endpoint
+                    # Now, build the new URL with the new language
+                    new_view_args = view_args.copy()
+                    new_view_args['lang'] = lang_code_to_set # Set/override the language
+
+                    # Remove query parameters from original view_args if they were captured in path
+                    # and re-add them from the original referrer's query string to avoid duplication or loss.
+                    # However, view_args from match() only contains path parameters.
+                    # Query parameters from referrer_url.query should be appended separately if needed.
+                    # For now, url_for will build the path; query params are usually separate.
+                    # If a specific page needs certain query params preserved, that's more complex.
+                    # For this implementation, we'll redirect to the base path of the matched page.
+
+                    redirect_url = url_for(matched_endpoint, **new_view_args)
+
+                    # Preserve query string from original referrer if any
+                    if referrer_url.query:
+                        redirect_url = f"{redirect_url}?{referrer_url.query}"
+
+            except Exception as e:
+                # Exception could be werkzeug.routing.exceptions.NotFound if path doesn't match
+                # Or other issues. In any case, fall back to homepage.
+                print(f"Could not match referrer path '{referrer_url.path}' or build URL: {e}")
+                redirect_url = None # Ensure fallback
+
+    if not redirect_url:
+        # Fallback: redirect to the new language's homepage
+        redirect_url = url_for('serve_index', lang=lang_code_to_set)
 
     response = make_response(redirect(redirect_url))
     response.set_cookie('lang', lang_code_to_set, max_age=60*60*24*365*2) # Expires in 2 years
@@ -324,9 +389,163 @@ def serve_report_legacy(analysis_id):
 
 @app.route('/', methods=['GET'])
 def root_redirect():
-    # Определи язык пользователя (через get_locale или куку/Accept-Language)
-    preferred_lang = get_locale()
-    return redirect(url_for('serve_index', lang=preferred_lang))
+    """
+    Redirects users from the root path `/` to a language-specific homepage.
+    - Bots are redirected to the default language (e.g., /en/).
+    - Regular users are redirected based on their cookie or Accept-Language header.
+    This prevents bots from being redirected based on their origin's Accept-Language
+    if it doesn't match the site's primary content strategy for indexing.
+    """
+    user_agent_string = request.user_agent.string.lower()
+    bot_keywords = [
+        'googlebot', 'bingbot', 'slurp', 'duckduckbot', 'baiduspider',
+        'yandexbot', 'sogou', 'exabot', 'facebot', 'facebookexternalhit', # facebook
+        'twitterbot', 'linkedinbot', 'applebot', 'pinterest'
+    ]
+
+    is_bot_request = any(keyword in user_agent_string for keyword in bot_keywords)
+
+    if is_bot_request:
+        # For bots, always redirect to the default language homepage (e.g., English)
+        # This ensures consistent indexing.
+        default_lang_for_bots = app.config.get('BABEL_DEFAULT_LOCALE', 'en')
+        # Add a comment indicating this behavior for future reference.
+        # Comment: Bots visiting root are redirected to the default language version.
+        print(f"Bot detected: {user_agent_string}, redirecting to /{default_lang_for_bots}/") # For logging
+        return redirect(url_for('serve_index', lang=default_lang_for_bots), code=302)
+    else:
+        # For regular users, determine preferred language via get_locale()
+        # (which checks URL, then cookie, then Accept-Language header, then default)
+        preferred_lang = get_locale()
+        return redirect(url_for('serve_index', lang=preferred_lang), code=302)
+
+# Sitemap generation
+@app.route('/sitemap.xml')
+def sitemap():
+    """
+    Generates the sitemap.xml dynamically.
+    Includes homepage and a generic report page for each supported language.
+    Provides alternate hreflang links for each URL.
+    """
+    xml_parts = [
+        '<?xml version="1.0" encoding="UTF-8"?>',
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"',
+        '        xmlns:xhtml="http://www.w3.org/1999/xhtml">'
+    ]
+
+    # Define pages to include in the sitemap (endpoint name and view_args if any)
+    # For dynamic parts like <analysis_id>, we list the general structure.
+    # Actual sitemaps might list specific important URLs, but for a dynamic app,
+    # this approach is more manageable for on-the-fly generation.
+    pages_to_map = [
+        ('serve_index', {}),
+        # Add other key public page endpoints here if they exist
+        # For example, if there was a generic '/<lang>/reports/' page:
+        # ('serve_reports_overview', {})
+        # For now, we don't have a generic reports list page, only individual ones.
+        # We will represent the report section by its structure.
+        # A true sitemap for individual reports would require fetching all report IDs.
+        # For simplicity, we will point to the base structure, implying /<lang>/report/*
+        # This is a common simplification. Alternatively, one could list a few recent reports.
+        # For this exercise, we will only add a conceptual entry for reports.
+        # In a real-world scenario, one might list top N reports or use a separate sitemap for reports.
+    ]
+
+    # Add a conceptual entry for the report structure
+    # This doesn't create a sitemap entry for /<lang>/report/ directly as it's not a page,
+    # but signals to search engines that URLs under /<lang>/report/ exist.
+    # A more robust way for numerous items is a sitemap index file.
+    # For now, we'll list the main index pages.
+    # If we had a page like /en/reports (plural) that lists reports, we'd add its endpoint.
+    # Since /<lang>/report/<id> is the structure, we'll skip adding a generic /<lang>/report/
+    # to the sitemap unless it's an actual browseable page.
+    # Let's assume for now `serve_report` is for specific reports and not a generic listing.
+
+    supported_langs = list(LANGUAGES.keys())
+    default_lang = app.config['BABEL_DEFAULT_LOCALE'] # 'en'
+
+    for endpoint_name, view_args in pages_to_map:
+        for lang_code in supported_langs:
+            # Create the primary URL for the current language
+            loc_args = view_args.copy()
+            loc_args['lang'] = lang_code
+            # Ensure SERVER_NAME is configured for url_for to generate absolute URLs
+            # If not, it will generate relative URLs. For sitemaps, absolute URLs are required.
+            # Flask's url_for generates absolute URLs if app.config['SERVER_NAME'] is set
+            # and _external=True. If not set, we might need to prepend the domain manually.
+            # For this exercise, we assume it's configured or will be.
+            # A common setup is to set app.config['SERVER_NAME'] = 'factchecking.pro'
+            # and app.config['APPLICATION_ROOT'] = '/'
+            # and app.config['PREFERRED_URL_SCHEME'] = 'https'
+            # For now, let's ensure _external=True and rely on Flask's behavior.
+            # It's crucial that the server is configured for this.
+            # If request context is available (which it is in a route), _external=True works.
+
+            # Construct URL, ensuring it's absolute
+            # For sitemap, we need absolute URLs. url_for with _external=True
+            # relies on request context or SERVER_NAME configuration.
+            # In a route handler, request context is available.
+            current_url = url_for(endpoint_name, _external=True, **loc_args)
+
+            xml_parts.append('  <url>')
+            xml_parts.append(f'    <loc>{current_url}</loc>')
+
+            # Add alternate links for all languages
+            for alt_lang_code in supported_langs:
+                alt_args = view_args.copy()
+                alt_args['lang'] = alt_lang_code
+                alt_url = url_for(endpoint_name, _external=True, **alt_args)
+                xml_parts.append(f'    <xhtml:link rel="alternate" hreflang="{alt_lang_code}" href="{alt_url}"/>')
+
+            # Add x-default link (pointing to the default language version, e.g., English)
+            default_args = view_args.copy()
+            default_args['lang'] = default_lang
+            default_url = url_for(endpoint_name, _external=True, **default_args)
+            xml_parts.append(f'    <xhtml:link rel="alternate" hreflang="x-default" href="{default_url}"/>')
+
+            xml_parts.append('  </url>')
+
+    xml_parts.append('</urlset>')
+    sitemap_xml = "\n".join(xml_parts)
+
+    response = make_response(sitemap_xml)
+    response.headers["Content-Type"] = "application/xml"
+    return response
+
+# robots.txt generation
+@app.route('/robots.txt')
+def robots_txt():
+    """
+    Generates the robots.txt file dynamically.
+    Allows crawling of language-specific paths and the sitemap.
+    Disallows crawling of API endpoints.
+    """
+    lines = ["User-agent: *"]
+
+    # Allow crawling for each language-prefixed path
+    for lang_code in LANGUAGES.keys():
+        lines.append(f"Allow: /{lang_code}/")
+
+    # Allow crawling of the sitemap itself
+    lines.append("Allow: /sitemap.xml") # Path to the sitemap
+
+    # Disallow API paths
+    lines.append("Disallow: /api/")
+
+    # Add other Disallow rules as needed, for example:
+    # lines.append("Disallow: /admin/")
+    # lines.append("Disallow: /tmp/")
+
+    # Specify the location of the sitemap
+    # Ensure this is an absolute URL. url_for with _external=True can be used.
+    # This assumes app.config['SERVER_NAME'] and app.config['PREFERRED_URL_SCHEME'] are set.
+    sitemap_url = url_for('sitemap', _external=True)
+    lines.append(f"Sitemap: {sitemap_url}")
+
+    robots_content = "\n".join(lines)
+    response = make_response(robots_content)
+    response.headers["Content-Type"] = "text/plain"
+    return response
 
 
 if __name__ == '__main__':

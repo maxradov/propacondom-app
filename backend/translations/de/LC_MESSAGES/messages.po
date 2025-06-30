@@ -1,8 +1,9 @@
+
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-06-29 18:04+0000\n"
+"POT-Creation-Date: 2025-06-30 16:42+0000\n"
 "PO-Revision-Date: 2025-06-29 21:25+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: de\n"
@@ -13,235 +14,283 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: backend/app.py:232
+#: app.py:332
 msgid "Report not found"
 msgstr "Bericht nicht gefunden"
 
-#: backend/app.py:235
+#: app.py:335
 msgid "An error occurred"
 msgstr "Es ist ein Fehler aufgetreten"
 
-#: backend/templates/index.html:3
+#: templates/index.html:3
 msgid "AI Fact Checker for YouTube, Articles & Text | Verify Sources"
 msgstr "KI-Faktencheck für YouTube, Artikel & Text | Quellen prüfen"
 
-#: backend/templates/index.html:9
+#: templates/index.html:6
+#, fuzzy
+msgid ""
+"Instantly verify facts and detect misinformation in YouTube videos, news "
+"articles, and text using advanced AI. Check sources and assess "
+"credibility with our free tool. Supports multiple languages."
+msgstr ""
+"Prüfe Fakten und erkenne Falschinformationen in YouTube-Videos, News, "
+"Artikeln und jedem Text – sofort mit modernem KI-Faktencheck."
+
+#: templates/index.html:15
 msgid "AI Fact-Checker for YouTube, News & Articles"
 msgstr "KI-Faktencheck für YouTube, News & Artikel"
 
-#: backend/templates/index.html:10
-msgid "Instantly verify facts and detect misinformation in YouTube videos, news, articles, and any text using advanced AI fact-checking."
-msgstr "Prüfe Fakten und erkenne Falschinformationen in YouTube-Videos, News, Artikeln und jedem Text – sofort mit modernem KI-Faktencheck."
+#: templates/index.html:16
+msgid ""
+"Instantly verify facts and detect misinformation in YouTube videos, news,"
+" articles, and any text using advanced AI fact-checking."
+msgstr ""
+"Prüfe Fakten und erkenne Falschinformationen in YouTube-Videos, News, "
+"Artikeln und jedem Text – sofort mit modernem KI-Faktencheck."
 
-#: backend/templates/index.html:13
+#: templates/index.html:19
 msgid "Paste a YouTube link, article URL, or text to check..."
 msgstr "Füge einen YouTube-Link, Artikel-URL oder Text zum Prüfen ein..."
 
-#: backend/templates/index.html:14 backend/templates/layout.html:80
+#: templates/index.html:20 templates/layout.html:109
 msgid "Run Fact Check"
 msgstr "Faktencheck starten"
 
-#: backend/templates/index.html:23 backend/templates/report.html:37
+#: templates/index.html:29 templates/report.html:48
 msgid "Last checked:"
 msgstr "Zuletzt geprüft:"
 
-#: backend/templates/index.html:41 backend/templates/report.html:55
+#: templates/index.html:48 templates/report.html:67
 #, python-format
 msgid "%(credibility)s%% Credibility / %(confidence)s%% Confidence"
 msgstr "%(credibility)s%% Glaubwürdigkeit / %(confidence)s%% Vertrauen"
 
-#: backend/templates/index.html:49 backend/templates/layout.html:45 backend/templates/report.html:63
+#: templates/index.html:56 templates/layout.html:74 templates/report.html:75
 msgid "Loading more..."
 msgstr "Mehr wird geladen..."
 
-#: backend/templates/layout.html:6
+#: templates/layout.html:7
 msgid "AI Fact Checker"
 msgstr "Faktencheck starten"
 
-#: backend/templates/layout.html:14
+#: templates/layout.html:10
+msgid "Verify information with our AI Fact Checker."
+msgstr ""
+
+#: templates/layout.html:17
+#, fuzzy
+msgid "FactChecking.pro"
+msgstr "Faktencheck-Bericht"
+
+#: templates/layout.html:41
 msgid "Advanced AI Fact Checking"
 msgstr "Erweiterter KI-Faktencheck"
 
-#: backend/templates/layout.html:37
+#: templates/layout.html:66
 msgid "Please paste a video link."
 msgstr "Bitte füge einen Videolink ein."
 
-#: backend/templates/layout.html:38
+#: templates/layout.html:67
 msgid "Please enter a valid YouTube video link!"
 msgstr "Bitte gib einen gültigen YouTube-Link ein!"
 
-#: backend/templates/layout.html:39
+#: templates/layout.html:68
 msgid "Sending request for analysis..."
 msgstr "Analyse wird angefordert..."
 
-#: backend/templates/layout.html:40
+#: templates/layout.html:69
 msgid "Error starting analysis."
 msgstr "Fehler beim Starten der Analyse."
 
-#: backend/templates/layout.html:41
+#: templates/layout.html:70
 msgid "Critical polling error:"
 msgstr "Kritischer Abfragefehler:"
 
-#: backend/templates/layout.html:42
+#: templates/layout.html:71
 msgid "An error occurred during processing:"
 msgstr "Fehler bei der Verarbeitung:"
 
-#: backend/templates/layout.html:43
+#: templates/layout.html:72
 msgid "No more results"
 msgstr "Keine weiteren Ergebnisse"
 
-#: backend/templates/layout.html:44
+#: templates/layout.html:73
 msgid "Failed to load"
 msgstr "Laden fehlgeschlagen"
 
-#: backend/templates/layout.html:46
+#: templates/layout.html:75
 msgid "Credibility"
 msgstr "Glaubwürdigkeit"
 
-#: backend/templates/layout.html:47
+#: templates/layout.html:76
 msgid "Confidence"
 msgstr "Vertrauen"
 
-#: backend/templates/layout.html:48
+#: templates/layout.html:77
 msgid "Sources:"
 msgstr "Quellen:"
 
-#: backend/templates/layout.html:49
+#: templates/layout.html:78
 msgid "Link Copied!"
 msgstr "Link kopiert!"
 
-#: backend/templates/layout.html:50
+#: templates/layout.html:79
 msgid "Failed to copy link."
 msgstr "Link konnte nicht kopiert werden."
 
-#: backend/templates/layout.html:51
+#: templates/layout.html:80
 msgid "Fact-Check Report"
 msgstr "Faktencheck-Bericht"
 
-#: backend/templates/layout.html:52
+#: templates/layout.html:81
 msgid "Check out the fact-check report for this video:"
 msgstr "Hier ist der Faktencheck-Bericht für dieses Video:"
 
-#: backend/templates/layout.html:53
+#: templates/layout.html:82
 msgid "Select up to 5 claims to verify"
 msgstr "Wähle bis zu 5 Behauptungen zum Prüfen aus"
 
-#: backend/templates/layout.html:54
+#: templates/layout.html:83
 msgid "Fact-Check Selected"
 msgstr "Ausgewählte prüfen"
 
-#: backend/templates/layout.html:55
+#: templates/layout.html:84
 msgid "You can only select up to"
 msgstr "Du kannst nur bis zu"
 
-#: backend/templates/layout.html:56
+#: templates/layout.html:85
 msgid "claims"
 msgstr "Behauptungen"
 
-#: backend/templates/layout.html:57
+#: templates/layout.html:86
 msgid "Already checked"
 msgstr "Bereits geprüft"
 
-#: backend/templates/layout.html:58
+#: templates/layout.html:87
 msgid "Could not extract any claims to check."
 msgstr "Keine prüfbaren Behauptungen gefunden."
 
-#: backend/templates/layout.html:59
+#: templates/layout.html:88
 msgid "Sending selected claims for final analysis..."
 msgstr "Ausgewählte Behauptungen werden zur Analyse gesendet..."
 
-#: backend/templates/layout.html:60
+#: templates/layout.html:89
 msgid "Checked claims"
 msgstr "Geprüfte Behauptungen"
 
-#: backend/templates/layout.html:61
+#: templates/layout.html:90
 msgid "Show detailed analysis"
 msgstr "Details anzeigen"
 
-#: backend/templates/layout.html:62
+#: templates/layout.html:91
 msgid "Hide detailed analysis"
 msgstr "Details ausblenden"
 
-#: backend/templates/layout.html:63
+#: templates/layout.html:92
 msgid "Checked Text"
 msgstr "Geprüfter Text"
 
-#: backend/templates/layout.html:64
+#: templates/layout.html:93
 msgid "Disclaimer:"
 msgstr "Hinweis:"
 
-#: backend/templates/layout.html:65
-msgid "This report is AI-generated. It may contain errors and may not have access to real-time data. Please verify the information independently."
-msgstr "Dieser Bericht wurde von einer KI generiert. Er kann Fehler enthalten und hat möglicherweise keinen Zugriff auf Echtzeitdaten. Bitte prüfe die Infos immer selbst nach."
+#: templates/layout.html:94
+msgid ""
+"This report is AI-generated. It may contain errors and may not have "
+"access to real-time data. Please verify the information independently."
+msgstr ""
+"Dieser Bericht wurde von einer KI generiert. Er kann Fehler enthalten und"
+" hat möglicherweise keinen Zugriff auf Echtzeitdaten. Bitte prüfe die "
+"Infos immer selbst nach."
 
-#: backend/templates/layout.html:66
+#: templates/layout.html:95
 msgid "Confirmed"
 msgstr "Bestätigt"
 
-#: backend/templates/layout.html:67
+#: templates/layout.html:96
 msgid "Refuted"
 msgstr "Widerlegt"
 
-#: backend/templates/layout.html:68
+#: templates/layout.html:97
 msgid "Misleading"
 msgstr "Irreführend"
 
-#: backend/templates/layout.html:69
+#: templates/layout.html:98
 msgid "Partly True"
 msgstr "Teilweise wahr"
 
-#: backend/templates/layout.html:70
+#: templates/layout.html:99
 msgid "Unverifiable"
 msgstr "Nicht verifizierbar"
 
-#: backend/templates/layout.html:71
+#: templates/layout.html:100
 msgid "Claim text missing"
 msgstr "Behauptungstext fehlt"
 
-#: backend/templates/layout.html:72
+#: templates/layout.html:101
 msgid "No verdict"
 msgstr "Kein Urteil"
 
-#: backend/templates/layout.html:73
+#: templates/layout.html:102
 msgid "Show unchecked claims"
 msgstr "Nicht geprüfte Behauptungen anzeigen"
 
-#: backend/templates/layout.html:74
+#: templates/layout.html:103
 msgid "Hide unchecked claims"
 msgstr "Nicht geprüfte Behauptungen ausblenden"
 
-#: backend/templates/layout.html:75
+#: templates/layout.html:104
 msgid "Check more claims"
 msgstr "Mehr Behauptungen prüfen"
 
-#: backend/templates/layout.html:76
+#: templates/layout.html:105
 msgid "Mostly True"
 msgstr "Größtenteils wahr"
 
-#: backend/templates/layout.html:77
+#: templates/layout.html:106
 msgid "Mostly False"
 msgstr "Größtenteils falsch"
 
-#: backend/templates/layout.html:78
+#: templates/layout.html:107
 msgid "Mixed Veracity"
 msgstr "Gemischte Wahrhaftigkeit"
 
-#: backend/templates/layout.html:79
+#: templates/layout.html:108
 msgid "Largely Unverifiable"
 msgstr "Weitgehend nicht überprüfbar"
 
-#: backend/templates/report.html:3
-msgid "Fact-Check Report for:"
+#: templates/report.html:3
+#, fuzzy, python-format
+msgid "Fact-Check Report for: %(title)s"
 msgstr "Faktencheck-Bericht für:"
 
-#: backend/templates/report.html:9
+#: templates/report.html:3
+msgid "Untitled Report"
+msgstr ""
+
+#: templates/report.html:6
+msgid "this content"
+msgstr ""
+
+#: templates/report.html:7
+#, python-format
+msgid ""
+"View the AI-generated fact-check report for \"%(title)s\". Assesses "
+"credibility, details verified claims, and lists sources. Processed by "
+"FactChecking.pro."
+msgstr ""
+
+#: templates/report.html:20
 msgid "Fact-check report for:"
 msgstr "Faktencheck-Bericht für:"
 
-#: backend/templates/report.html:15
+#: templates/report.html:26
 msgid "Share Results"
 msgstr "Ergebnisse teilen"
 
-#: backend/templates/report.html:20
+#: templates/report.html:31
 msgid "Video Thumbnail"
 msgstr "Video-Vorschaubild"
+
+#~ msgid "Fact-Check Report for:"
+#~ msgstr "Faktencheck-Bericht für:"
