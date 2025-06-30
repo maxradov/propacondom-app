@@ -421,7 +421,7 @@ def root_redirect():
         return redirect(url_for('serve_index', lang=preferred_lang), code=302)
 
 # Sitemap generation
-@app.route('/sitemap.xml')
+@app.route('/sitemap.xml', methods=['GET', 'HEAD'])
 def sitemap():
     """
     Generates the sitemap.xml dynamically.
@@ -514,7 +514,7 @@ def sitemap():
     return response
 
 # robots.txt generation
-@app.route('/robots.txt')
+@app.route('/robots.txt', methods=['GET', 'HEAD'])
 def robots_txt():
     """
     Generates the robots.txt file dynamically.
