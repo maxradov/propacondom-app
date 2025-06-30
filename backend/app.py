@@ -540,7 +540,7 @@ def robots_txt():
     # Specify the location of the sitemap
     # Ensure this is an absolute URL. url_for with _external=True can be used.
     # This assumes app.config['SERVER_NAME'] and app.config['PREFERRED_URL_SCHEME'] are set.
-    sitemap_url = url_for('sitemap', _external=True)
+    sitemap_url = url_for('sitemap', _external=True, _scheme='https')
     lines.append(f"Sitemap: {sitemap_url}")
 
     robots_content = "\n".join(lines)
