@@ -297,7 +297,7 @@ def api_get_recent_analyses():
         return jsonify({"error": "Failed to fetch more analyses"}), 500
 
 # These routes will be updated to include <lang> prefix
-@app.route('/', methods=['GET'])
+@app.route('/<lang>/', methods=['GET'])
 def serve_index_legacy(): # Renamed temporarily
     # This route will be handled by the redirection logic in global_before_request_handler
     # Or, more directly, we can define it as /<lang>/ and have a separate / route for redirect.
@@ -329,6 +329,36 @@ def serve_report_legacy(analysis_id): # Renamed temporarily
 # def serve_report(lang, analysis_id):
 #     ...
 
+@app.route('/<lang>/', methods=['GET'])
+def serve_index(lang):
+    try:
+        recent_analyses = get_analyses()
+        url_param = request.args.get('url', '')
+        return render_template("index.html", recent_analyses=recent_analyses, initial_url=url_param)
+    except Exception as e:
+        print(f"Error fetching initial analyses: {e}")
+        return render_template("index.html", recent_analyses=[], initial_url='')
+
+@app.route('/<lang>/report/<analysis_id>', methods=['GET'])
+def serve_report(lang, analysis_id):
+    try:
+        db = get_db_client()
+        doc_ref = db.collection('analyses').document(analysis_id)
+        doc = doc_ref.get()
+        if doc.exists:
+            report_data = doc.to_dict()
+            if 'created_at' in report_data and hasattr(report_data['created_at'], 'isoformat'):
+                report_data['created_at'] = report_data['created_at'].isoformat()
+            recent_analyses = get_analyses()
+            return render_template('report.html', report=report_data, recent_analyses=recent_analyses)
+        else:
+            return _("Report not found"), 404
+    except Exception as e:
+        print(f"Error fetching report {analysis_id}: {e}")
+        return f"{_('An error occurred')}: {e}", 500
+
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 8080))
     app.run(host='0.0.0.0', port=port)
+
