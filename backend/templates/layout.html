@@ -9,10 +9,10 @@
     {# Add hreflang tags for SEO #}
     {% if request.endpoint and request.endpoint not in ['static', 'set_language'] and 'lang' in request.view_args %}
         {% for lang_code_iter in SUPPORTED_LANGS_FOR_HREFLANG %}
-            <link rel="alternate" hreflang="{{ lang_code_iter }}" href="{{ url_for(request.endpoint, **request.view_args, lang=lang_code_iter) }}">
+            <link rel="alternate" hreflang="{{ lang_code_iter }}" href="{{ hreflang_url(request.endpoint, request.view_args, lang_code_iter) }}">
         {% endfor %}
         {# Add x-default hreflang for the default language (e.g., English) #}
-        <link rel="alternate" hreflang="x-default" href="{{ url_for(request.endpoint, **request.view_args, lang='en') }}">
+        <link rel="alternate" hreflang="x-default" href="{{ hreflang_url(request.endpoint, request.view_args, 'en') }}">
     {% endif %}
 </head>
 <body>

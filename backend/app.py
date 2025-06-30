@@ -135,10 +135,15 @@ def inject_conf_var():
     # Otherwise, get_locale() provides the language determined by cookie/header/default, which Babel also uses.
     template_current_lang = g.current_lang if hasattr(g, 'current_lang') and g.current_lang in SUPPORTED_LANGUAGES_IN_URL else get_locale()
 
+    def hreflang_url(endpoint, view_args, lang):
+        args = dict(view_args) if view_args else {}
+        args['lang'] = lang
+        return url_for(endpoint, **args)
     return dict(
         LANGUAGES=LANGUAGES,
-        CURRENT_LANG=template_current_lang, # This is the language for the current request rendering
-        SUPPORTED_LANGS_FOR_HREFLANG=SUPPORTED_LANGUAGES_IN_URL # For generating all hreflang links
+        CURRENT_LANG=template_current_lang,
+        SUPPORTED_LANGS_FOR_HREFLANG=SUPPORTED_LANGUAGES_IN_URL,
+        hreflang_url=hreflang_url
     )
 
 @app.route('/api/report/<analysis_id>')
