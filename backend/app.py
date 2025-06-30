@@ -486,7 +486,7 @@ def sitemap():
             # For sitemap, we need absolute URLs. url_for with _external=True
             # relies on request context or SERVER_NAME configuration.
             # In a route handler, request context is available.
-            current_url = url_for(endpoint_name, _external=True, **loc_args)
+            current_url = url_for(endpoint_name, _external=True, _scheme='https', **loc_args)
 
             xml_parts.append('  <url>')
             xml_parts.append(f'    <loc>{current_url}</loc>')
@@ -495,13 +495,13 @@ def sitemap():
             for alt_lang_code in supported_langs:
                 alt_args = view_args.copy()
                 alt_args['lang'] = alt_lang_code
-                alt_url = url_for(endpoint_name, _external=True, **alt_args)
+                alt_url = url_for(endpoint_name, _external=True, _scheme='https', **alt_args)
                 xml_parts.append(f'    <xhtml:link rel="alternate" hreflang="{alt_lang_code}" href="{alt_url}"/>')
 
             # Add x-default link (pointing to the default language version, e.g., English)
             default_args = view_args.copy()
             default_args['lang'] = default_lang
-            default_url = url_for(endpoint_name, _external=True, **default_args)
+            default_url = url_for(endpoint_name, _external=True, _scheme='https', **default_args)
             xml_parts.append(f'    <xhtml:link rel="alternate" hreflang="x-default" href="{default_url}"/>')
 
             xml_parts.append('  </url>')
