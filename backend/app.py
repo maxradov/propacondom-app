@@ -119,8 +119,12 @@ def global_before_request_handler():
 
         current_path = request.path
         if current_path == '/':
-            new_path = f"/{preferred_lang_for_redirect}"
+            new_path = f"/{preferred_lang_for_redirect}/" # Ensure trailing slash to match serve_index route
         else:
+            # For other paths, ensure consistency.
+            # If the target route (e.g. serve_report) is defined without a trailing slash, this is fine.
+            # If it's defined WITH a trailing slash, this might need adjustment or rely on Flask's strict_slashes.
+            # Current serve_report: /<string:lang>/report/<analysis_id> (no trailing slash), so this is okay.
             new_path = f"/{preferred_lang_for_redirect}{current_path}"
 
         if request.query_string:
