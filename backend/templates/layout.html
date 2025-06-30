@@ -31,7 +31,7 @@
                 {% for lang_code_iter, lang_info in LANGUAGES.items() %}
                     {# The route for set_language is /set_language/<target_lang>, so 'target_lang' is the parameter name #}
                     {# It's not /<lang>/set_language/... #}
-                    <a href="{{ url_for('set_language', target_lang=lang_code_iter) }}" class="lang-option {% if lang_code_iter == CURRENT_LANG %}active{% endif %}">
+                    <a href="{{ url_for('set_language', lang_code_to_set=lang_code_iter) }}" class="lang-option {% if lang_code_iter == CURRENT_LANG %}active{% endif %}">
                         <span>{{ lang_info['flag'] }}</span>
                         <span>{{ lang_info['name'] }}</span>
                     </a>
