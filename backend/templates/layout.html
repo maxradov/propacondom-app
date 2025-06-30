@@ -3,16 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>{% block title %}{{ _('AI Fact Checker') }}{% endblock %}</title>
+
+    {# Page-specific description - to be overridden in child templates #}
+    <meta name="description" content="{% block meta_description %}{{ _('Verify information with our AI Fact Checker.') }}{% endblock %}">
+
+    {# Open Graph Meta Tags #}
+    <meta property="og:title" content="{% block og_title %}{% block title_for_og %}{{ self.title() }}{% endblock %}{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}{{ self.meta_description() }}{% endblock %}">
+    <meta property="og:url" content="{{ url_for(request.endpoint, _external=True, **request.view_args) if request.endpoint else request.base_url }}">
+    <meta property="og:locale" content="{{ OG_LOCALE_MAPPING.get(CURRENT_LANG, OG_LOCALE_MAPPING['en']) }}">
+    <meta property="og:site_name" content="{{ _('FactChecking.pro') }}"> {# Translatable site name #}
+
+    {# Page-specific OG type - to be overridden in child templates e.g. website, article #}
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+    {# Add og:image later if there's a generic site image or page-specific images #}
+
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
-    {# Add hreflang tags for SEO #}
+
+    {# Add hreflang tags for SEO - ensure these use absolute URLs #}
     {% if request.endpoint and request.endpoint not in ['static', 'set_language'] and 'lang' in request.view_args %}
         {% for lang_code_iter in SUPPORTED_LANGS_FOR_HREFLANG %}
             <link rel="alternate" hreflang="{{ lang_code_iter }}" href="{{ hreflang_url(request.endpoint, request.view_args, lang_code_iter) }}">
         {% endfor %}
         {# Add x-default hreflang for the default language (e.g., English) #}
         <link rel="alternate" hreflang="x-default" href="{{ hreflang_url(request.endpoint, request.view_args, 'en') }}">
+    {% endif %}
+
+    {# Canonical Link #}
+    {% if request.endpoint and 'lang' in request.view_args %}
+    <link rel="canonical" href="{{ url_for(request.endpoint, _external=True, **request.view_args) }}">
     {% endif %}
 </head>
 <body>

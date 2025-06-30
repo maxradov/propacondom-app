@@ -1,6 +1,17 @@
 {% extends "layout.html" %}
 
-{% block title %}{{ _('Fact-Check Report for:') }} {{ report.video_title }}{% endblock %}
+{% block title %}{{ _('Fact-Check Report for: %(title)s', title=report.video_title if report and report.video_title else _('Untitled Report')) }}{% endblock %}
+
+{% block meta_description %}
+{% set report_title = report.video_title if report and report.video_title else _('this content') %}
+{{ _('View the AI-generated fact-check report for "%(title)s". Assesses credibility, details verified claims, and lists sources. Processed by FactChecking.pro.', title=report_title) }}
+{% endblock %}
+
+{% block og_type %}article{% endblock %}
+
+{# Potentially add more article-specific OG tags here if relevant, like article:published_time #}
+{# For example: <meta property="article:published_time" content="{{ report.created_at_iso }}"> #}
+{# This would require report.created_at_iso to be available in the template context. #}
 
 {% block content %}
 <div class="main-layout">

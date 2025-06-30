@@ -1,8 +1,9 @@
+
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-06-29 18:04+0000\n"
+"POT-Creation-Date: 2025-06-30 16:42+0000\n"
 "PO-Revision-Date: 2025-06-29 23:30+0300\n"
 "Last-Translator: Gemini AI Translator\n"
 "Language: zh\n"
@@ -13,235 +14,276 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: backend/app.py:232
+#: app.py:332
 msgid "Report not found"
 msgstr "报告未找到"
 
-#: backend/app.py:235
+#: app.py:335
 msgid "An error occurred"
 msgstr "发生错误"
 
-#: backend/templates/index.html:3
+#: templates/index.html:3
 msgid "AI Fact Checker for YouTube, Articles & Text | Verify Sources"
 msgstr "AI事实核查（适用于YouTube、文章和文本）| 核实来源"
 
-#: backend/templates/index.html:9
+#: templates/index.html:6
+#, fuzzy
+msgid ""
+"Instantly verify facts and detect misinformation in YouTube videos, news "
+"articles, and text using advanced AI. Check sources and assess "
+"credibility with our free tool. Supports multiple languages."
+msgstr "用AI技术，快速验证YouTube视频、新闻、文章和文本的真实性，及时发现谣言和误导。"
+
+#: templates/index.html:15
 msgid "AI Fact-Checker for YouTube, News & Articles"
 msgstr "AI事实核查 - 适用于YouTube、新闻和文章"
 
-#: backend/templates/index.html:10
-msgid "Instantly verify facts and detect misinformation in YouTube videos, news, articles, and any text using advanced AI fact-checking."
+#: templates/index.html:16
+msgid ""
+"Instantly verify facts and detect misinformation in YouTube videos, news,"
+" articles, and any text using advanced AI fact-checking."
 msgstr "用AI技术，快速验证YouTube视频、新闻、文章和文本的真实性，及时发现谣言和误导。"
 
-#: backend/templates/index.html:13
+#: templates/index.html:19
 msgid "Paste a YouTube link, article URL, or text to check..."
 msgstr "粘贴YouTube链接、文章网址或文本进行核查..."
 
-#: backend/templates/index.html:14 backend/templates/layout.html:80
+#: templates/index.html:20 templates/layout.html:109
 msgid "Run Fact Check"
 msgstr "开始事实核查"
 
-#: backend/templates/index.html:23 backend/templates/report.html:37
+#: templates/index.html:29 templates/report.html:48
 msgid "Last checked:"
 msgstr "上次检查："
 
-#: backend/templates/index.html:41 backend/templates/report.html:55
+#: templates/index.html:48 templates/report.html:67
 #, python-format
 msgid "%(credibility)s%% Credibility / %(confidence)s%% Confidence"
 msgstr "%(credibility)s%% 可信度 / %(confidence)s%% 置信度"
 
-#: backend/templates/index.html:49 backend/templates/layout.html:45 backend/templates/report.html:63
+#: templates/index.html:56 templates/layout.html:74 templates/report.html:75
 msgid "Loading more..."
 msgstr "加载更多..."
 
-#: backend/templates/layout.html:6
+#: templates/layout.html:7
 msgid "AI Fact Checker"
 msgstr "AI事实核查"
 
-#: backend/templates/layout.html:14
+#: templates/layout.html:10
+msgid "Verify information with our AI Fact Checker."
+msgstr ""
+
+#: templates/layout.html:17
+#, fuzzy
+msgid "FactChecking.pro"
+msgstr "事实核查报告"
+
+#: templates/layout.html:41
 msgid "Advanced AI Fact Checking"
 msgstr "高级AI事实核查"
 
-#: backend/templates/layout.html:37
+#: templates/layout.html:66
 msgid "Please paste a video link."
 msgstr "请粘贴视频链接。"
 
-#: backend/templates/layout.html:38
+#: templates/layout.html:67
 msgid "Please enter a valid YouTube video link!"
 msgstr "请输入有效的YouTube视频链接！"
 
-#: backend/templates/layout.html:39
+#: templates/layout.html:68
 msgid "Sending request for analysis..."
 msgstr "正在发送分析请求..."
 
-#: backend/templates/layout.html:40
+#: templates/layout.html:69
 msgid "Error starting analysis."
 msgstr "启动分析时出错。"
 
-#: backend/templates/layout.html:41
+#: templates/layout.html:70
 msgid "Critical polling error:"
 msgstr "状态检测发生严重错误："
 
-#: backend/templates/layout.html:42
+#: templates/layout.html:71
 msgid "An error occurred during processing:"
 msgstr "处理过程中发生错误："
 
-#: backend/templates/layout.html:43
+#: templates/layout.html:72
 msgid "No more results"
 msgstr "没有更多结果"
 
-#: backend/templates/layout.html:44
+#: templates/layout.html:73
 msgid "Failed to load"
 msgstr "加载失败"
 
-#: backend/templates/layout.html:46
+#: templates/layout.html:75
 msgid "Credibility"
 msgstr "可信度"
 
-#: backend/templates/layout.html:47
+#: templates/layout.html:76
 msgid "Confidence"
 msgstr "置信度"
 
-#: backend/templates/layout.html:48
+#: templates/layout.html:77
 msgid "Sources:"
 msgstr "来源："
 
-#: backend/templates/layout.html:49
+#: templates/layout.html:78
 msgid "Link Copied!"
 msgstr "链接已复制！"
 
-#: backend/templates/layout.html:50
+#: templates/layout.html:79
 msgid "Failed to copy link."
 msgstr "复制链接失败。"
 
-#: backend/templates/layout.html:51
+#: templates/layout.html:80
 msgid "Fact-Check Report"
 msgstr "事实核查报告"
 
-#: backend/templates/layout.html:52
+#: templates/layout.html:81
 msgid "Check out the fact-check report for this video:"
 msgstr "查看该视频的事实核查报告："
 
-#: backend/templates/layout.html:53
+#: templates/layout.html:82
 msgid "Select up to 5 claims to verify"
 msgstr "最多可选择5条信息进行核查"
 
-#: backend/templates/layout.html:54
+#: templates/layout.html:83
 msgid "Fact-Check Selected"
 msgstr "已选择事实核查"
 
-#: backend/templates/layout.html:55
+#: templates/layout.html:84
 msgid "You can only select up to"
 msgstr "最多只能选择"
 
-#: backend/templates/layout.html:56
+#: templates/layout.html:85
 msgid "claims"
 msgstr "条信息"
 
-#: backend/templates/layout.html:57
+#: templates/layout.html:86
 msgid "Already checked"
 msgstr "已核查"
 
-#: backend/templates/layout.html:58
+#: templates/layout.html:87
 msgid "Could not extract any claims to check."
 msgstr "未检测到可核查的信息。"
 
-#: backend/templates/layout.html:59
+#: templates/layout.html:88
 msgid "Sending selected claims for final analysis..."
 msgstr "正在分析所选内容..."
 
-#: backend/templates/layout.html:60
+#: templates/layout.html:89
 msgid "Checked claims"
 msgstr "已核查的信息"
 
-#: backend/templates/layout.html:61
+#: templates/layout.html:90
 msgid "Show detailed analysis"
 msgstr "显示详细分析"
 
-#: backend/templates/layout.html:62
+#: templates/layout.html:91
 msgid "Hide detailed analysis"
 msgstr "隐藏详细分析"
 
-#: backend/templates/layout.html:63
+#: templates/layout.html:92
 msgid "Checked Text"
 msgstr "已核查文本"
 
-#: backend/templates/layout.html:64
+#: templates/layout.html:93
 msgid "Disclaimer:"
 msgstr "免责声明："
 
-#: backend/templates/layout.html:65
-msgid "This report is AI-generated. It may contain errors and may not have access to real-time data. Please verify the information independently."
+#: templates/layout.html:94
+msgid ""
+"This report is AI-generated. It may contain errors and may not have "
+"access to real-time data. Please verify the information independently."
 msgstr "本报告由AI自动生成，可能存在错误，也可能无法访问实时数据。请自行核实信息。"
 
-#: backend/templates/layout.html:66
+#: templates/layout.html:95
 msgid "Confirmed"
 msgstr "已确认"
 
-#: backend/templates/layout.html:67
+#: templates/layout.html:96
 msgid "Refuted"
 msgstr "已驳斥"
 
-#: backend/templates/layout.html:68
+#: templates/layout.html:97
 msgid "Misleading"
 msgstr "误导"
 
-#: backend/templates/layout.html:69
+#: templates/layout.html:98
 msgid "Partly True"
 msgstr "部分属实"
 
-#: backend/templates/layout.html:70
+#: templates/layout.html:99
 msgid "Unverifiable"
 msgstr "无法核实"
 
-#: backend/templates/layout.html:71
+#: templates/layout.html:100
 msgid "Claim text missing"
 msgstr "声明文本缺失"
 
-#: backend/templates/layout.html:72
+#: templates/layout.html:101
 msgid "No verdict"
 msgstr "无结论"
 
-#: backend/templates/layout.html:73
+#: templates/layout.html:102
 msgid "Show unchecked claims"
 msgstr "显示未核查信息"
 
-#: backend/templates/layout.html:74
+#: templates/layout.html:103
 msgid "Hide unchecked claims"
 msgstr "隐藏未核查信息"
 
-#: backend/templates/layout.html:75
+#: templates/layout.html:104
 msgid "Check more claims"
 msgstr "核查更多信息"
 
-#: backend/templates/layout.html:76
+#: templates/layout.html:105
 msgid "Mostly True"
 msgstr "大部分属实"
 
-#: backend/templates/layout.html:77
+#: templates/layout.html:106
 msgid "Mostly False"
 msgstr "大部分不实"
 
-#: backend/templates/layout.html:78
+#: templates/layout.html:107
 msgid "Mixed Veracity"
 msgstr "真伪混杂"
 
-#: backend/templates/layout.html:79
+#: templates/layout.html:108
 msgid "Largely Unverifiable"
 msgstr "基本无法核实"
 
-#: backend/templates/report.html:3
-msgid "Fact-Check Report for:"
+#: templates/report.html:3
+#, fuzzy, python-format
+msgid "Fact-Check Report for: %(title)s"
 msgstr "事实核查报告："
 
-#: backend/templates/report.html:9
+#: templates/report.html:3
+msgid "Untitled Report"
+msgstr ""
+
+#: templates/report.html:6
+msgid "this content"
+msgstr ""
+
+#: templates/report.html:7
+#, python-format
+msgid ""
+"View the AI-generated fact-check report for \"%(title)s\". Assesses "
+"credibility, details verified claims, and lists sources. Processed by "
+"FactChecking.pro."
+msgstr ""
+
+#: templates/report.html:20
 msgid "Fact-check report for:"
 msgstr "事实核查报告："
 
-#: backend/templates/report.html:15
+#: templates/report.html:26
 msgid "Share Results"
 msgstr "分享结果"
 
-#: backend/templates/report.html:20
+#: templates/report.html:31
 msgid "Video Thumbnail"
 msgstr "视频缩略图"
+
+#~ msgid "Fact-Check Report for:"
+#~ msgstr "事实核查报告："
