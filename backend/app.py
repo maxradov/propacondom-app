@@ -283,24 +283,9 @@ def api_get_recent_analyses():
 
 
 
-@app.route('/report/<analysis_id>', methods=['GET'])
-def serve_report_legacy(analysis_id): # Renamed temporarily
-    # Similar to serve_index_legacy, this should be caught by redirection.
-    # This will be replaced by a redirecting route shortly.
-    return "Redirecting..."
-
-
-# New user-facing routes with language prefix will be added in the next step.
-# For example:
-# @app.route('/<string:lang>/', methods=['GET'])
-# def serve_index(lang):
-#     ...
-# @app.route('/<string:lang>/report/<analysis_id>', methods=['GET'])
-# def serve_report(lang, analysis_id):
-#     ...
-
 @app.route('/<lang>/', methods=['GET'])
 def serve_index(lang):
+    print(f"SERVE_INDEX: lang={lang}, path={request.path}")
     try:
         recent_analyses = get_analyses()
         url_param = request.args.get('url', '')
@@ -326,6 +311,12 @@ def serve_report(lang, analysis_id):
     except Exception as e:
         print(f"Error fetching report {analysis_id}: {e}")
         return f"{_('An error occurred')}: {e}", 500
+
+@app.route('/report/<analysis_id>', methods=['GET'])
+def serve_report_legacy(analysis_id):
+    preferred_lang = get_locale()
+    return redirect(url_for('serve_report', lang=preferred_lang, analysis_id=analysis_id), code=302)
+
 
 
 if __name__ == '__main__':
