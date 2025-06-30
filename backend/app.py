@@ -223,6 +223,10 @@ def fact_check_selected():
 
 from urllib.parse import urlparse, urljoin # For intelligent language switching
 
+@app.route('/<lang>/set_language/<lang_code_to_set>')
+def set_language_prefixed(lang, lang_code_to_set):
+    return set_language(lang_code_to_set)
+    
 # This route will be updated later to handle redirection to new lang-prefixed URLs
 @app.route('/set_language/<lang_code_to_set>')
 def set_language(lang_code_to_set):
