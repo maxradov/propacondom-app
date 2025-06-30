@@ -296,21 +296,6 @@ def api_get_recent_analyses():
         print(f"Error in /api/get_recent_analyses: {e}")
         return jsonify({"error": "Failed to fetch more analyses"}), 500
 
-# These routes will be updated to include <lang> prefix
-@app.route('/<lang>/', methods=['GET'])
-def serve_index_legacy(): # Renamed temporarily
-    # This route will be handled by the redirection logic in global_before_request_handler
-    # Or, more directly, we can define it as /<lang>/ and have a separate / route for redirect.
-    # For now, global_before_request_handler should redirect this.
-    # The actual content serving will happen via the new /<lang>/ route.
-    # So, this function might not even be called if redirection works as planned.
-    # If it is called, it means redirection didn't happen, which is an issue.
-    # Let's assume it's a fallback or will be removed/replaced.
-    # For safety, rendering a simple message or relying on redirect.
-    # The redirect logic in global_before_request_handler should catch this.
-    # If we reach here, something is not right with the redirect setup.
-    # This will be replaced by a redirecting route shortly.
-    return "Redirecting..."
 
 
 @app.route('/report/<analysis_id>', methods=['GET'])
