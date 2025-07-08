@@ -343,10 +343,8 @@ def analyze_free_text(self, text, target_lang='en', title=None, thumbnail_url=No
             state='FAILURE',
             meta={'status_message': 'Content moderation failed: the submitted text contains prohibited or offensive language.'}
         )
-        return {
-        "error": "Please try a different text. The submitted material does not meet our moderation requirements (contains prohibited or offensive content).",
-        "moderation_status": "BLOCKED"
-    }
+        raise ValueError("Content moderation failed: the submitted text contains prohibited or offensive language.")
+
         
     # --- moderation ok, сообщаем пользователю ---
     
