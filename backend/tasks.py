@@ -311,12 +311,21 @@ def analyze_free_text(self, text, target_lang='en', title=None, thumbnail_url=No
             "source_url": report_data.get("source_url", "")
         }
     # --- AI moderation step: фильтруем запрещённый контент ---
+    
+    # --- AI moderation step: фильтруем запрещённый контент ---
+    STOPWORDS = [
+        "nigger", "fag", "faggot", "cunt", "bitch", "whore", "slut", "retard",
+        "spastic", "spic", "kike", "chink", "gook", "camel jockey", "sand nigger",
+        "raghead", "motherfucker", "asshole", "dickhead", "cock", "pussy", "shithead",
+        "twat", "bastard", "cripple"
+    ]
     moderation_prompt = f"""
     Carefully read the following text and determine if it contains any of the following:
     - Insults, humiliation, or discrimination of any kind.
     - Profanity, obscene or offensive language (including veiled or censored forms).
     - Racism, xenophobia, or hate speech.
     - Explicitly offensive or provocative formulations.
+    - The following prohibited words or slurs (case-insensitive): {', '.join(STOPWORDS)}.
 
     Answer with a single word only: "OK" — if the text does NOT contain any prohibited or offensive content,
     or "BLOCKED" — if there is at least one issue found.
@@ -333,6 +342,9 @@ def analyze_free_text(self, text, target_lang='en', title=None, thumbnail_url=No
         return {
             "error": "Please try a different text. The submitted material does not meet our moderation requirements (contains prohibited or offensive content)."
         }
+        
+     # --- moderation ok, сообщаем пользователю ---
+    moderation_status = "Moderation passed."
     self.update_state(state='PROGRESS', meta={'status_message': 'AI is extracting claims...'})
     prompt_claims = f"""
     You are an expert fact-checking assistant. Carefully read the following text and extract up to {MAX_CLAIMS_EXTRACTED} main and the most **important, factual, and verifiable claims** made in the text.
