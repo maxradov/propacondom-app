@@ -339,7 +339,7 @@ def analyze_free_text(self, text, target_lang='en', title=None, thumbnail_url=No
     moderation_response = gemini_model.generate_content(moderation_prompt)
     moderation_result = moderation_response.text.strip().upper()
     if moderation_result != "OK":
-    self.update_state(
+        self.update_state(
         state='FAILURE',
         meta={'status_message': 'Content moderation failed: the submitted text contains prohibited or offensive language.'}
     )
