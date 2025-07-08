@@ -340,15 +340,15 @@ def analyze_free_text(self, text, target_lang='en', title=None, thumbnail_url=No
     moderation_result = moderation_response.text.strip().upper()
     if moderation_result != "OK":
         self.update_state(
-        state='FAILURE',
-        meta={'status_message': 'Content moderation failed: the submitted text contains prohibited or offensive language.'}
-    )
-    return {
+            state='FAILURE',
+            meta={'status_message': 'Content moderation failed: the submitted text contains prohibited or offensive language.'}
+        )
+        return {
         "error": "Please try a different text. The submitted material does not meet our moderation requirements (contains prohibited or offensive content).",
         "moderation_status": "BLOCKED"
     }
         
-     # --- moderation ok, сообщаем пользователю ---
+    # --- moderation ok, сообщаем пользователю ---
     
     self.update_state(state='PROGRESS', meta={'status_message': 'Content moderation passed. Extracting claims...'})
     prompt_claims = f"""
