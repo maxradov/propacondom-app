@@ -9,7 +9,7 @@ MAX_CLAIMS_TO_CHECK = 5
 CACHE_EXPIRATION_DAYS = 30
 
 # === Blog Generation Settings ===
-BLOG_POSTING_INTERVAL_MINUTES = 2  # 1 раз в сутки. Для отладки можно поставить 10
+BLOG_POSTING_INTERVAL_MINUTES = 2880  # 1 раз в сутки. Для отладки можно поставить 10
 WORDS_PER_SECTION = 150
 SUMMARY_WORD_COUNT = 30
 BLOG_SECTIONS_PER_ARTICLE = 4
