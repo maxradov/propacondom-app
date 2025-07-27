@@ -16,14 +16,13 @@ app = Flask(__name__)
 CORS(app)
 
 # --- ВСТАВЬТЕ ЭТОТ БЛОК КОДА СЮДА ---
-# Централизованная конфигурация Celery
+# --- ЦЕНТРАЛЬНАЯ КОНФИГУРАЦИЯ CELERY (ИСПРАВЛЕННАЯ) ---
 app.config.update(
-    # Эти параметры Flask передаст в Celery
-    CELERY_BROKER_URL=os.environ.get('REDIS_URL', 'redis://localhost:6379/0'),
-    CELERY_RESULT_BACKEND=os.environ.get('REDIS_URL', 'redis://localhost:6379/0')
+    broker_url=os.environ.get('REDIS_URL', 'redis://localhost:6379/0'), # <-- НОВОЕ ИМЯ
+    result_backend=os.environ.get('REDIS_URL', 'redis://localhost:6379/0') # <-- НОВОЕ ИМЯ
 )
-# Обновляем конфигурацию вашего существующего celery_app
 celery_app.conf.update(app.config)
+# ... остальной код конфигурации ...
 
 # Явно указываем, где искать задачи
 celery_app.conf.imports = ('tasks',)
