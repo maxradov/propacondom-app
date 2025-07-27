@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fact-Checking Blog</title>
+    <style>
+        body { font-family: sans-serif; max-width: 800px; margin: auto; padding: 20px; }
+        .article-card { border: 1px solid #ccc; border-radius: 8px; margin-bottom: 20px; overflow: hidden; }
+        .article-card img { width: 100%; }
+        .article-card div { padding: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Fact-Checking Blog</h1>
+    {% for article in articles %}
+    <div class="article-card">
+        <img src="{{ article.image_url }}" alt="{{ article.title }}">
+        <div>
+            <h2><a href="{{ url_for('blog.article_detail', slug=article.slug) }}">{{ article.title }}</a></h2>
+            <p>{{ article.summary }}</p>
+        </div>
+    </div>
+    {% endfor %}
+</body>
+</html>

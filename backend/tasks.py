@@ -11,10 +11,12 @@ from datetime import datetime, timezone, timedelta
 import google.generativeai as genai
 from celery import Celery
 from google.cloud import firestore
-
+import random
+import markdown2
 
 # Предполагается, что эти константы определены в файле constants.py
-from constants import MAX_CLAIMS_EXTRACTED, MAX_CLAIMS_TO_CHECK, CACHE_EXPIRATION_DAYS
+from constants import (MAX_CLAIMS_EXTRACTED, MAX_CLAIMS_TO_CHECK, CACHE_EXPIRATION_DAYS,
+                       WORDS_PER_SECTION, SUMMARY_WORD_COUNT, BLOG_SECTIONS_PER_ARTICLE, PROMO_LINKS)
 
 from celery_init import celery
 
