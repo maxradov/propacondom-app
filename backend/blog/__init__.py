@@ -1,5 +1,8 @@
+# backend/blog/__init__.py
+
 from flask import Blueprint
 
-bp = Blueprint('blog', __name__, template_folder='templates', url_prefix='/blog')
+# Убираем url_prefix отсюда
+bp = Blueprint('blog', __name__, template_folder='templates')
 
 from . import routes

@@ -11,6 +11,12 @@ from constants import CACHE_EXPIRATION_DAYS
 from celery_init import celery as celery_app
 from tasks import get_db_client
 
+# === РЕГИСТРАЦИЯ BLUEPRINT БЛОГА (ИСПРАВЛЕННАЯ) ===
+from blog import bp as blog_bp
+# Теперь Blueprint будет доступен по адресам /en/blog/, /ru/blog/ и т.д.
+app.register_blueprint(blog_bp, url_prefix='/<lang>/blog')
+# =================================================
+
 app = Flask(__name__)
 CORS(app)
 
