@@ -556,3 +556,99 @@ Data: {json.dumps(summary_context, ensure_ascii=False)}
     data_to_return["updated_at"] = datetime.now(timezone.utc).isoformat()
     
     return data_to_return
+    # ===================================================================
+# ===               КОД ДЛЯ АВТОМАТИЧЕСКОГО БЛОГА                 ===
+# ===================================================================
+
+def generate_with_gemini(prompt_text):
+    """
+    Обертка для вызова API Gemini с использованием существующей модели.
+    """
+    gemini_model = get_gemini_model()
+    try:
+        response = gemini_model.generate_content(prompt_text)
+        return response.text.strip()
+    except Exception as e:
+        print(f"Error calling Gemini API: {e}")
+        # В случае ошибки возвращаем None, чтобы вызывающая функция могла это обработать
+        return None
+
+@celery.task(name="tasks.generate_and_publish_article")
+def generate_and_publish_article():
+    """
+    Периодическая задача Celery для генерации и публикации новой статьи в блоге.
+    """
+    print("🚀 Запуск задачи по генерации статьи для блога...")
+    db = get_db_client()
+
+    # --- Шаг 1: Выбор темы из файла ---
+    try:
+        with open('topics.txt', 'r+') as f:
+            topics = [line for line in f if line.strip()]
+            if not topics:
+                print("Темы для статей закончились.")
+                return "Темы для статей закончились."
+            selected_topic = random.choice(topics).strip()
+            # Удаляем использованную тему из файла
+            f.seek(0)
+            f.writelines(line for line in topics if line.strip() != selected_topic)
+            f.truncate()
+    except FileNotFoundError:
+        return "Файл topics.txt не найден."
+
+    print(f"Выбрана тема: '{selected_topic}'")
+
+    # --- Шаг 2: Генерация контента ---
+    # Заголовок
+    title_prompt = f"Generate an engaging, SEO-friendly H1 title for a blog post on the topic: '{selected_topic}'. Return only the title text."
+    generated_title = generate_with_gemini(title_prompt)
+    if not generated_title:
+        return f"Не удалось сгенерировать заголовок для темы: {selected_topic}"
+
+    # Секции статьи
+    html_parts = [f"<h1>{generated_title}</h1>"]
+    markdown_parts, previous_headings = [], []
+    for i in range(BLOG_SECTIONS_PER_ARTICLE):
+        context_prompt = f"You are an expert copywriter writing a blog post titled '{generated_title}'.\n"
+        if previous_headings:
+            context_prompt += "Headings of previous sections (for context): " + ", ".join(previous_headings)
+        
+        section_prompt = f"""
+        {context_prompt}
+        Your task is to write the *next section* of this blog post.
+        The section must start with an H2 heading and be approximately {WORDS_PER_SECTION} words long.
+        Use rich Markdown formatting (paragraphs, bold, lists).
+        Naturally incorporate this link: {random.choice(PROMO_LINKS)}
+        Output ONLY the Markdown for this new section.
+        """
+        markdown_section = generate_with_gemini(section_prompt)
+        if markdown_section:
+            markdown_parts.append(markdown_section)
+            html_parts.append(markdown2.markdown(markdown_section, extras=["fenced-code-blocks", "tables", "nofollow"]))
+            try:
+                current_heading = next(line for line in markdown_section.split('\n') if line.startswith('## ')).replace('## ', '').strip()
+                previous_headings.append(f"'{current_heading}'")
+            except StopIteration:
+                pass # Если не удалось извлечь заголовок, просто продолжаем
+
+    # --- Шаг 3: Генерация саммари ---
+    summary_prompt = f"Based on the article titled '{generated_title}', write a compelling summary of no more than {SUMMARY_WORD_COUNT} words. Return ONLY the summary text."
+    generated_summary = generate_with_gemini(summary_prompt) or "A detailed look at " + selected_topic
+
+    # --- Шаг 4: Генерация URL изображения (плейсхолдер) ---
+    slug = generated_title.lower().replace(' ', '-').replace('?', '').replace(':', '').replace("'", "")
+    image_url = f"https://placehold.co/1200x630/003366/FFFFFF?text={slug[:50]}"
+
+    # --- Шаг 5: Сохранение в Firestore ---
+    doc_ref = db.collection('blog_articles').document(slug)
+    doc_ref.set({
+        "title": generated_title,
+        "slug": slug,
+        "summary": generated_summary,
+        "full_html_content": "\n".join(html_parts),
+        "image_url": image_url,
+        "published_at": firestore.SERVER_TIMESTAMP,
+    })
+
+    print(f"✅ Статья '{generated_title}' успешно создана и сохранена в Firestore.")
+    return f"Статья '{generated_title}' успешно создана."
