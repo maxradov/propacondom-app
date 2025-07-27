@@ -7,12 +7,36 @@ from google.cloud.firestore_v1.query import Query
 from flask_babel import Babel, _
 from datetime import datetime, timezone, timedelta
 from constants import CACHE_EXPIRATION_DAYS
+from constants import BLOG_POSTING_INTERVAL_MINUTES
 
 from celery_init import celery as celery_app
 from tasks import get_db_client
 
 app = Flask(__name__)
 CORS(app)
+
+# --- ВСТАВЬТЕ ЭТОТ БЛОК КОДА СЮДА ---
+# Централизованная конфигурация Celery
+app.config.update(
+    # Эти параметры Flask передаст в Celery
+    CELERY_BROKER_URL=os.environ.get('REDIS_URL', 'redis://localhost:6379/0'),
+    CELERY_RESULT_BACKEND=os.environ.get('REDIS_URL', 'redis://localhost:6379/0')
+)
+# Обновляем конфигурацию вашего существующего celery_app
+celery_app.conf.update(app.config)
+
+# Явно указываем, где искать задачи
+celery_app.conf.imports = ('tasks',)
+celery_app.conf.timezone = 'UTC'
+
+# Добавляем расписание
+celery_app.conf.beat_schedule = {
+    'generate-periodic-blog-article': {
+        'task': 'tasks.generate_and_publish_article',
+        'schedule': 60.0 * BLOG_POSTING_INTERVAL_MINUTES,
+    },
+}
+# --- КОНЕЦ БЛОКА ---
 
 # === РЕГИСТРАЦИЯ BLUEPRINT БЛОГА (ИСПРАВЛЕННАЯ) ===
 from blog import bp as blog_bp
