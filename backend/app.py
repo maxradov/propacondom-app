@@ -20,6 +20,12 @@ app.register_blueprint(blog_bp, url_prefix='/<lang>/blog')
 app = Flask(__name__)
 CORS(app)
 
+# === РЕГИСТРАЦИЯ BLUEPRINT БЛОГА (ИСПРАВЛЕННАЯ) ===
+from blog import bp as blog_bp
+# Теперь Blueprint будет доступен по адресам /en/blog/, /ru/blog/ и т.д.
+app.register_blueprint(blog_bp, url_prefix='/<lang>/blog')
+# =================================================
+
 # Initialize g.current_lang to None at the beginning of each request.
 # This ensures it's always defined.
 @app.before_request
