@@ -16,7 +16,7 @@
     <div class="article-card">
         <img src="{{ article.image_url }}" alt="{{ article.title }}">
         <div>
-            <h2><a href="{{ url_for('blog.article_detail', slug=article.slug) }}">{{ article.title }}</a></h2>
+			<h2><a href="{{ url_for('blog.article_detail', lang=CURRENT_LANG, slug=article.slug) }}">{{ article.title }}</a></h2>
             <p>{{ article.summary }}</p>
         </div>
     </div>
